@@ -1,0 +1,73 @@
+@page "/Test"
+
+@* <MudPaper> *@
+@*     <MudGrid> *@
+@*         <MudStack Row="true"> *@
+@*             <MudTooltip Text="Previous Page" Arrow="true" Placement="Placement.Top"> *@
+@*                 <MudIconButton Icon="@Icons.Material.Filled.ArrowUpward" Size="Size.Medium" aria-label="previous page"/> *@
+@*             </MudTooltip> *@
+@*             <MudTooltip Text="Next Page" Arrow="true" Placement="Placement.Top"> *@
+@*                 <MudIconButton Icon="@Icons.Material.Filled.ArrowDownward" Size="Size.Medium" aria-label="next page"/> *@
+@*             </MudTooltip> *@
+@*         </MudStack> *@
+@*         <MudStack Row="@true"> *@
+@*             <MudTooltip Text="Zoom Out" Arrow="true" Placement="Placement.Top"> *@
+@*                 <MudIconButton Icon="@Icons.Material.Filled.Remove" Size="Size.Medium" aria-label="zoom out"/> *@
+@*             </MudTooltip> *@
+@*             <MudChip T="string" Variant="Variant.Text">100%</MudChip> *@
+@*             <MudTooltip Text="Zoom In" Arrow="true" Placement="Placement.Top"> *@
+@*                 <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Medium" aria-label="zoom in"/> *@
+@*             </MudTooltip> *@
+@*         </MudStack> *@
+@*         <MudStack> *@
+@* *@
+@*         </MudStack> *@
+@*     </MudGrid> *@
+@* *@
+@*     <MudGrid Justify="Justify.Center"> *@
+@*         <canvas width="720" height="1000"> *@
+@* *@
+@*         </canvas> *@
+@*     </MudGrid> *@
+@* </MudPaper> *@
+
+
+<div>
+    <MudPaper>
+        <MudToolBar Class="justify-space-between">
+            <MudTooltip Text="Previous Page" Arrow="true" Placement="Placement.Top">
+                <MudIconButton Icon="@Icons.Material.Filled.ArrowUpward" Size="Size.Medium" aria-label="previous page"/>
+            </MudTooltip>
+            <MudTooltip Text="Next Page" Arrow="true" Placement="Placement.Top">
+                <MudIconButton Icon="@Icons.Material.Filled.ArrowDownward" Size="Size.Medium" aria-label="next page"/>
+            </MudTooltip>
+            <MudText Typo="Typo.caption">1</MudText>
+            <MudText Typo="Typo.caption">of</MudText>
+            <MudText Typo="Typo.caption">14</MudText>
+            <MudSpacer/>
+            <MudTooltip Text="Zoom Out" Arrow="true" Placement="Placement.Top">
+                <MudIconButton Icon="@Icons.Material.Filled.Remove" Size="Size.Medium" aria-label="zoom out"/>
+            </MudTooltip>
+            <MudChip T="string" Variant="Variant.Text">100%</MudChip>
+            <MudTooltip Text="Zoom In" Arrow="true" Placement="Placement.Top">
+                <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Medium" aria-label="zoom in"/>
+            </MudTooltip>
+            <MudSpacer/>
+            <MudMenu Label="Open Menu">
+                <MudMenuItem Label="Item 1"/>
+                <MudMenuItem Label="Item 2"/>
+                <MudMenuItem Label="Item 3"/>
+            </MudMenu>
+        </MudToolBar>
+    </MudPaper>
+
+    <MudGrid Justify="Justify.Center">
+        <canvas width="720" height="1000">
+
+        </canvas>
+    </MudGrid>
+</div>
+
+@code {
+
+}

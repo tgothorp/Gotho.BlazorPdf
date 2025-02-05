@@ -1,7 +1,37 @@
 @inherits MudComponentBase
 
-<div>
-    <canvas @ref="_element" id="@_id">
-        
-    </canvas>
+<div style="width: inherit">
+    <MudPaper Class="mb-5" Width="100%">
+        <MudToolBar Class="justify-space-between">
+            <MudTooltip Text="Previous Page" Arrow="true" Placement="Placement.Top">
+                <MudIconButton Icon="@Icons.Material.Filled.ArrowUpward" Size="Size.Medium" aria-label="previous page"/>
+            </MudTooltip>
+            <MudTooltip Text="Next Page" Arrow="true" Placement="Placement.Top">
+                <MudIconButton Icon="@Icons.Material.Filled.ArrowDownward" Size="Size.Medium" aria-label="next page"/>
+            </MudTooltip>
+            <MudText Typo="Typo.caption">1</MudText>
+            <MudText Typo="Typo.caption">of</MudText>
+            <MudText Typo="Typo.caption">14</MudText>
+            <MudSpacer/>
+            <MudTooltip Text="Zoom Out" Arrow="true" Placement="Placement.Top">
+                <MudIconButton Icon="@Icons.Material.Filled.Remove" Size="Size.Medium" OnClick="ZoomOutAsync" aria-label="zoom out"/>
+            </MudTooltip>
+            <MudChip T="string" Variant="Variant.Text">100%</MudChip>
+            <MudTooltip Text="Zoom In" Arrow="true" Placement="Placement.Top">
+                <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Medium" OnClick="ZoomInAsync" aria-label="zoom in"/>
+            </MudTooltip>
+            <MudSpacer/>
+            <MudMenu Label="Open Menu">
+                <MudMenuItem Label="Item 1"/>
+                <MudMenuItem Label="Item 2"/>
+                <MudMenuItem Label="Item 3"/>
+            </MudMenu>
+        </MudToolBar>
+
+        <MudPaper Class="justify-center d-flex" Style="background-color: black">
+            <canvas @ref="_element" id="@_id">
+
+            </canvas>
+        </MudPaper>
+    </MudPaper>
 </div>
