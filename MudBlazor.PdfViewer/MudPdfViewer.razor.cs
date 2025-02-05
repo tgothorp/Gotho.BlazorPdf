@@ -11,7 +11,6 @@ public partial class MudPdfViewer : MudComponentBase
     private DotNetObjectReference<MudPdfViewer>? _objectReference;
     private string? _id;
     private double _scale = 1.0;
-    private double _rotation = 0;
 
     private int _maxZoomLevel = 17;
     private int _minZoomLevel = 1;
@@ -20,6 +19,9 @@ public partial class MudPdfViewer : MudComponentBase
 
     private int _pageNumber = 0;
     private int _pageCount = 0;
+    
+    private Orientation _oldOrientation = Orientation.Portrait;
+    private double _rotation = 0;
 
     [Parameter] public Orientation Orientation { get; set; } = Orientation.Portrait;
     [Parameter] public string? Url { get; set; }
@@ -121,5 +123,42 @@ public partial class MudPdfViewer : MudComponentBase
         _zoomPercentage = $"{zp}%";
         _scale = 0.01 * zp;
         await PdfInterop.ZoomInOutAsync(_objectReference!, _id!, _scale);
+    }
+    
+    private async Task RotateClockwiseAsync()
+    {
+        _rotation += 90;
+        _rotation = _rotation.Equals(360) ? 0 : _rotation;
+        await PdfInterop.RotateAsync(_objectReference!, _id!, _rotation);
+
+        SetOrientation();
+    }
+
+    private async Task RotateCounterclockwiseAsync()
+    {
+        _rotation += 90;
+        _rotation = _rotation.Equals(360) ? 0 : _rotation;
+        await PdfInterop.RotateAsync(_objectReference!, _id!, _rotation);
+
+        SetOrientation();
+    }
+
+    private void SetOrientation()
+    {
+        _oldOrientation = _rotation switch
+        {
+            0 => Orientation = Orientation.Portrait,
+            -90 => Orientation = Orientation.Landscape,
+            _ => _oldOrientation
+        };
+    }
+
+    private async Task SwitchOrientationAsync()
+    {
+        _oldOrientation = Orientation;
+        Orientation = Orientation == Orientation.Portrait ? Orientation.Landscape : Orientation.Portrait;
+        _rotation = Orientation == Orientation.Portrait ? 0 : -90;
+        
+        await PdfInterop.RotateAsync(_objectReference!, _id!, _rotation);
     }
 }

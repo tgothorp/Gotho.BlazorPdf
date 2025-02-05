@@ -16,15 +16,15 @@
             <MudTooltip Text="Zoom Out" Arrow="true" Placement="Placement.Top">
                 <MudIconButton Icon="@Icons.Material.Filled.Remove" Size="Size.Medium" OnClick="ZoomOutAsync" aria-label="zoom out"/>
             </MudTooltip>
-            <MudChip T="string" Variant="Variant.Text">100%</MudChip>
+            <MudChip T="string" Variant="Variant.Text">@_zoomPercentage</MudChip>
             <MudTooltip Text="Zoom In" Arrow="true" Placement="Placement.Top">
                 <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Medium" OnClick="ZoomInAsync" aria-label="zoom in"/>
             </MudTooltip>
             <MudSpacer/>
-            <MudMenu Label="Open Menu">
-                <MudMenuItem Label="Item 1"/>
-                <MudMenuItem Label="Item 2"/>
-                <MudMenuItem Label="Item 3"/>
+            <MudMenu Icon="@Icons.Material.Filled.MoreVert" AriaLabel="Open menu">
+                <MudMenuItem Icon="@Icons.Material.Filled.RotateRight" Label="Rotate Clockwise" OnClick="RotateClockwiseAsync"/>
+                <MudMenuItem Icon="@Icons.Material.Filled.RotateLeft" Label="Rotate Counterclockwise" OnClick="RotateCounterclockwiseAsync"/>
+                <MudMenuItem Icon="@Icons.Material.Filled.ScreenRotation" Label="Switch Orientation" OnClick="SwitchOrientationAsync"/>
             </MudMenu>
         </MudToolBar>
 
