@@ -3,8 +3,8 @@
 <div style="width: inherit">
     <MudPaper Class="mb-5" Width="100%">
         <MudToolBar Class="justify-space-between">
-            <MudTooltip Text="Previous Page" Arrow="true" Placement="Placement.Top">
-                <MudIconButton Icon="@Icons.Material.Filled.ArrowUpward" Size="Size.Medium" OnClick="PreviousPageAsync" aria-label="previous page"/>
+            <MudTooltip Text="@Config.Labels.PreviousPage" Arrow="true" Placement="Placement.Top">
+                <MudIconButton Icon="@Config.Icons.PreviousPage" Size="Size.Medium" OnClick="PreviousPageAsync" aria-label="previous page"/>
             </MudTooltip>
             <MudTooltip Text="Next Page" Arrow="true" Placement="Placement.Top">
                 <MudIconButton Icon="@Icons.Material.Filled.ArrowDownward" Size="Size.Medium" OnClick="NextPageAsync" aria-label="next page"/>

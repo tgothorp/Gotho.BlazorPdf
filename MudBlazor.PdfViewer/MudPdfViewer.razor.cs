@@ -27,7 +27,8 @@ public partial class MudPdfViewer : MudComponentBase
     [Parameter] public Orientation Orientation { get; set; } = Orientation.Portrait;
     [Parameter] public string? Url { get; set; }
 
-    [Inject] private PdfInterop PdfInterop { get; set; } = default;
+    [Inject] private PdfInterop PdfInterop { get; set; } = default!;
+    [Inject] private MudPdfViewerConfig Config { get; set; } = default!;
 
     protected override async Task OnInitializedAsync()
     {
