@@ -4,7 +4,6 @@ public class MudPdfViewerConfig
 {
     public Label Labels { get; set; } = new();
     public Icon Icons { get; set; } = new();
-    public Color Colors { get; set; } = new();
     
     public class Label
     {
@@ -35,10 +34,5 @@ public class MudPdfViewerConfig
         public string FirstPage { get; set; } = MudBlazor.Icons.Material.Filled.VerticalAlignTop;
         public string LastPage { get; set; } = MudBlazor.Icons.Material.Filled.VerticalAlignBottom;
         public string ResetZoom { get; set; } = MudBlazor.Icons.Material.Filled.ResetTv;
-    }
-    
-    public class Color
-    {
-        public MudBlazor.Color Background { get; set; } = MudBlazor.Color.Dark;
     }
 }
