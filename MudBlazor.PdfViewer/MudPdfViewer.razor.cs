@@ -18,6 +18,9 @@ public partial class MudPdfViewer : MudComponentBase
     private int _zoomLevel = 8;
     private string _zoomPercentage = "100%";
 
+    private int _pageNumber = 0;
+    private int _pageCount = 0;
+
     [Parameter] public Orientation Orientation { get; set; } = Orientation.Portrait;
     [Parameter] public string? Url { get; set; }
 
@@ -39,6 +42,39 @@ public partial class MudPdfViewer : MudComponentBase
 
         await base.OnAfterRenderAsync(firstRender);
     }
+
+    [JSInvokable]
+    public void DocumentLoaded(PdfViewerModel? pdfViewerModel)
+    {
+        if (pdfViewerModel is null)
+            return;
+
+        _pageNumber = pdfViewerModel.PageNumber;
+        _pageCount = pdfViewerModel.PagesCount;
+
+        StateHasChanged();
+
+        // if (OnDocumentLoaded.HasDelegate)
+        //     OnDocumentLoaded.InvokeAsync(new PdfViewerEventArgs(pageNumber, pagesCount));
+    }
+
+    [JSInvokable]
+    public void SetPdfViewerMetaData(PdfViewerModel? pdfViewerModel)
+    {
+        if (pdfViewerModel is null)
+            return;
+
+        _pageNumber = pdfViewerModel.PageNumber;
+        _pageCount = pdfViewerModel.PagesCount;
+
+        // if (OnPageChanged.HasDelegate)
+        //     OnPageChanged.InvokeAsync(new PdfViewerEventArgs(pageNumber, pagesCount));
+    }
+
+    private async Task FirstPageAsync() => await PdfInterop.FirstPageAsync(_objectReference!, _id!);
+    private async Task LastPageAsync() => await PdfInterop.LastPageAsync(_objectReference!, _id!);
+    private async Task NextPageAsync() => await PdfInterop.NextPageAsync(_objectReference!, _id!);
+    private async Task PreviousPageAsync() => await PdfInterop.PreviousPageAsync(_objectReference!, _id!);
 
     private int GetZoomPercentage(int zoomLevel) =>
         zoomLevel switch

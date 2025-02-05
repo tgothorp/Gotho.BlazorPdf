@@ -4,14 +4,14 @@
     <MudPaper Class="mb-5" Width="100%">
         <MudToolBar Class="justify-space-between">
             <MudTooltip Text="Previous Page" Arrow="true" Placement="Placement.Top">
-                <MudIconButton Icon="@Icons.Material.Filled.ArrowUpward" Size="Size.Medium" aria-label="previous page"/>
+                <MudIconButton Icon="@Icons.Material.Filled.ArrowUpward" Size="Size.Medium" OnClick="PreviousPageAsync" aria-label="previous page"/>
             </MudTooltip>
             <MudTooltip Text="Next Page" Arrow="true" Placement="Placement.Top">
-                <MudIconButton Icon="@Icons.Material.Filled.ArrowDownward" Size="Size.Medium" aria-label="next page"/>
+                <MudIconButton Icon="@Icons.Material.Filled.ArrowDownward" Size="Size.Medium" OnClick="NextPageAsync" aria-label="next page"/>
             </MudTooltip>
-            <MudText Typo="Typo.caption">1</MudText>
-            <MudText Typo="Typo.caption">of</MudText>
-            <MudText Typo="Typo.caption">14</MudText>
+            <MudText Typo="Typo.body1">@_pageNumber</MudText>
+            <MudText Typo="Typo.body1" Class="ml-2 mr-2">of</MudText>
+            <MudText Typo="Typo.body1">@_pageCount</MudText>
             <MudSpacer/>
             <MudTooltip Text="Zoom Out" Arrow="true" Placement="Placement.Top">
                 <MudIconButton Icon="@Icons.Material.Filled.Remove" Size="Size.Medium" OnClick="ZoomOutAsync" aria-label="zoom out"/>
