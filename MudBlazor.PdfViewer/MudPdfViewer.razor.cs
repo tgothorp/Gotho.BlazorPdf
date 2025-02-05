@@ -27,6 +27,9 @@ public partial class MudPdfViewer : MudComponentBase
     [Parameter] public Orientation Orientation { get; set; } = Orientation.Portrait;
     [Parameter] public string? Url { get; set; }
 
+    [Parameter] public EventCallback<PdfViewerEventArgs> OnDocumentLoaded { get; set; }
+    [Parameter] public EventCallback<PdfViewerEventArgs> OnPageChanged { get; set; }
+
     [Inject] private PdfInterop PdfInterop { get; set; } = default!;
     [Inject] private MudPdfViewerConfig Config { get; set; } = default!;
 
@@ -58,8 +61,8 @@ public partial class MudPdfViewer : MudComponentBase
 
         StateHasChanged();
 
-        // if (OnDocumentLoaded.HasDelegate)
-        //     OnDocumentLoaded.InvokeAsync(new PdfViewerEventArgs(pageNumber, pagesCount));
+        if (OnDocumentLoaded.HasDelegate)
+            OnDocumentLoaded.InvokeAsync(new PdfViewerEventArgs(_pageNumber, _pageCount));
     }
 
     [JSInvokable]
@@ -71,8 +74,8 @@ public partial class MudPdfViewer : MudComponentBase
         _pageNumber = pdfViewerModel.PageNumber;
         _pageCount = pdfViewerModel.PagesCount;
 
-        // if (OnPageChanged.HasDelegate)
-        //     OnPageChanged.InvokeAsync(new PdfViewerEventArgs(pageNumber, pagesCount));
+        if (OnPageChanged.HasDelegate)
+            OnPageChanged.InvokeAsync(new PdfViewerEventArgs(_pageNumber, _pageCount));
     }
 
     private async Task FirstPageAsync() => await PdfInterop.FirstPageAsync(_objectReference!, _id!);

@@ -1,10 +1,22 @@
 @page "/Demo"
 @using MudBlazorPdf
 
-<MudGrid Class="pt-5 ml-1">
-    <MudPdfViewer Url="https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf"/>
-</MudGrid>
+<MudPaper Class="pt-5">
+    <MudPdfViewer
+        Class="pt-5"
+        Url="https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf"
+        OnDocumentLoaded="OnDocumentLoaded"
+        OnPageChanged="OnPageChanged"/>
+
+    <MudText Typo="Typo.caption">@eventLog</MudText>
+</MudPaper>
 
 @code {
+    private string eventLog { get; set; } = $"Last event: ..., CurrentPage: 0, TotalPages: 0";
 
+    private void OnDocumentLoaded(PdfViewerEventArgs args)
+        => eventLog = $"Last event: OnDocumentLoaded, CurrentPage: {args.CurrentPage}, TotalPages: {args.TotalPages}";
+
+    private void OnPageChanged(PdfViewerEventArgs args)
+        => eventLog = $"Last event: OnPageChanged, CurrentPage: {args.CurrentPage}, TotalPages: {args.TotalPages}";
 }
