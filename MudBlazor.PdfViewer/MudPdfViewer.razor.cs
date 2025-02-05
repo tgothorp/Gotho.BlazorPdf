@@ -14,6 +14,7 @@ public partial class MudPdfViewer : MudComponentBase
 
     private int _maxZoomLevel = 17;
     private int _minZoomLevel = 1;
+    private int _defaultZoomLevel = 8;
     private int _zoomLevel = 8;
     private string _zoomPercentage = "100%";
 
@@ -120,6 +121,15 @@ public partial class MudPdfViewer : MudComponentBase
 
         _zoomLevel -= 1;
         var zp = GetZoomPercentage(_zoomLevel);
+        _zoomPercentage = $"{zp}%";
+        _scale = 0.01 * zp;
+        await PdfInterop.ZoomInOutAsync(_objectReference!, _id!, _scale);
+    }
+    
+    private async Task ResetZoomAsync()
+    {
+        _zoomLevel = _defaultZoomLevel;
+        var zp = GetZoomPercentage(_defaultZoomLevel);
         _zoomPercentage = $"{zp}%";
         _scale = 0.01 * zp;
         await PdfInterop.ZoomInOutAsync(_objectReference!, _id!, _scale);
