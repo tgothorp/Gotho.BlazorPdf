@@ -5,10 +5,10 @@ using MudBlazorPdf.Extensions;
 
 namespace MudBlazorPdf;
 
-public partial class MudPdf : MudComponentBase
+public partial class MudPdfViewer : MudComponentBase
 {
     private ElementReference _element;
-    private DotNetObjectReference<MudPdf>? _objectReference;
+    private DotNetObjectReference<MudPdfViewer>? _objectReference;
     private string? _id;
     private double _scale = 1.0;
     private double _rotation = 0;
