@@ -4,6 +4,10 @@ A port of the BlazorBootstrap PDF viewer to work with MudBlazor
 
 ## Installation
 
+> ℹ️ Important
+>
+> This library is still in beta, expect breaking changes and incompatibility
+
 ## Usage
 
 ## Examples
