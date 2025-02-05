@@ -3,33 +3,33 @@
 <div style="width: inherit">
     <MudPaper Class="mb-5" Width="100%">
         <MudToolBar Class="justify-space-between">
-            <MudTooltip Text="Previous Page" Arrow="true" Placement="Placement.Top">
-                <MudIconButton Icon="@Icons.Material.Filled.ArrowUpward" Size="Size.Medium" OnClick="PreviousPageAsync" aria-label="previous page"/>
+            <MudTooltip Text="@Config.Labels.PreviousPage" Arrow="true" Placement="Placement.Top">
+                <MudIconButton Icon="@Config.Icons.PreviousPage" Size="Size.Medium" OnClick="PreviousPageAsync" aria-label="@Config.Labels.PreviousPage"/>
             </MudTooltip>
-            <MudTooltip Text="Next Page" Arrow="true" Placement="Placement.Top">
-                <MudIconButton Icon="@Icons.Material.Filled.ArrowDownward" Size="Size.Medium" OnClick="NextPageAsync" aria-label="next page"/>
+            <MudTooltip Text="@Config.Labels.NextPage" Arrow="true" Placement="Placement.Top">
+                <MudIconButton Icon="@Config.Icons.NextPage" Size="Size.Medium" OnClick="NextPageAsync" aria-label="@Config.Labels.NextPage"/>
             </MudTooltip>
             <MudText Typo="Typo.body1">@_pageNumber</MudText>
-            <MudText Typo="Typo.body1" Class="ml-2 mr-2">of</MudText>
+            <MudText Typo="Typo.body1" Class="ml-2 mr-2">@Config.Labels.PageOf</MudText>
             <MudText Typo="Typo.body1">@_pageCount</MudText>
             <MudSpacer/>
-            <MudTooltip Text="Zoom Out" Arrow="true" Placement="Placement.Top">
-                <MudIconButton Icon="@Icons.Material.Filled.Remove" Size="Size.Medium" OnClick="ZoomOutAsync" aria-label="zoom out"/>
+            <MudTooltip Text="@Config.Labels.ZoomOut" Arrow="true" Placement="Placement.Top">
+                <MudIconButton Icon="@Config.Icons.ZoomOut" Size="Size.Medium" OnClick="ZoomOutAsync" aria-label="@Config.Labels.ZoomOut"/>
             </MudTooltip>
             <MudChip T="string" Variant="Variant.Text">@_zoomPercentage</MudChip>
-            <MudTooltip Text="Zoom In" Arrow="true" Placement="Placement.Top">
-                <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Medium" OnClick="ZoomInAsync" aria-label="zoom in"/>
+            <MudTooltip Text="@Config.Labels.ZoomIn" Arrow="true" Placement="Placement.Top">
+                <MudIconButton Icon="@Config.Icons.ZoomIn" Size="Size.Medium" OnClick="ZoomInAsync" aria-label="@Config.Labels.ZoomIn"/>
             </MudTooltip>
             <MudSpacer/>
-            <MudMenu Icon="@Icons.Material.Filled.MoreVert" AriaLabel="Open menu">
-                <MudMenuItem Icon="@Icons.Material.Filled.RotateRight" Label="Rotate Clockwise" OnClick="RotateClockwiseAsync"/>
-                <MudMenuItem Icon="@Icons.Material.Filled.RotateLeft" Label="Rotate Counterclockwise" OnClick="RotateCounterclockwiseAsync"/>
-                <MudMenuItem Icon="@Icons.Material.Filled.ScreenRotation" Label="Switch Orientation" OnClick="SwitchOrientationAsync"/>
+            <MudMenu Icon="@Config.Icons.Menu" AriaLabel="@Config.Labels.OpenMenu">
+                <MudMenuItem Icon="@Config.Icons.RotateClockwise" Label="@Config.Labels.RotateClockwise" OnClick="RotateClockwiseAsync"/>
+                <MudMenuItem Icon="@Config.Icons.RotateCounterclockwise" Label="@Config.Labels.RotateCounterclockwise" OnClick="RotateCounterclockwiseAsync"/>
+                <MudMenuItem Icon="@Config.Icons.SwitchOrientation" Label="@Config.Labels.SwitchOrientation" OnClick="SwitchOrientationAsync"/>
                 <MudDivider/>
-                <MudMenuItem Icon="@Icons.Material.Filled.VerticalAlignTop" Label="First Page" OnClick="FirstPageAsync"/>
-                <MudMenuItem Icon="@Icons.Material.Filled.VerticalAlignBottom" Label="Last Page" OnClick="LastPageAsync"/>
+                <MudMenuItem Icon="@Config.Icons.FirstPage" Label="@Config.Labels.FirstPage" OnClick="FirstPageAsync"/>
+                <MudMenuItem Icon="@Config.Icons.LastPage" Label="@Config.Labels.LastPage" OnClick="LastPageAsync"/>
                 <MudDivider/>
-                <MudMenuItem Icon="@Icons.Material.Filled.ResetTv" Label="Reset Zoom" OnClick="ResetZoomAsync"/>
+                <MudMenuItem Icon="@Config.Icons.ResetZoom" Label="@Config.Labels.ResetZoom" OnClick="ResetZoomAsync"/>
             </MudMenu>
         </MudToolBar>
 
