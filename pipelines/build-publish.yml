@@ -1,0 +1,39 @@
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  buildConfiguration: 'Release'
+
+steps:
+- task: DotNetCoreCLI@2
+  name: restore
+  inputs:
+    command: 'restore'
+    projects: '**/*.csproj'
+    feedsToUse: 'select'
+
+- task: DotNetCoreCLI@2
+  name: build
+  inputs:
+    command: 'build'
+    projects: '**/*.csproj'
+    arguments: '--no-restore -c Release'
+
+- task: DotNetCoreCLI@2
+  name: publish_web
+  inputs:
+    command: 'publish'
+    publishWebProjects: true
+    arguments: 'MudBlazor.PdfViewer.Docs\MudBlazor.PdfViewer.Docs.csproj -c Release'
+    modifyOutputPath: false
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'pack'
+    packagesToPack: '**/MudBlazor.PdfViewer.csproj'
+    nobuild: true
+    includesymbols: true
+    versioningScheme: 'off'
