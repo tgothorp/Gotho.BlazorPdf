@@ -1,4 +1,4 @@
-# MudBlazor.PdfViewer
+# TG.MudBlazor.PdfViewer
 
 A port of the BlazorBootstrap PDF viewer to work with MudBlazor
 
@@ -7,7 +7,7 @@ A port of the BlazorBootstrap PDF viewer to work with MudBlazor
 Grab the package from nuget.org;
 
 ```
-dotnet add MudBlazor.PdfViewer
+dotnet add TG.MudBlazor.PdfViewer
 ```
 
 ### Configure
