@@ -2,30 +2,76 @@
 
 @using MudBlazorPdf
 
-<MudText Typo="Typo.h1">MudBlazor PDF Viewer</MudText>
-<MudText Typo="Typo.body1">This project ports the
-    <MudLink Href="https://demos.blazorbootstrap.com/pdf-viewer">Blazor Bootstrap PDF Viewer</MudLink>
-    component to work seamlessly with MudBlazor.
-</MudText>
+<div style="max-width: 1440px; margin: auto">
 
-<MudText Typo="Typo.h2" Class="pt-5">Example</MudText>
+    <MudText Typo="Typo.h1">MudBlazor PDF Viewer</MudText>
+    <MudText Typo="Typo.body1" Class="pb-4">This project ports the
+        <MudLink Href="https://demos.blazorbootstrap.com/pdf-viewer">Blazor Bootstrap PDF Viewer</MudLink>
+        component to work seamlessly with MudBlazor.
+    </MudText>
 
-<MudTabs>
-    <MudTabPanel Text="Example">
-        <MudPaper>
-            <MudPdfViewer
-                Class="pt-5"
-                Url="https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf"
-                OnDocumentLoaded="OnDocumentLoaded"
-                OnPageChanged="OnPageChanged"/>
+    <MudText Typo="Typo.h2" Class="pt-5">Installation</MudText>
+    <MudText Typo="Typo.body1" Class="pb-4">Please see the
+        <MudLink Href="https://github.com/tgothorp/MudBlazor.PdfViewer">GitHub repository</MudLink>
+        for up to date information on how to install this component.
+    </MudText>
 
-            <MudText Typo="Typo.caption">@eventLog</MudText>
-        </MudPaper>
-    </MudTabPanel>
-    <MudTabPanel Text="Code">
-        
-    </MudTabPanel>
-</MudTabs>
+    <MudText Typo="Typo.h2" Class="pt-5">Example</MudText>
+    <MudText Typo="Typo.body1" Class="pb-4">This basic example demonstrates the basic functionality of the PDF Viewer as
+        well as the OnDocumentLoaded and OnPageChanged events that can be used by your code.
+    </MudText>
+
+    <MudTabs>
+        <MudTabPanel Text="Example">
+            <MudPaper>
+                <MudPdfViewer
+                    Class="pt-5"
+                    Url="https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf"
+                    OnDocumentLoaded="OnDocumentLoaded"
+                    OnPageChanged="OnPageChanged"/>
+
+                <MudText Typo="Typo.caption">@eventLog</MudText>
+            </MudPaper>
+        </MudTabPanel>
+        <MudTabPanel Text="Code">
+            <pre>
+                <MudText Style="display: block; padding: 1rem; white-space: pre; background-color: #161719" HtmlTag="code">@Examples.BasicExample</MudText>
+            </pre>
+        </MudTabPanel>
+    </MudTabs>
+
+    <MudText Typo="Typo.h2" Class="pt-5">Orientation</MudText>
+    <MudText Typo="Typo.body1" Class="pb-4">The orientation of the loaded PDF can be specified manually</MudText>
+
+    <MudTabs>
+        <MudTabPanel Text="Example">
+            <MudPaper>
+                <MudPdfViewer
+                    Class="pt-5"
+                    Url="https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf"
+                    Orientation="Orientation.Landscape"/>
+            </MudPaper>
+        </MudTabPanel>
+        <MudTabPanel Text="Code">
+            <pre>
+                <MudText Style="display: block; padding: 1rem; white-space: pre; background-color: #161719" HtmlTag="code">@Examples.Orientation</MudText>
+            </pre>
+        </MudTabPanel>
+    </MudTabs>
+
+    <MudText Typo="Typo.h2" Class="pt-5">Additional Configuration</MudText>
+    <MudText Typo="Typo.body1" Class="pb-4">All of the icons as well as the text within the PDF viewer can be
+        customised. The following example shows how icons and text can be changed
+    </MudText>
+
+    <MudTabs>
+        <MudTabPanel Text="Code">
+            <pre>
+                <MudText Style="display: block; padding: 1rem; white-space: pre; background-color: #161719" HtmlTag="code">@Examples.Configuration</MudText>
+            </pre>
+        </MudTabPanel>
+    </MudTabs>
+</div>
 
 @code {
     private string eventLog { get; set; } = $"Last event: ..., CurrentPage: 0, TotalPages: 0";

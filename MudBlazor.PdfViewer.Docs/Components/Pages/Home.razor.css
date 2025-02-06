@@ -1,0 +1,8 @@
+.code-block {
+    display: block;
+    padding: 1rem;
+    white-space: pre;
+    max-width: 100%;
+    min-width: 100px;
+    overflow-x: auto;
+}
