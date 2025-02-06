@@ -27,7 +27,7 @@ steps:
   inputs:
     command: 'publish'
     publishWebProjects: true
-    arguments: 'MudBlazor.PdfViewer.Docs\MudBlazor.PdfViewer.Docs.csproj -c Release'
+    arguments: '-c Release --no-build --no-restore'
     modifyOutputPath: false
 
 - task: DotNetCoreCLI@2
