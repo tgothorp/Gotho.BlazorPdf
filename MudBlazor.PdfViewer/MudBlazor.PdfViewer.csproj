@@ -1,20 +1,22 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
     <PropertyGroup>
+        <PackageId>Gotho.MudBlazor.PdfViewer</PackageId>
         <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <Version>0.0.1</Version>
-        <Title>MudBlazor.PdfViewer</Title>
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+        <Version>1.0.0</Version>
+        <Title>Gotho.MudBlazor.PdfViewer</Title>
         <Authors>tgothorp</Authors>
         <Company>tgothorp</Company>
         <Description>A simple PDF viewer for MudBlazor</Description>
-        <Copyright>tgothorp OpenSource MIT</Copyright>
+        <Copyright>tgothorp OpenSource Apache-2.0</Copyright>
         <PackageIcon>logo.png</PackageIcon>
-        <PackageProjectUrl>https://example.com</PackageProjectUrl>
-        <RepositoryUrl>https://example.com</RepositoryUrl>
-        <PackageTags>Blazor; MudBlazor</PackageTags>
+        <PackageProjectUrl>https://github.com/tgothorp/MudBlazor.PdfViewer</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/tgothorp/MudBlazor.PdfViewer</RepositoryUrl>
+        <PackageTags>Blazor; MudBlazor; PDF</PackageTags>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
         <RootNamespace>MudBlazorPdf</RootNamespace>
     </PropertyGroup>
 
@@ -38,6 +40,10 @@
     </ItemGroup>
     
     <ItemGroup>
+        <None Include="README.md">
+            <Pack>true</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
         <None Include="logo.png">
             <Pack>true</Pack>
             <PackagePath>\</PackagePath>

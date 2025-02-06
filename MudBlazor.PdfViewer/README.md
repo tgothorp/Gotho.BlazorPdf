@@ -26,7 +26,6 @@ Then, add the namespace to your `_Imports.razor` file.
 
 You should now be fully setup to use the `MudPdfViewer` component in your code!
 
-
 ## Prerequisites
 
 In order to use this package, your project will need to be configured with the following;
@@ -37,21 +36,3 @@ In order to use this package, your project will need to be configured with the f
 ## Usage & Examples
 
 Please see the [documentation site](https://mudpdf.info) for detailed examples
-
-## Contributing
-
-Feel free to make contributions.
-
-## License
-
-> ℹ️ Important
->
-> Please read the following carefully as it may impact your ability to use this library.
-
-This library is a port of the `PdfViewer` Blazor component provided by the [Blazor Bootstrap]() component library which is licensed under the Apache 2.0 license.
-
-This means that this project is also required to use the Apache 2.0 license which different to MudBlazor's MIT license. This difference may have consequences as to your ability to use this library.
-
-It is your responsibility to determine that this license is compatible with your use-case.
-
-Please see the NOTICE.md file for more information.
