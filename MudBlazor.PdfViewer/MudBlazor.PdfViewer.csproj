@@ -16,6 +16,7 @@
         <PackageProjectUrl>https://github.com/tgothorp/MudBlazor.PdfViewer</PackageProjectUrl>
         <RepositoryUrl>https://github.com/tgothorp/MudBlazor.PdfViewer</RepositoryUrl>
         <PackageTags>Blazor; MudBlazor; PDF</PackageTags>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
         <RootNamespace>MudBlazorPdf</RootNamespace>
     </PropertyGroup>
 
