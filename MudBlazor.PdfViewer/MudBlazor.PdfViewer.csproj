@@ -12,9 +12,9 @@
         <Description>A simple PDF viewer for MudBlazor</Description>
         <Copyright>tgothorp OpenSource MIT</Copyright>
         <PackageIcon>logo.png</PackageIcon>
-        <PackageProjectUrl>https://example.com</PackageProjectUrl>
-        <RepositoryUrl>https://example.com</RepositoryUrl>
-        <PackageTags>Blazor; MudBlazor</PackageTags>
+        <PackageProjectUrl>https://github.com/tgothorp/MudBlazor.PdfViewer</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/tgothorp/MudBlazor.PdfViewer</RepositoryUrl>
+        <PackageTags>Blazor; MudBlazor; PDF</PackageTags>
         <RootNamespace>MudBlazorPdf</RootNamespace>
     </PropertyGroup>
 
