@@ -11,7 +11,7 @@
         <Company>tgothorp</Company>
         <Description>A simple PDF viewer for MudBlazor</Description>
         <Copyright>tgothorp OpenSource MIT</Copyright>
-        <PackageIcon>pdf.png</PackageIcon>
+        <PackageIcon>logo.png</PackageIcon>
         <PackageProjectUrl>https://example.com</PackageProjectUrl>
         <RepositoryUrl>https://example.com</RepositoryUrl>
         <PackageTags>Blazor; MudBlazor</PackageTags>
@@ -35,6 +35,13 @@
     <ItemGroup Condition=" '$(TargetFramework)' == 'net8.0' ">
         <PackageReference Include="Microsoft.AspNetCore.Components" Version="8.0.*" />
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.*" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <None Include="logo.png">
+            <Pack>true</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
     </ItemGroup>
 
 </Project>

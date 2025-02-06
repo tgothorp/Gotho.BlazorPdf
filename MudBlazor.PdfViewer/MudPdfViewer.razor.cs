@@ -45,7 +45,7 @@ public partial class MudPdfViewer : MudComponentBase
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
-            await PdfInterop.InitializeAsync(_objectReference!, _id, _scale, _rotation, Url!);
+            await PdfInterop.InitializeAsync(_objectReference!, _id!, _scale, _rotation, Url!);
 
         await base.OnAfterRenderAsync(firstRender);
     }
