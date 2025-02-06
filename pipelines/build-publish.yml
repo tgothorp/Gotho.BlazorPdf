@@ -23,14 +23,6 @@ steps:
     arguments: '--no-restore -c Release'
 
 - task: DotNetCoreCLI@2
-  name: publish_web
-  inputs:
-    command: 'publish'
-    publishWebProjects: true
-    arguments: '-c Release --no-build --no-restore'
-    modifyOutputPath: false
-
-- task: DotNetCoreCLI@2
   inputs:
     command: 'pack'
     packagesToPack: '**/MudBlazor.PdfViewer.csproj'
