@@ -1,0 +1,12 @@
+services:
+  mudpdfdocs:
+    build:
+      context: .
+      dockerfile: ./MudBlazor.PdfViewer.Docs/Dockerfile
+    container_name: mudpdfdocs
+    ports:
+      - 8080:8080
+      - 8081:8081
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    restart: unless-stopped
