@@ -34,13 +34,9 @@ In order to use this package, your project will need to be configured with the f
 - **MudBlazor** Version 8.0.0 or later
 - **.NET** Version 8.0 or 9.0
 
-## Usage
+## Usage & Examples
 
-
-
-## Examples
-
-Please see the documentation site for detailed examples
+Please see the [documentation site](https://mudpdf.info) for detailed examples
 
 ## Contributing
 
