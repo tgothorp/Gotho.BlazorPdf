@@ -1,7 +1,39 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
+@using MudBlazorPdf
 
-<h1>Hello, world!</h1>
+<MudText Typo="Typo.h1">MudBlazor PDF Viewer</MudText>
+<MudText Typo="Typo.body1">This project ports the
+    <MudLink Href="https://demos.blazorbootstrap.com/pdf-viewer">Blazor Bootstrap PDF Viewer</MudLink>
+    component to work seamlessly with MudBlazor.
+</MudText>
 
-Welcome to your new app.
+<MudText Typo="Typo.h2" Class="pt-5">Example</MudText>
+
+<MudTabs>
+    <MudTabPanel Text="Example">
+        <MudPaper>
+            <MudPdfViewer
+                Class="pt-5"
+                Url="https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf"
+                OnDocumentLoaded="OnDocumentLoaded"
+                OnPageChanged="OnPageChanged"/>
+
+            <MudText Typo="Typo.caption">@eventLog</MudText>
+        </MudPaper>
+    </MudTabPanel>
+    <MudTabPanel Text="Code">
+        
+    </MudTabPanel>
+</MudTabs>
+
+@code {
+    private string eventLog { get; set; } = $"Last event: ..., CurrentPage: 0, TotalPages: 0";
+
+    private void OnDocumentLoaded(PdfViewerEventArgs args)
+        => eventLog = $"Last event: OnDocumentLoaded, CurrentPage: {args.CurrentPage}, TotalPages: {args.TotalPages}";
+
+    private void OnPageChanged(PdfViewerEventArgs args)
+        => eventLog = $"Last event: OnPageChanged, CurrentPage: {args.CurrentPage}, TotalPages: {args.TotalPages}";
+
+}

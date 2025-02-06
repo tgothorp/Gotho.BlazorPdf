@@ -9,7 +9,9 @@
             <MudTooltip Text="@Config.Labels.NextPage" Arrow="true" Placement="Placement.Top">
                 <MudIconButton Icon="@Config.Icons.NextPage" Size="Size.Medium" OnClick="NextPageAsync" aria-label="@Config.Labels.NextPage"/>
             </MudTooltip>
-            <MudText Typo="Typo.body1">@_pageNumber</MudText>
+            <div style="max-width: 60px;">
+                <MudNumericField T="int" Text="@_pageNumber.ToString()" Variant="Variant.Filled" Margin="Margin.Dense" HideSpinButtons="true" ValueChanged="PageNumberChanged"/>
+            </div>
             <MudText Typo="Typo.body1" Class="ml-2 mr-2">@Config.Labels.PageOf</MudText>
             <MudText Typo="Typo.body1">@_pageCount</MudText>
             <MudSpacer/>
@@ -33,7 +35,7 @@
             </MudMenu>
         </MudToolBar>
 
-        <MudPaper Class="justify-center d-flex" Style="background-color: black">
+        <MudPaper Class="justify-center d-flex py-3" Style="background-color: #161719">
             <canvas @ref="_element" id="@_id">
 
             </canvas>

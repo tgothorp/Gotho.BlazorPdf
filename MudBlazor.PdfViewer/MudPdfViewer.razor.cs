@@ -82,6 +82,15 @@ public partial class MudPdfViewer : MudComponentBase
     private async Task LastPageAsync() => await PdfInterop.LastPageAsync(_objectReference!, _id!);
     private async Task NextPageAsync() => await PdfInterop.NextPageAsync(_objectReference!, _id!);
     private async Task PreviousPageAsync() => await PdfInterop.PreviousPageAsync(_objectReference!, _id!);
+    private async Task PageNumberChanged(int value)
+    {
+        if (value < 1 || value > _pageCount)
+            _pageNumber = 1;
+        else
+            _pageNumber = value;
+
+        await PdfInterop.GotoPageAsync(_objectReference!, _id!, _pageNumber);
+    }
 
     private int GetZoomPercentage(int zoomLevel) =>
         zoomLevel switch

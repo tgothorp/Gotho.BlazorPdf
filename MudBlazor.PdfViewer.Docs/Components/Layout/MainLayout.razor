@@ -1,19 +1,12 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider Theme="@_theme" IsDarkMode="_isDarkMode"/>
+<MudThemeProvider Theme="@_theme" IsDarkMode="true"/>
 <MudPopoverProvider/>
 <MudDialogProvider/>
 <MudSnackbarProvider/>
 <MudLayout>
     <MudAppBar Elevation="1">
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())"/>
-        <MudSpacer/>
-        <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle"/>
-        <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End"/>
     </MudAppBar>
-    <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="1">
-        <NavMenu/>
-    </MudDrawer>
     <MudMainContent Class="mt-16 pa-4">
         @Body
     </MudMainContent>
@@ -27,33 +20,24 @@
 </div>
 
 @code {
-    private bool _drawerOpen = true;
-    private bool _isDarkMode = true;
     private MudTheme? _theme = null;
-
-    public string TextValue { get; set; }
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
-        _theme = new();
+        _theme = new()
+        {
+            PaletteDark = new PaletteDark
+            {
+                AppbarBackground = "#180161"
+            },
+            Typography = new Typography
+            {
+                H1 = new H3Typography(),
+                H2 = new H4Typography(), 
+            }
+        };
     }
 
-
-    private void DrawerToggle()
-    {
-        _drawerOpen = !_drawerOpen;
-    }
-
-    private void DarkModeToggle()
-    {
-        _isDarkMode = !_isDarkMode;
-    }
-
-    public string DarkLightModeButtonIcon => _isDarkMode switch
-    {
-        true => Icons.Material.Rounded.LightMode,
-        false => Icons.Material.Outlined.DarkMode,
-    };
 }
