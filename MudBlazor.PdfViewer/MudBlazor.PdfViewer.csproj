@@ -1,12 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
     <PropertyGroup>
+        <PackageId>Gotho.MudBlazor.PdfViewer</PackageId>
         <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <Version>1.0.0</Version>
-        <Title>TG.MudBlazor.PdfViewer</Title>
+        <Title>Gotho.MudBlazor.PdfViewer</Title>
         <Authors>tgothorp</Authors>
         <Company>tgothorp</Company>
         <Description>A simple PDF viewer for MudBlazor</Description>
