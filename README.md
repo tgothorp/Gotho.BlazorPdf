@@ -4,12 +4,6 @@ A port of the BlazorBootstrap PDF viewer to work with MudBlazor
 
 ## Installation
 
-> ℹ️ Important
->
-> This library is still in beta, expect breaking changes and incompatibility
-
-### Install package
-
 Grab the package from nuget.org;
 
 ```
@@ -42,9 +36,15 @@ In order to use this package, your project will need to be configured with the f
 
 ## Usage
 
+
+
 ## Examples
 
+Please see the documentation site for detailed examples
+
 ## Contributing
+
+Feel free to make contributions.
 
 ## License
 

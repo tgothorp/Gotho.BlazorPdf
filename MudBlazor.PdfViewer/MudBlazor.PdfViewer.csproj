@@ -4,8 +4,8 @@
         <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <Version>0.0.1</Version>
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+        <Version>1.0.0</Version>
         <Title>MudBlazor.PdfViewer</Title>
         <Authors>tgothorp</Authors>
         <Company>tgothorp</Company>
