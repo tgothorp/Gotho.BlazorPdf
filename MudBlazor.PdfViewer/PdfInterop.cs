@@ -5,7 +5,7 @@ namespace MudBlazorPdf;
 internal class PdfInterop(IJSRuntime jsRuntime) : IAsyncDisposable
 {
     private readonly Lazy<Task<IJSObjectReference>> js = 
-        new(() => jsRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/MudBlazor.PdfViewer/mudpdf.js").AsTask());
+        new(() => jsRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Gotho.MudBlazor.PdfViewer/mudpdf.js").AsTask());
 
     public async Task FirstPageAsync(object objRef, string elementId)
     {
