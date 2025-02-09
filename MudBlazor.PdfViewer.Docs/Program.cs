@@ -9,6 +9,7 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddMudServices();
 builder.Services.AddMudBlazorPdfViewer();
+builder.Services.AddHealthChecks();
 
 var app = builder.Build();
 
@@ -20,6 +21,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.MapHealthChecks("/healthz");
 app.UseHttpsRedirection();
 
 
