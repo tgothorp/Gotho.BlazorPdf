@@ -26,6 +26,7 @@ public partial class MudPdfViewer : MudComponentBase
 
     [Parameter] public Orientation Orientation { get; set; } = Orientation.Portrait;
     [Parameter] public string? Url { get; set; }
+    [Parameter] public bool ShowThumbnails { get; set; }
 
     [Parameter] public EventCallback<PdfViewerEventArgs> OnDocumentLoaded { get; set; }
     [Parameter] public EventCallback<PdfViewerEventArgs> OnPageChanged { get; set; }
@@ -45,7 +46,7 @@ public partial class MudPdfViewer : MudComponentBase
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
-            await PdfInterop.InitializeAsync(_objectReference!, _id!, _scale, _rotation, Url!);
+            await PdfInterop.InitializeAsync(_objectReference!, _id!, _scale, _rotation, Url!, ShowThumbnails);
 
         await base.OnAfterRenderAsync(firstRender);
     }
@@ -185,8 +186,16 @@ public partial class MudPdfViewer : MudComponentBase
         await PdfInterop.RotateAsync(_objectReference!, _id!, _rotation);
     }
 
-    private async Task Thumbnails()
+    private void ToggleThumbnails()
     {
-        await PdfInterop.RenderThumbs(_objectReference!, _id!);
+        ShowThumbnails = !ShowThumbnails;
+        StateHasChanged();
+    }
+
+    private string ThumbnailClass()
+    {
+        return ShowThumbnails
+            ? "mudpdf_thumbnails"
+            : "mudpdf_thumbnails d-none";
     }
 }

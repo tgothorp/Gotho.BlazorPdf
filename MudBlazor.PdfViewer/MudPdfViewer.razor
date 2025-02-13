@@ -1,6 +1,5 @@
 @inherits MudComponentBase
 
-
 <MudGrid Class="flex-wrap">
     <MudItem xs="12">
         <MudToolBar Class="justify-space-between">
@@ -42,19 +41,14 @@
                 <MudMenuItem Icon="@Config.Icons.LastPage" Label="@Config.Labels.LastPage" OnClick="LastPageAsync"/>
                 <MudDivider/>
                 <MudMenuItem Icon="@Config.Icons.ResetZoom" Label="@Config.Labels.ResetZoom" OnClick="ResetZoomAsync"/>
-                <MudMenuItem Icon="@Config.Icons.ResetZoom" Label="Thumbs" OnClick="Thumbnails"/>
             </MudMenu>
         </MudToolBar>
     </MudItem>
     <MudItem xs="12">
         <MudGrid Class="flex-column">
-            <MudItem xs="12" Class="justify-center d-flex" Style="background-color: #161719; margin-left: 24px; padding-bottom: 24px">
-                <div id="@($"{_id}_thumbs")" style="max-width: 11%; position: absolute; left: 0; overflow-y: scroll; max-height: 88%; margin-left: 1rem">
-
-                </div>
-                <canvas @ref="_element" id="@_id">
-
-                </canvas>
+            <MudItem xs="12" Class="justify-center d-flex mudpdf_container" Style="background-color: #161719;">
+                <div id="@($"{_id}_thumbs")" class="@ThumbnailClass()"></div>
+                <canvas @ref="_element" id="@_id"></canvas>
             </MudItem>
         </MudGrid>
     </MudItem>

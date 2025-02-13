@@ -203,15 +203,16 @@ pageRotateCwButton.disabled = this.pagesCount === 0;
 pageRotateCcwButton.disabled = this.pagesCount === 0;
 */
 
-export function initialize(dotNetHelper, elementId, scale, rotation, url) {
+export function initialize(dotNetHelper, elementId, scale, rotation, url, showThumbs) {
     const pdf = new Pdf(elementId);
     pdf.scale = scale;
     pdf.rotation = rotation;
-
+    
     pdfJS.getDocument(url).promise.then(function (doc) {
         pdf.pdfDoc = doc;
         pdf.pagesCount = doc.numPages;
         renderPage(pdf, pdf.pageNum);
+        renderThumbs(pdf);
         dotNetHelper.invokeMethodAsync('DocumentLoaded', { pagesCount: pdf.pagesCount, pageNumber: pdf.pageNum });
     });
 }
