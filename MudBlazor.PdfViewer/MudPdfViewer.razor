@@ -1,44 +1,55 @@
 @inherits MudComponentBase
 
-<div style="width: inherit">
-    <MudPaper Class="mb-5" Width="100%">
+<MudGrid Class="flex-wrap">
+    <MudItem xs="12">
         <MudToolBar Class="justify-space-between">
             <MudTooltip Text="@Config.Labels.PreviousPage" Arrow="true" Placement="Placement.Top">
-                <MudIconButton Icon="@Config.Icons.PreviousPage" Size="Size.Medium" OnClick="PreviousPageAsync" aria-label="@Config.Labels.PreviousPage"/>
+                <MudIconButton Icon="@Config.Icons.PreviousPage" Size="Size.Medium" OnClick="PreviousPageAsync"
+                               aria-label="@Config.Labels.PreviousPage"/>
             </MudTooltip>
             <MudTooltip Text="@Config.Labels.NextPage" Arrow="true" Placement="Placement.Top">
-                <MudIconButton Icon="@Config.Icons.NextPage" Size="Size.Medium" OnClick="NextPageAsync" aria-label="@Config.Labels.NextPage"/>
+                <MudIconButton Icon="@Config.Icons.NextPage" Size="Size.Medium" OnClick="NextPageAsync"
+                               aria-label="@Config.Labels.NextPage"/>
             </MudTooltip>
             <div style="max-width: 60px;">
-                <MudNumericField T="int" Text="@_pageNumber.ToString()" Variant="Variant.Filled" Margin="Margin.Dense" HideSpinButtons="true" ValueChanged="PageNumberChanged"/>
+                <MudNumericField T="int" Text="@_pageNumber.ToString()" Variant="Variant.Filled"
+                                 Margin="Margin.Dense" HideSpinButtons="true" ValueChanged="PageNumberChanged"/>
             </div>
             <MudText Typo="Typo.body1" Class="ml-2 mr-2">@Config.Labels.PageOf</MudText>
             <MudText Typo="Typo.body1">@_pageCount</MudText>
             <MudSpacer/>
             <MudTooltip Text="@Config.Labels.ZoomOut" Arrow="true" Placement="Placement.Top">
-                <MudIconButton Icon="@Config.Icons.ZoomOut" Size="Size.Medium" OnClick="ZoomOutAsync" aria-label="@Config.Labels.ZoomOut"/>
+                <MudIconButton Icon="@Config.Icons.ZoomOut" Size="Size.Medium" OnClick="ZoomOutAsync"
+                               aria-label="@Config.Labels.ZoomOut"/>
             </MudTooltip>
             <MudChip T="string" Variant="Variant.Text">@_zoomPercentage</MudChip>
             <MudTooltip Text="@Config.Labels.ZoomIn" Arrow="true" Placement="Placement.Top">
-                <MudIconButton Icon="@Config.Icons.ZoomIn" Size="Size.Medium" OnClick="ZoomInAsync" aria-label="@Config.Labels.ZoomIn"/>
+                <MudIconButton Icon="@Config.Icons.ZoomIn" Size="Size.Medium" OnClick="ZoomInAsync"
+                               aria-label="@Config.Labels.ZoomIn"/>
             </MudTooltip>
             <MudSpacer/>
             <MudMenu Icon="@Config.Icons.Menu" AriaLabel="@Config.Labels.OpenMenu">
-                <MudMenuItem Icon="@Config.Icons.RotateClockwise" Label="@Config.Labels.RotateClockwise" OnClick="RotateClockwiseAsync"/>
-                <MudMenuItem Icon="@Config.Icons.RotateCounterclockwise" Label="@Config.Labels.RotateCounterclockwise" OnClick="RotateCounterclockwiseAsync"/>
-                <MudMenuItem Icon="@Config.Icons.SwitchOrientation" Label="@Config.Labels.SwitchOrientation" OnClick="SwitchOrientationAsync"/>
+                <MudMenuItem Icon="@Config.Icons.RotateClockwise" Label="@Config.Labels.RotateClockwise"
+                             OnClick="RotateClockwiseAsync"/>
+                <MudMenuItem Icon="@Config.Icons.RotateCounterclockwise"
+                             Label="@Config.Labels.RotateCounterclockwise" OnClick="RotateCounterclockwiseAsync"/>
+                <MudMenuItem Icon="@Config.Icons.SwitchOrientation" Label="@Config.Labels.SwitchOrientation"
+                             OnClick="SwitchOrientationAsync"/>
                 <MudDivider/>
-                <MudMenuItem Icon="@Config.Icons.FirstPage" Label="@Config.Labels.FirstPage" OnClick="FirstPageAsync"/>
+                <MudMenuItem Icon="@Config.Icons.FirstPage" Label="@Config.Labels.FirstPage"
+                             OnClick="FirstPageAsync"/>
                 <MudMenuItem Icon="@Config.Icons.LastPage" Label="@Config.Labels.LastPage" OnClick="LastPageAsync"/>
                 <MudDivider/>
                 <MudMenuItem Icon="@Config.Icons.ResetZoom" Label="@Config.Labels.ResetZoom" OnClick="ResetZoomAsync"/>
             </MudMenu>
         </MudToolBar>
-
-        <MudPaper Class="justify-center d-flex py-3" Style="background-color: #161719">
-            <canvas @ref="_element" id="@_id">
-
-            </canvas>
-        </MudPaper>
-    </MudPaper>
-</div>
+    </MudItem>
+    <MudItem xs="12">
+        <MudGrid Class="flex-column">
+            <MudItem xs="12" Class="justify-center d-flex mudpdf_container" Style="background-color: #161719;">
+                <div id="@($"{_id}_thumbs")" class="@ThumbnailClass()"></div>
+                <canvas @ref="_element" id="@_id"></canvas>
+            </MudItem>
+        </MudGrid>
+    </MudItem>
+</MudGrid>

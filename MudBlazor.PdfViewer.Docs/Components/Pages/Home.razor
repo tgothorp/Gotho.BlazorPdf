@@ -23,15 +23,12 @@
 
     <MudTabs>
         <MudTabPanel Text="Example">
-            <MudPaper>
-                <MudPdfViewer
-                    Class="pt-5"
-                    Url="https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf"
-                    OnDocumentLoaded="OnDocumentLoaded"
-                    OnPageChanged="OnPageChanged"/>
-
-                <MudText Typo="Typo.caption">@eventLog</MudText>
-            </MudPaper>
+            <MudPdfViewer
+                Class="pt-5"
+                ShowThumbnails="true"
+                Url="https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf"
+                OnDocumentLoaded="OnDocumentLoaded"
+                OnPageChanged="OnPageChanged"/>
         </MudTabPanel>
         <MudTabPanel Text="Code">
             <pre>
@@ -45,12 +42,10 @@
 
     <MudTabs>
         <MudTabPanel Text="Example">
-            <MudPaper>
-                <MudPdfViewer
-                    Class="pt-5"
-                    Url="https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf"
-                    Orientation="Orientation.Landscape"/>
-            </MudPaper>
+            <MudPdfViewer
+                Class="pt-5"
+                Url="https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf"
+                Orientation="Orientation.Landscape"/>
         </MudTabPanel>
         <MudTabPanel Text="Code">
             <pre>
