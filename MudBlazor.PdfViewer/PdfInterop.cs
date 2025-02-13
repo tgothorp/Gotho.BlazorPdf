@@ -61,6 +61,13 @@ internal class PdfInterop(IJSRuntime jsRuntime) : IAsyncDisposable
         await module.InvokeVoidAsync("zoomInOut", objRef, elementId, scale);
     }
     
+    public async Task RenderThumbs(object objRef, string elementId)
+    {
+        var module = await js.Value;
+        await module.InvokeVoidAsync("renderThumbnails", objRef, elementId);
+    }
+
+    
     public async ValueTask DisposeAsync()
     {
         if (js.IsValueCreated)

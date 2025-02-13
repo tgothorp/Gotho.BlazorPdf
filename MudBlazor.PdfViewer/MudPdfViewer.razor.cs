@@ -184,4 +184,9 @@ public partial class MudPdfViewer : MudComponentBase
         
         await PdfInterop.RotateAsync(_objectReference!, _id!, _rotation);
     }
+
+    private async Task Thumbnails()
+    {
+        await PdfInterop.RenderThumbs(_objectReference!, _id!);
+    }
 }

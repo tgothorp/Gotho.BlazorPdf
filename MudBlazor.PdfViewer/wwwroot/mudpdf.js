@@ -182,6 +182,15 @@ export function zoomInOut(dotNetHelper, elementId, scale) {
     queueRenderPage(pdf, pdf.pageNum);
 }
 
+export function renderThumbnails(dotNetHelper, elementId) {
+    const pdf = getPdf(elementId);
+
+    if (pdf == null)
+        return;
+    
+    renderThumbs(pdf);
+}
+
 // resize
 // print
 // download
@@ -257,6 +266,27 @@ function renderPage(pdf, num) {
                 // TODO: track exception
             });
     });
+}
+
+function renderThumbs(pdf) {
+
+    const sidebar = document.getElementById(`${pdf.id}_thumbs`);
+
+    for (let pageNum = 1; pageNum <= pdf.pdfDoc.numPages; pageNum++) {
+        pdf.pdfDoc.getPage(pageNum).then(page => {
+            let viewport = page.getViewport({ scale: 0.2 }); // Small scale for thumbnails
+            let thumbCanvas = document.createElement('canvas');
+            let thumbCtx = thumbCanvas.getContext('2d');
+            thumbCanvas.width = viewport.width;
+            thumbCanvas.height = viewport.height;
+            thumbCanvas.classList.add('mudpdf_thumbnail');
+            sidebar.appendChild(thumbCanvas);
+
+            page.render({ canvasContext: thumbCtx, viewport });
+
+            thumbCanvas.addEventListener('click', () => renderPage(pdf, pageNum));
+        });
+    }
 }
 
 function setPdfViewerMetaData(dotNetHelper, pdf) {

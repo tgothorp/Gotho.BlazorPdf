@@ -1,0 +1,10 @@
+.mudpdf_thumbnail
+{
+    margin: 2px 5px 2px 2px;
+    border: 5px solid transparent;
+}
+
+.mudpdf_thumbnail:hover {
+    border: 5px solid #404040;
+    cursor: pointer;
+}
