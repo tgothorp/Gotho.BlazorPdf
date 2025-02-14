@@ -182,15 +182,6 @@ export function zoomInOut(dotNetHelper, elementId, scale) {
     queueRenderPage(pdf, pdf.pageNum);
 }
 
-export function renderThumbnails(dotNetHelper, elementId) {
-    const pdf = getPdf(elementId);
-
-    if (pdf == null)
-        return;
-    
-    renderThumbs(pdf);
-}
-
 // resize
 // print
 // download
@@ -212,7 +203,8 @@ export function initialize(dotNetHelper, elementId, scale, rotation, url, showTh
         pdf.pdfDoc = doc;
         pdf.pagesCount = doc.numPages;
         renderPage(pdf, pdf.pageNum);
-        renderThumbs(pdf);
+        renderThumbs(pdf, dotNetHelper, elementId);
+        
         dotNetHelper.invokeMethodAsync('DocumentLoaded', { pagesCount: pdf.pagesCount, pageNumber: pdf.pageNum });
     });
 }
@@ -269,23 +261,24 @@ function renderPage(pdf, num) {
     });
 }
 
-function renderThumbs(pdf) {
-
+async function renderThumbs(pdf, dotNetHelper, elementId) {
     const sidebar = document.getElementById(`${pdf.id}_thumbs`);
+    sidebar.innerHTML = "";
 
     for (let pageNum = 1; pageNum <= pdf.pdfDoc.numPages; pageNum++) {
-        pdf.pdfDoc.getPage(pageNum).then(page => {
-            let viewport = page.getViewport({ scale: 0.2 }); // Small scale for thumbnails
-            let thumbCanvas = document.createElement('canvas');
-            let thumbCtx = thumbCanvas.getContext('2d');
-            thumbCanvas.width = viewport.width;
-            thumbCanvas.height = viewport.height;
-            thumbCanvas.classList.add('mudpdf_thumbnail');
-            sidebar.appendChild(thumbCanvas);
+        const page = await pdf.pdfDoc.getPage(pageNum);
+        let viewport = page.getViewport({ scale: 0.2 });
+        let thumbCanvas = document.createElement('canvas');
+        let thumbCtx = thumbCanvas.getContext('2d');
+        thumbCanvas.width = viewport.width;
+        thumbCanvas.height = viewport.height;
+        thumbCanvas.classList.add('mudpdf_thumbnail');
+        sidebar.appendChild(thumbCanvas);
 
-            page.render({ canvasContext: thumbCtx, viewport });
+        await page.render({ canvasContext: thumbCtx, viewport }).promise;
 
-            thumbCanvas.addEventListener('click', () => renderPage(pdf, pageNum));
+        thumbCanvas.addEventListener('click', () => {
+            gotoPage(dotNetHelper, elementId, pageNum);
         });
     }
 }
