@@ -74,6 +74,8 @@ public partial class MudPdfViewer : MudComponentBase
 
         _pageNumber = pdfViewerModel.PageNumber;
         _pageCount = pdfViewerModel.PagesCount;
+        
+        StateHasChanged();
 
         if (OnPageChanged.HasDelegate)
             OnPageChanged.InvokeAsync(new PdfViewerEventArgs(_pageNumber, _pageCount));
