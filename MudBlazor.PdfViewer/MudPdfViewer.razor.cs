@@ -26,7 +26,7 @@ public partial class MudPdfViewer : MudComponentBase
 
     [Parameter] public Orientation Orientation { get; set; } = Orientation.Portrait;
     [Parameter] public string? Url { get; set; }
-    [Parameter] public bool ShowThumbnails { get; set; }
+    [Parameter] public bool ShowThumbnails { get; set; } = true;
 
     [Parameter] public EventCallback<PdfViewerEventArgs> OnDocumentLoaded { get; set; }
     [Parameter] public EventCallback<PdfViewerEventArgs> OnPageChanged { get; set; }
