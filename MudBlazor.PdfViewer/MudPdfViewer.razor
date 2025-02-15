@@ -3,10 +3,13 @@
 <MudGrid Class="flex-wrap">
     <MudItem xs="12">
         <MudToolBar Class="justify-space-between">
-            <MudTooltip Text="@Config.Labels.ToddleThumbnails" Arrow="true" Placement="Placement.Top">
-                <MudIconButton Icon="@Config.Icons.ToggleThumbnails" Size="Size.Medium" OnClick="ToggleThumbnails"
-                               aria-label="@Config.Labels.ToddleThumbnails"/>
-            </MudTooltip>
+            @if (!HideThumbnails)
+            {
+                <MudTooltip Text="@Config.Labels.ToggleThumbnails" Arrow="true" Placement="Placement.Top">
+                    <MudIconButton Icon="@Config.Icons.ToggleThumbnails" Size="Size.Medium" OnClick="ToggleThumbnails"
+                                   aria-label="@Config.Labels.ToggleThumbnails"/>
+                </MudTooltip>
+            }
             <MudTooltip Text="@Config.Labels.PreviousPage" Arrow="true" Placement="Placement.Top">
                 <MudIconButton Icon="@Config.Icons.PreviousPage" Size="Size.Medium" OnClick="PreviousPageAsync"
                                aria-label="@Config.Labels.PreviousPage"/>

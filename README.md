@@ -7,7 +7,7 @@ A port of the BlazorBootstrap PDF viewer to work with MudBlazor
 Grab the package from [nuget.org](https://www.nuget.org/packages/Gotho.MudBlazor.PdfViewer/1.0.1#readme-body-tab);
 
 ```
-dotnet add package Gotho.MudBlazor.PdfViewer --version 1.0.1
+dotnet add package Gotho.MudBlazor.PdfViewer --version 1.1.0
 ```
 
 ### Configure
@@ -18,7 +18,13 @@ Add the following to your application startup in `Program.cs`;
 builder.Services.AddMudBlazorPdfViewer();
 ```
 
-Then, add the namespace to your `_Imports.razor` file.
+Update your `App.razor` file to import the required CSS;
+
+```
+<link href="_content/Gotho.MudBlazor.PdfViewer/mudpdf.min.css" rel="stylesheet"/>
+```
+
+Then, add the namespace to your `_Imports.razor` file;
 
 ```
 @using MudBlazor.PdfViewer

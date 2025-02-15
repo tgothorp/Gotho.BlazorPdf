@@ -7,7 +7,7 @@ public class MudPdfViewerConfig
     
     public class Label
     {
-        public string ToddleThumbnails { get; set; } = "Show Thumbnails";
+        public string ToggleThumbnails { get; set; } = "Show Thumbnails";
         public string PreviousPage { get; set; } = "Previous Page";
         public string NextPage { get; set; } = "Next Page";
         public string PageOf { get; set; } = "of";
