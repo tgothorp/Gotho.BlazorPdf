@@ -18,6 +18,12 @@ Add the following to your application startup in `Program.cs`;
 builder.Services.AddMudBlazorPdfViewer();
 ```
 
+Update your `App.razor` file to import the required CSS;
+
+```
+<link href="_content/Gotho.MudBlazor.PdfViewer/mudpdf.min.css" rel="stylesheet"/>
+```
+
 Then, add the namespace to your `_Imports.razor` file.
 
 ```

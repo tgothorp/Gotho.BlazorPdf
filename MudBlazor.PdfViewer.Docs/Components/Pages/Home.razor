@@ -2,6 +2,8 @@
 
 @using MudBlazorPdf
 
+<PageTitle>MudBlazor PdfViewer</PageTitle>
+
 <div style="max-width: 1440px; margin: auto">
 
     <MudText Typo="Typo.h1">MudBlazor PDF Viewer</MudText>
@@ -23,9 +25,9 @@
 
     <MudTabs>
         <MudTabPanel Text="Example">
+            <MudText Class="py-3">@eventLog</MudText>
             <MudPdfViewer
                 Class="pt-5"
-                ShowThumbnails="true"
                 Url="https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf"
                 OnDocumentLoaded="OnDocumentLoaded"
                 OnPageChanged="OnPageChanged"/>
@@ -37,6 +39,23 @@
         </MudTabPanel>
     </MudTabs>
 
+    <MudText Typo="Typo.h2" Class="pt-5">Thumbnails</MudText>
+    <MudText Typo="Typo.body1" Class="pb-4">Thumbnails for individual pages can be toggled or hidden completely</MudText>
+
+    <MudTabs>
+        <MudTabPanel Text="Example">
+            <MudPdfViewer
+                Class="pt-5"
+                HideThumbnails="true"
+                Url="https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf"/>
+        </MudTabPanel>
+        <MudTabPanel Text="Code">
+            <pre>
+                <MudText Style="display: block; padding: 1rem; white-space: pre; background-color: #161719" HtmlTag="code">@Examples.Thumbnails</MudText>
+            </pre>
+        </MudTabPanel>
+    </MudTabs>
+
     <MudText Typo="Typo.h2" Class="pt-5">Orientation</MudText>
     <MudText Typo="Typo.body1" Class="pb-4">The orientation of the loaded PDF can be specified manually</MudText>
 
@@ -44,6 +63,7 @@
         <MudTabPanel Text="Example">
             <MudPdfViewer
                 Class="pt-5"
+                HideThumbnails="true"
                 Url="https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf"
                 Orientation="Orientation.Landscape"/>
         </MudTabPanel>
