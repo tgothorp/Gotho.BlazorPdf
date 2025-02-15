@@ -7,7 +7,7 @@ A port of the BlazorBootstrap PDF viewer to work with MudBlazor
 Grab the package from nuget.org;
 
 ```
-dotnet add Gotho.MudBlazor.PdfViewer
+dotnet add package Gotho.MudBlazor.PdfViewer --version 1.1.0
 ```
 
 ### Configure
