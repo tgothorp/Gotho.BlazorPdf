@@ -46,5 +46,9 @@ builder.Services.AddMudBlazorPdfViewer(opt =>
     // Change menu item text
     opt.Labels.RotateClockwise = ""Spin it to the right"";
     opt.Labels.RotateCounterclockwise = ""Spin it to the left"";
+
+    // Change color of icons and background
+    opt.Colors.IconColor = MudBlazor.Color.Secondary;
+    opt.Colors.Background = ""#161719"";
 });";
 }
