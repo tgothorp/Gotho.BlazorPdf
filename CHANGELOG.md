@@ -6,6 +6,7 @@ All notable changes and releases will be documented here
 
 - Added support for page thumbnails which can be toggled on/off
 - Add some basic code documentation to the PDF viewer parameters
+- Small improvements to the documentation website
 
 ## [2025-02-08] - V1.0.1 
 
