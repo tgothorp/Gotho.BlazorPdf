@@ -19,10 +19,10 @@ internal class PdfInterop(IJSRuntime jsRuntime) : IAsyncDisposable
         await module.InvokeVoidAsync("gotoPage", objRef, elementId, gotoPageNum);
     }
 
-    public async Task InitializeAsync(object objRef, string elementId, double scale, double rotation, string url)
+    public async Task InitializeAsync(object objRef, string elementId, double scale, double rotation, string url, bool showThumbs)
     {
         var module = await js.Value;
-        await module.InvokeVoidAsync("initialize", objRef, elementId, scale, rotation, url);
+        await module.InvokeVoidAsync("initialize", objRef, elementId, scale, rotation, url, showThumbs);
     }
 
     public async Task LastPageAsync(object objRef, string elementId)
@@ -60,6 +60,13 @@ internal class PdfInterop(IJSRuntime jsRuntime) : IAsyncDisposable
         var module = await js.Value;
         await module.InvokeVoidAsync("zoomInOut", objRef, elementId, scale);
     }
+    
+    public async Task RenderThumbs(object objRef, string elementId)
+    {
+        var module = await js.Value;
+        await module.InvokeVoidAsync("renderThumbnails", objRef, elementId);
+    }
+
     
     public async ValueTask DisposeAsync()
     {

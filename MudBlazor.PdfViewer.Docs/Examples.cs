@@ -22,9 +22,17 @@ public static class Examples
 }
 ";
 
+    public static string Thumbnails = @"
+<MudPdfViewer
+    Class=""pt-5""
+    HideThumbnails=""true""
+    Url=""https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf""/>
+";
+    
     public static string Orientation = @"
 <MudPdfViewer
     Class=""pt-5""
+    HideThumbnails=""true""
     Orientation=""Orientation.Landscape""
     Url=""https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf""/>";
 
@@ -38,5 +46,9 @@ builder.Services.AddMudBlazorPdfViewer(opt =>
     // Change menu item text
     opt.Labels.RotateClockwise = ""Spin it to the right"";
     opt.Labels.RotateCounterclockwise = ""Spin it to the left"";
+
+    // Change color of icons and background
+    opt.Colors.IconColor = MudBlazor.Color.Secondary;
+    opt.Colors.Background = ""#161719"";
 });";
 }

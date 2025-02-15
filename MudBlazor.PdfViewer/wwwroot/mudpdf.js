@@ -194,15 +194,17 @@ pageRotateCwButton.disabled = this.pagesCount === 0;
 pageRotateCcwButton.disabled = this.pagesCount === 0;
 */
 
-export function initialize(dotNetHelper, elementId, scale, rotation, url) {
+export function initialize(dotNetHelper, elementId, scale, rotation, url, showThumbs) {
     const pdf = new Pdf(elementId);
     pdf.scale = scale;
     pdf.rotation = rotation;
-
+    
     pdfJS.getDocument(url).promise.then(function (doc) {
         pdf.pdfDoc = doc;
         pdf.pagesCount = doc.numPages;
         renderPage(pdf, pdf.pageNum);
+        renderThumbs(pdf, dotNetHelper, elementId);
+        
         dotNetHelper.invokeMethodAsync('DocumentLoaded', { pagesCount: pdf.pagesCount, pageNumber: pdf.pageNum });
     });
 }
@@ -257,6 +259,28 @@ function renderPage(pdf, num) {
                 // TODO: track exception
             });
     });
+}
+
+async function renderThumbs(pdf, dotNetHelper, elementId) {
+    const sidebar = document.getElementById(`${pdf.id}_thumbs`);
+    sidebar.innerHTML = "";
+
+    for (let pageNum = 1; pageNum <= pdf.pdfDoc.numPages; pageNum++) {
+        const page = await pdf.pdfDoc.getPage(pageNum);
+        let viewport = page.getViewport({ scale: 0.2 });
+        let thumbCanvas = document.createElement('canvas');
+        let thumbCtx = thumbCanvas.getContext('2d');
+        thumbCanvas.width = viewport.width;
+        thumbCanvas.height = viewport.height;
+        thumbCanvas.classList.add('mudpdf_thumbnail');
+        sidebar.appendChild(thumbCanvas);
+
+        await page.render({ canvasContext: thumbCtx, viewport }).promise;
+
+        thumbCanvas.addEventListener('click', () => {
+            gotoPage(dotNetHelper, elementId, pageNum);
+        });
+    }
 }
 
 function setPdfViewerMetaData(dotNetHelper, pdf) {

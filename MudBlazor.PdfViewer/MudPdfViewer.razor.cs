@@ -23,11 +23,38 @@ public partial class MudPdfViewer : MudComponentBase
     
     private Orientation _oldOrientation = Orientation.Portrait;
     private double _rotation = 0;
+    
+    private bool _toggleThumbnails = true;
 
+    /// <summary>
+    /// Sets the display orientation of the PDF document
+    /// </summary>
+    /// <remarks>
+    /// Defaults to <c>Orientation.Portrait</c>
+    /// </remarks>
     [Parameter] public Orientation Orientation { get; set; } = Orientation.Portrait;
+    
+    /// <summary>
+    /// URL of the PDF to be displayed, this can also be a base64 string 
+    /// </summary>
     [Parameter] public string? Url { get; set; }
+    
+    /// <summary>
+    /// Hides the thumbnail bar as well as the option to display it
+    /// </summary>
+    /// <remarks>
+    /// Defaults to <c>false</c>
+    /// </remarks>
+    [Parameter] public bool HideThumbnails { get; set; } = false;
 
+    /// <summary>
+    /// This event fires immediately after the PDF document is loaded.
+    /// </summary>
     [Parameter] public EventCallback<PdfViewerEventArgs> OnDocumentLoaded { get; set; }
+    
+    /// <summary>
+    /// This event fires immediately after the page is changed.
+    /// </summary>
     [Parameter] public EventCallback<PdfViewerEventArgs> OnPageChanged { get; set; }
 
     [Inject] private PdfInterop PdfInterop { get; set; } = default!;
@@ -38,6 +65,7 @@ public partial class MudPdfViewer : MudComponentBase
         _objectReference ??= DotNetObjectReference.Create(this);
         _rotation = Orientation == Orientation.Portrait ? 0 : -90;
         _id ??= "".GenerateRandomString();
+        _toggleThumbnails = !HideThumbnails;
 
         await base.OnInitializedAsync();
     }
@@ -45,7 +73,7 @@ public partial class MudPdfViewer : MudComponentBase
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
-            await PdfInterop.InitializeAsync(_objectReference!, _id!, _scale, _rotation, Url!);
+            await PdfInterop.InitializeAsync(_objectReference!, _id!, _scale, _rotation, Url!, HideThumbnails);
 
         await base.OnAfterRenderAsync(firstRender);
     }
@@ -73,6 +101,8 @@ public partial class MudPdfViewer : MudComponentBase
 
         _pageNumber = pdfViewerModel.PageNumber;
         _pageCount = pdfViewerModel.PagesCount;
+        
+        StateHasChanged();
 
         if (OnPageChanged.HasDelegate)
             OnPageChanged.InvokeAsync(new PdfViewerEventArgs(_pageNumber, _pageCount));
@@ -183,5 +213,23 @@ public partial class MudPdfViewer : MudComponentBase
         _rotation = Orientation == Orientation.Portrait ? 0 : -90;
         
         await PdfInterop.RotateAsync(_objectReference!, _id!, _rotation);
+    }
+
+    private void ToggleThumbnails()
+    {
+        _toggleThumbnails = !_toggleThumbnails;
+        StateHasChanged();
+    }
+
+    private string ThumbnailClass()
+    {
+        return _toggleThumbnails
+            ? "mudpdf_thumbnails"
+            : "mudpdf_thumbnails d-none";
+    }
+
+    private string ColorStyle()
+    {
+        return $"background-color: {Config.Colors.Background}";
     }
 }
