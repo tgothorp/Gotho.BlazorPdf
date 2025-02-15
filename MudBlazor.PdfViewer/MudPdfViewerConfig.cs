@@ -2,9 +2,21 @@ namespace MudBlazorPdf;
 
 public class MudPdfViewerConfig
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public Label Labels { get; set; } = new();
+    
+    /// <summary>
+    /// 
+    /// </summary>
     public Icon Icons { get; set; } = new();
     
+    /// <summary>
+    /// 
+    /// </summary>
+    public Color Colors { get; set; } = new();
+
     public class Label
     {
         public string ToggleThumbnails { get; set; } = "Show Thumbnails";
@@ -36,5 +48,11 @@ public class MudPdfViewerConfig
         public string FirstPage { get; set; } = MudBlazor.Icons.Material.Filled.VerticalAlignTop;
         public string LastPage { get; set; } = MudBlazor.Icons.Material.Filled.VerticalAlignBottom;
         public string ResetZoom { get; set; } = MudBlazor.Icons.Material.Filled.ResetTv;
+    }
+    
+    public class Color
+    {
+        public MudBlazor.Color IconColor { get; set; } = MudBlazor.Color.Default;
+        public string Background { get; set; } = "#161719";
     }
 }

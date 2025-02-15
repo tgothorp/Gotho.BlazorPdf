@@ -4,14 +4,14 @@
     position: relative;
 }
 
-.mudpdf_thumbnail canvas{
+.mudpdf_thumbnail canvas {
     overflow: auto;
 }
 
 .mudpdf_thumbnails {
-    max-width: 11%; 
-    position: absolute; 
-    left: 0; 
+    max-width: 11%;
+    position: absolute;
+    left: 0;
     overflow-y: scroll;
     margin-left: 1rem;
     background-color: #161719;
@@ -19,10 +19,9 @@
     bottom: 1em;
 }
 
-.mudpdf_thumbnail
-{
+.mudpdf_thumbnail {
     margin: 2px 2px 2px 2px;
-    border: 5px solid transparent;
+    border: 5px solid #fff0;
 }
 
 .mudpdf_thumbnail:hover {

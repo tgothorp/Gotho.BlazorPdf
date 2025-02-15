@@ -227,4 +227,9 @@ public partial class MudPdfViewer : MudComponentBase
             ? "mudpdf_thumbnails"
             : "mudpdf_thumbnails d-none";
     }
+
+    private string ColorStyle()
+    {
+        return $"background-color: {Config.Colors.Background}";
+    }
 }
