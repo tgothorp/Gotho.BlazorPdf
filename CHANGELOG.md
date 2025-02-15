@@ -2,7 +2,7 @@
 
 All notable changes and releases will be documented here
 
-## [Unreleased] - V1.1.0 (Latest Version)
+## [2025-02-15] - V1.1.0 (Latest Version)
 
 - Added support for page thumbnails which can be toggled on/off
 - Add some basic code documentation to the PDF viewer parameters
