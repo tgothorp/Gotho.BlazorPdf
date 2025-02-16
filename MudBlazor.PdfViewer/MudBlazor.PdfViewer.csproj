@@ -49,5 +49,9 @@
             <PackagePath>\</PackagePath>
         </None>
     </ItemGroup>
+    
+    <ItemGroup>
+      <TypeScriptCompile Include="wwwroot\mudpdfviewer.ts" />
+    </ItemGroup>
 
 </Project>
