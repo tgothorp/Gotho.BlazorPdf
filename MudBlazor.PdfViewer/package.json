@@ -4,7 +4,7 @@
   "description": "A simple PDF viewer component for use with MudBlazor",
   "main": "index.js",
   "scripts": {
-    "ts": "npx tsc wwwroot\\mudpdfviewer.ts",
+    "ts": "npx tsc wwwroot\\mudpdfviewer.ts --target es2015",
     "css": "npx cleancss -o wwwroot\\mudpdf.min.css wwwroot\\mudpdf.css"
   },
   "repository": {

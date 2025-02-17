@@ -20,6 +20,13 @@
         <RootNamespace>MudBlazorPdf</RootNamespace>
     </PropertyGroup>
 
+    <Target Name="CompileTypeScript" BeforeTargets="Build">
+        <Exec Command="npm run ts" />
+    </Target>
+
+    <Target Name="MinifyCss" BeforeTargets="Build">
+        <Exec Command="npm run css" />
+    </Target>
 
     <ItemGroup>
         <SupportedPlatform Include="browser"/>
@@ -49,9 +56,4 @@
             <PackagePath>\</PackagePath>
         </None>
     </ItemGroup>
-    
-    <ItemGroup>
-      <TypeScriptCompile Include="wwwroot\mudpdfviewer.ts" />
-    </ItemGroup>
-
 </Project>

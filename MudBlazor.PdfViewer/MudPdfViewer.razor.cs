@@ -58,6 +58,7 @@ public partial class MudPdfViewer : MudComponentBase
     [Parameter] public EventCallback<PdfViewerEventArgs> OnPageChanged { get; set; }
 
     [Inject] private PdfInterop PdfInterop { get; set; } = default!;
+    [Inject] private PdfInteropV2 PdfInteropV2 { get; set; } = default!;
     [Inject] private MudPdfViewerConfig Config { get; set; } = default!;
 
     protected override async Task OnInitializedAsync()
@@ -73,7 +74,10 @@ public partial class MudPdfViewer : MudComponentBase
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
+        {
             await PdfInterop.InitializeAsync(_objectReference!, _id!, _scale, _rotation, Url!, HideThumbnails);
+            await PdfInteropV2.InitializeAsync(_objectReference!, _id!);
+        }
 
         await base.OnAfterRenderAsync(firstRender);
     }

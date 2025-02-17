@@ -12,6 +12,7 @@ public static class Init
 
         services.AddSingleton(config);
         services.AddScoped<PdfInterop>();
+        services.AddScoped<PdfInteropV2>();
 
         return services;
     }
