@@ -73,7 +73,9 @@ public partial class MudPdfViewer : MudComponentBase
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
-            await PdfInterop.InitializeAsync(_objectReference!, _id!, _scale, _rotation, Url!, HideThumbnails);
+        {
+            await PdfInterop.InitializeAsync(_objectReference!, _id!, Url!, _scale, _rotation);
+        }
 
         await base.OnAfterRenderAsync(firstRender);
     }
@@ -189,7 +191,7 @@ public partial class MudPdfViewer : MudComponentBase
 
     private async Task RotateCounterclockwiseAsync()
     {
-        _rotation += 90;
+        _rotation -= 90;
         _rotation = _rotation.Equals(360) ? 0 : _rotation;
         await PdfInterop.RotateAsync(_objectReference!, _id!, _rotation);
 
