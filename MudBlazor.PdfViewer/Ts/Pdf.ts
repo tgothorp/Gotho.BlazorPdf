@@ -6,7 +6,6 @@ export class Pdf {
 
     public id: string;
     public canvas: any;
-    public canvasContext: any;
     public scale: number;
     public rotation: number;
     public url: string;
@@ -18,16 +17,15 @@ export class Pdf {
     public currentPage: number;
     public queuedPage: number;
 
-    constructor(id: string, scale: number, rotation: number, url: string) {
+    constructor(id: string, scale: number, rotation: number, url: string, singlePageMode: boolean) {
         this.id = id;
         this.canvas = Pdf.getCanvas(id);
-        this.canvasContext = this.canvas.getContext("2d");
         this.scale = scale;
         this.rotation = rotation;
         this.url = url;
         this.document = null;
         this.renderInProgress = false;
-        this.singlePageMode = true;
+        this.singlePageMode = singlePageMode;
         this.pageCount = 0;
         this.currentPage = 1;
         this.queuedPage = null;
@@ -106,6 +104,10 @@ export class Pdf {
 
     public zoom(scale: number) {
         this.scale = scale;
+    }
+    
+    public getCanvasContext(): any {
+        return this.canvas.getContext("2d");
     }
 
     private static getCanvas(id: any) {
