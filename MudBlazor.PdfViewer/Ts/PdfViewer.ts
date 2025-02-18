@@ -3,11 +3,11 @@ import {Pdf} from "./Pdf";
 import {getDocument, GlobalWorkerOptions} from "pdfjs-dist"
 GlobalWorkerOptions.workerSrc = "./pdfjs-4.0.379.worker.min.js";
 
-export function init(dotnetReference: any, id: string, documentUrl: string, scale: number, rotation: number) {
+export function init(dotnetReference: any, id: string, documentUrl: string, scale: number, rotation: number, singlePageMode: boolean) {
     console.log("Initializing PDF " + id);
 
     if (documentUrl) {
-        const pdf = new Pdf(id, scale, rotation, documentUrl)
+        const pdf = new Pdf(id, scale, rotation, documentUrl, singlePageMode)
         getDocument(pdf.url).promise.then((doc) => {
             pdf.setDocument(doc);
             renderPdf(pdf);
@@ -72,6 +72,15 @@ export function goToPage(dotnetReference: any, id: string, pageNumber: number) {
             updateMetadata(dotnetReference, pdf);
         } else {
             // Scroll to page
+            const container = document.getElementById(id);
+            const targetPage = document.getElementById(`${id}-page-${pageNumber}`);
+            if (container && targetPage) {
+                container.scrollTo({
+                    top: targetPage.offsetTop - container.offsetTop,
+                    behavior: 'smooth'
+                });
+                updateMetadata(dotnetReference, pdf);
+            }
         }
     }
 }
@@ -97,7 +106,7 @@ function renderPdf(pdf: Pdf) {
             pdf.canvas.height = viewport.height;
 
             const renderData = {
-                canvasContext: pdf.canvasContext,
+                canvasContext: pdf.getCanvasContext(),
                 viewport: viewport
             }
 
@@ -111,6 +120,34 @@ function renderPdf(pdf: Pdf) {
                     pdf.queuedPage = null;
                 }
             })
+        })
+    }
+    else
+    {
+        const container = document.getElementById(pdf.id);
+        const scale = pdf.scale;
+        container.innerHTML = '';
+        
+        
+        // @ts-ignore
+        getDocument(pdf.url).promise.then(async function (doc) {
+            for (let pageNum = 1; pageNum <= pdf.pageCount; pageNum++) {
+                const page = await doc.getPage(pageNum);
+                const viewport = page.getViewport({ scale });
+
+                // ✅ Create a canvas for each page
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d'); // ✅ Ensure canvas context is valid
+
+                canvas.id = `${pdf.id}-page-${pageNum}`;
+                canvas.classList.add('mudpdf_scroll_page');
+                canvas.width = viewport.width;
+                canvas.height = viewport.height;
+                container.appendChild(canvas); // ✅ Append the canvas before rendering
+
+                // ✅ Render the PDF page into the correct canvas
+                await page.render({ canvasContext: ctx, viewport }).promise;
+            }
         })
     }
 }

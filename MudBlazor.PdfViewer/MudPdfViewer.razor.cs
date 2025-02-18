@@ -33,6 +33,10 @@ public partial class MudPdfViewer : MudComponentBase
     /// Defaults to <c>Orientation.Portrait</c>
     /// </remarks>
     [Parameter] public Orientation Orientation { get; set; } = Orientation.Portrait;
+
+
+    [Parameter] public string Height { get; set; } = "65vh";
+    [Parameter] public bool SinglePageMode { get; set; } = true;
     
     /// <summary>
     /// URL of the PDF to be displayed, this can also be a base64 string 
@@ -74,7 +78,7 @@ public partial class MudPdfViewer : MudComponentBase
     {
         if (firstRender)
         {
-            await PdfInterop.InitializeAsync(_objectReference!, _id!, Url!, _scale, _rotation);
+            await PdfInterop.InitializeAsync(_objectReference!, _id!, Url!, _scale, _rotation, SinglePageMode);
         }
 
         await base.OnAfterRenderAsync(firstRender);
@@ -233,5 +237,10 @@ public partial class MudPdfViewer : MudComponentBase
     private string ColorStyle()
     {
         return $"background-color: {Config.Colors.Background}";
+    }
+
+    private string ScrollStyle()
+    {
+        return $"height: {Height}";
     }
 }

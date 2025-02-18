@@ -70,7 +70,14 @@
         <MudGrid Class="flex-column">
             <MudItem xs="12" Class="justify-center d-flex mudpdf_container" Style="@ColorStyle()">
                 <div id="@($"{_id}_thumbs")" class="@ThumbnailClass()" style="@ColorStyle()"></div>
-                <canvas @ref="_element" id="@_id" style="overflow: auto"></canvas>
+                @if (!SinglePageMode)
+                {
+                    <div id="@_id" class="mudpdf_scroll" style="@ScrollStyle()"></div>
+                }
+                else
+                {
+                    <canvas @ref="_element" id="@_id" style="overflow: auto"></canvas>
+                }
             </MudItem>
         </MudGrid>
     </MudItem>

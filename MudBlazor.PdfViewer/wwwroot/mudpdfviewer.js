@@ -601,7 +601,6 @@ var Pdf = class _Pdf {
   }
   id;
   canvas;
-  canvasContext;
   scale;
   rotation;
   url;
@@ -611,16 +610,15 @@ var Pdf = class _Pdf {
   pageCount;
   currentPage;
   queuedPage;
-  constructor(id, scale, rotation, url) {
+  constructor(id, scale, rotation, url, singlePageMode) {
     this.id = id;
     this.canvas = _Pdf.getCanvas(id);
-    this.canvasContext = this.canvas.getContext("2d");
     this.scale = scale;
     this.rotation = rotation;
     this.url = url;
     this.document = null;
     this.renderInProgress = false;
-    this.singlePageMode = true;
+    this.singlePageMode = singlePageMode;
     this.pageCount = 0;
     this.currentPage = 1;
     this.queuedPage = null;
@@ -679,6 +677,9 @@ var Pdf = class _Pdf {
   }
   zoom(scale) {
     this.scale = scale;
+  }
+  getCanvasContext() {
+    return this.canvas.getContext("2d");
   }
   static getCanvas(id) {
     if (this.isDomSupported() && typeof id === "string") {
@@ -19770,10 +19771,10 @@ var __webpack_exports__version = __webpack_exports__.version;
 
 // Ts/PdfViewer.ts
 __webpack_exports__GlobalWorkerOptions.workerSrc = "./pdfjs-4.0.379.worker.min.js";
-function init(dotnetReference, id, documentUrl, scale, rotation) {
+function init(dotnetReference, id, documentUrl, scale, rotation, singlePageMode) {
   console.log("Initializing PDF " + id);
   if (documentUrl) {
-    const pdf = new Pdf(id, scale, rotation, documentUrl);
+    const pdf = new Pdf(id, scale, rotation, documentUrl, singlePageMode);
     __webpack_exports__getDocument(pdf.url).promise.then((doc) => {
       pdf.setDocument(doc);
       renderPdf(pdf);
@@ -19834,6 +19835,15 @@ function goToPage(dotnetReference, id, pageNumber) {
       queuePdfRender(pdf, null);
       updateMetadata(dotnetReference, pdf);
     } else {
+      const container = document.getElementById(id);
+      const targetPage = document.getElementById(`${id}-page-${pageNumber}`);
+      if (container && targetPage) {
+        container.scrollTo({
+          top: targetPage.offsetTop - container.offsetTop,
+          behavior: "smooth"
+        });
+        updateMetadata(dotnetReference, pdf);
+      }
     }
   }
 }
@@ -19856,7 +19866,7 @@ function renderPdf(pdf) {
       pdf.canvas.width = viewport.width;
       pdf.canvas.height = viewport.height;
       const renderData = {
-        canvasContext: pdf.canvasContext,
+        canvasContext: pdf.getCanvasContext(),
         viewport
       };
       const renderTask = pdfPage.render(renderData);
@@ -19867,6 +19877,24 @@ function renderPdf(pdf) {
           pdf.queuedPage = null;
         }
       });
+    });
+  } else {
+    const container = document.getElementById(pdf.id);
+    const scale = pdf.scale;
+    container.innerHTML = "";
+    __webpack_exports__getDocument(pdf.url).promise.then(async function(doc) {
+      for (let pageNum = 1; pageNum <= pdf.pageCount; pageNum++) {
+        const page = await doc.getPage(pageNum);
+        const viewport = page.getViewport({ scale });
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        canvas.id = `${pdf.id}-page-${pageNum}`;
+        canvas.classList.add("mudpdf_scroll_page");
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        container.appendChild(canvas);
+        await page.render({ canvasContext: ctx, viewport }).promise;
+      }
     });
   }
 }
