@@ -4,7 +4,7 @@
   "description": "A simple PDF viewer component for use with MudBlazor",
   "main": "index.js",
   "scripts": {
-    "ts": "npx tsc wwwroot\\mudpdfviewer.ts --target es2015",
+    "ts": "npx esbuild Ts\\PdfViewer.ts --bundle --format=esm --target=esnext --outfile=wwwroot\\mudpdfviewer.js --keep-names",
     "css": "npx cleancss -o wwwroot\\mudpdf.min.css wwwroot\\mudpdf.css"
   },
   "repository": {
@@ -24,6 +24,10 @@
   "homepage": "https://github.com/tgothorp/MudBlazor.PdfViewer#readme",
   "devDependencies": {
     "clean-css-cli": "^5.6.3",
+    "esbuild": "^0.25.0",
     "typescript": "^5.7.3"
+  },
+  "dependencies": {
+    "pdfjs-dist": "^4.0.379"
   }
 }

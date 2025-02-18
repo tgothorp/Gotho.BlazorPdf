@@ -75,8 +75,8 @@ public partial class MudPdfViewer : MudComponentBase
     {
         if (firstRender)
         {
-            await PdfInterop.InitializeAsync(_objectReference!, _id!, _scale, _rotation, Url!, HideThumbnails);
-            await PdfInteropV2.InitializeAsync(_objectReference!, _id!);
+            // await PdfInterop.InitializeAsync(_objectReference!, _id!, _scale, _rotation, Url!, HideThumbnails);
+            await PdfInteropV2.InitializeAsync(_objectReference!, _id!, Url!, _scale, _rotation);
         }
 
         await base.OnAfterRenderAsync(firstRender);
@@ -112,10 +112,10 @@ public partial class MudPdfViewer : MudComponentBase
             OnPageChanged.InvokeAsync(new PdfViewerEventArgs(_pageNumber, _pageCount));
     }
 
-    private async Task FirstPageAsync() => await PdfInterop.FirstPageAsync(_objectReference!, _id!);
-    private async Task LastPageAsync() => await PdfInterop.LastPageAsync(_objectReference!, _id!);
-    private async Task NextPageAsync() => await PdfInterop.NextPageAsync(_objectReference!, _id!);
-    private async Task PreviousPageAsync() => await PdfInterop.PreviousPageAsync(_objectReference!, _id!);
+    private async Task FirstPageAsync() => await PdfInteropV2.FirstPageAsync(_objectReference!, _id!);
+    private async Task LastPageAsync() => await PdfInteropV2.LastPageAsync(_objectReference!, _id!);
+    private async Task NextPageAsync() => await PdfInteropV2.NextPageAsync(_objectReference!, _id!);
+    private async Task PreviousPageAsync() => await PdfInteropV2.PreviousPageAsync(_objectReference!, _id!);
     private async Task PageNumberChanged(int value)
     {
         if (value < 1 || value > _pageCount)
@@ -123,7 +123,7 @@ public partial class MudPdfViewer : MudComponentBase
         else
             _pageNumber = value;
 
-        await PdfInterop.GotoPageAsync(_objectReference!, _id!, _pageNumber);
+        await PdfInteropV2.GotoPageAsync(_objectReference!, _id!, _pageNumber);
     }
 
     private int GetZoomPercentage(int zoomLevel) =>
@@ -158,7 +158,7 @@ public partial class MudPdfViewer : MudComponentBase
         var zp = GetZoomPercentage(_zoomLevel);
         _zoomPercentage = $"{zp}%";
         _scale = 0.01 * zp;
-        await PdfInterop.ZoomInOutAsync(_objectReference!, _id!, _scale);
+        await PdfInteropV2.ZoomInOutAsync(_objectReference!, _id!, _scale);
     }
 
     private async Task ZoomOutAsync()
@@ -170,7 +170,7 @@ public partial class MudPdfViewer : MudComponentBase
         var zp = GetZoomPercentage(_zoomLevel);
         _zoomPercentage = $"{zp}%";
         _scale = 0.01 * zp;
-        await PdfInterop.ZoomInOutAsync(_objectReference!, _id!, _scale);
+        await PdfInteropV2.ZoomInOutAsync(_objectReference!, _id!, _scale);
     }
     
     private async Task ResetZoomAsync()
@@ -179,23 +179,23 @@ public partial class MudPdfViewer : MudComponentBase
         var zp = GetZoomPercentage(_defaultZoomLevel);
         _zoomPercentage = $"{zp}%";
         _scale = 0.01 * zp;
-        await PdfInterop.ZoomInOutAsync(_objectReference!, _id!, _scale);
+        await PdfInteropV2.ZoomInOutAsync(_objectReference!, _id!, _scale);
     }
     
     private async Task RotateClockwiseAsync()
     {
         _rotation += 90;
         _rotation = _rotation.Equals(360) ? 0 : _rotation;
-        await PdfInterop.RotateAsync(_objectReference!, _id!, _rotation);
+        await PdfInteropV2.RotateAsync(_objectReference!, _id!, _rotation);
 
         SetOrientation();
     }
 
     private async Task RotateCounterclockwiseAsync()
     {
-        _rotation += 90;
+        _rotation -= 90;
         _rotation = _rotation.Equals(360) ? 0 : _rotation;
-        await PdfInterop.RotateAsync(_objectReference!, _id!, _rotation);
+        await PdfInteropV2.RotateAsync(_objectReference!, _id!, _rotation);
 
         SetOrientation();
     }
@@ -216,7 +216,7 @@ public partial class MudPdfViewer : MudComponentBase
         Orientation = Orientation == Orientation.Portrait ? Orientation.Landscape : Orientation.Portrait;
         _rotation = Orientation == Orientation.Portrait ? 0 : -90;
         
-        await PdfInterop.RotateAsync(_objectReference!, _id!, _rotation);
+        await PdfInteropV2.RotateAsync(_objectReference!, _id!, _rotation);
     }
 
     private void ToggleThumbnails()
