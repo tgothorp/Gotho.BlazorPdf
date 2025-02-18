@@ -5,10 +5,10 @@ internal class PdfInterop(IJSRuntime jsRuntime) : IAsyncDisposable
     private readonly Lazy<Task<IJSObjectReference>> js =
         new(() => jsRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Gotho.MudBlazor.PdfViewer/mudpdfviewer.js").AsTask());
 
-    public async Task InitializeAsync(object objRef, string elementId, string documentUrl, double scale, double rotation)
+    public async Task InitializeAsync(object objRef, string elementId, string documentUrl, double scale, double rotation, bool singlePageMode)
     {
         var module = await js.Value;
-        await module.InvokeVoidAsync("init", objRef, elementId, documentUrl, scale, rotation);
+        await module.InvokeVoidAsync("init", objRef, elementId, documentUrl, scale, rotation, singlePageMode);
     }
 
     public async Task FirstPageAsync(object objRef, string elementId)
