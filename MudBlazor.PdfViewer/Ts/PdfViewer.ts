@@ -125,27 +125,23 @@ function renderPdf(pdf: Pdf) {
     else
     {
         const container = document.getElementById(pdf.id);
-        const scale = pdf.scale;
         container.innerHTML = '';
-        
         
         // @ts-ignore
         getDocument(pdf.url).promise.then(async function (doc) {
             for (let pageNum = 1; pageNum <= pdf.pageCount; pageNum++) {
                 const page = await doc.getPage(pageNum);
-                const viewport = page.getViewport({ scale });
+                const viewport = page.getViewport({ scale: pdf.scale, rotation: pdf.rotation });
 
-                // ✅ Create a canvas for each page
                 const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d'); // ✅ Ensure canvas context is valid
+                const ctx = canvas.getContext('2d');
 
                 canvas.id = `${pdf.id}-page-${pageNum}`;
                 canvas.classList.add('mudpdf_scroll_page');
                 canvas.width = viewport.width;
                 canvas.height = viewport.height;
-                container.appendChild(canvas); // ✅ Append the canvas before rendering
+                container.appendChild(canvas);
 
-                // ✅ Render the PDF page into the correct canvas
                 await page.render({ canvasContext: ctx, viewport }).promise;
             }
         })
