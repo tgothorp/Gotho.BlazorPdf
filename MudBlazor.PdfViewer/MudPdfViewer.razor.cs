@@ -74,7 +74,6 @@ public partial class MudPdfViewer : MudComponentBase
     {
         if (firstRender)
         {
-            // await PdfInterop.InitializeAsync(_objectReference!, _id!, _scale, _rotation, Url!, HideThumbnails);
             await PdfInterop.InitializeAsync(_objectReference!, _id!, Url!, _scale, _rotation);
         }
 
