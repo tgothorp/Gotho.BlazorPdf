@@ -1,6 +1,7 @@
 import {Pdf} from "./Pdf";
 
 import {getDocument, GlobalWorkerOptions} from "pdfjs-dist"
+
 GlobalWorkerOptions.workerSrc = "./pdfjs-4.0.379.worker.min.js";
 
 export function init(dotnetReference: any, id: string, documentUrl: string, scale: number, rotation: number, singlePageMode: boolean) {
@@ -13,7 +14,7 @@ export function init(dotnetReference: any, id: string, documentUrl: string, scal
             renderPdf(pdf);
             renderThumbnails(dotnetReference, pdf);
 
-            dotnetReference.invokeMethodAsync('DocumentLoaded', { pagesCount: pdf.pageCount, pageNumber: pdf.currentPage });
+            dotnetReference.invokeMethodAsync('DocumentLoaded', {pagesCount: pdf.pageCount, pageNumber: pdf.currentPage});
         })
     }
 }
@@ -21,7 +22,11 @@ export function init(dotnetReference: any, id: string, documentUrl: string, scal
 export function firstPage(dotnetReference: any, id: string) {
     const pdf = Pdf.getPdf(id)
     if (pdf !== null && pdf.firstPage()) {
-        queuePdfRender(pdf, null);
+        if (pdf.singlePageMode) {
+            queuePdfRender(pdf, null);
+        } else {
+            scrollToPage(id, pdf.currentPage);
+        }
         updateMetadata(dotnetReference, pdf);
     }
 }
@@ -29,7 +34,12 @@ export function firstPage(dotnetReference: any, id: string) {
 export function lastPage(dotnetReference: any, id: string) {
     const pdf = Pdf.getPdf(id)
     if (pdf !== null && pdf.lastPage()) {
-        queuePdfRender(pdf, null);
+        if (pdf.singlePageMode) {
+            queuePdfRender(pdf, null);
+        } else {
+            scrollToPage(id, pdf.currentPage);
+        }
+
         updateMetadata(dotnetReference, pdf);
     }
 }
@@ -37,7 +47,11 @@ export function lastPage(dotnetReference: any, id: string) {
 export function previousPage(dotnetReference: any, id: string) {
     const pdf = Pdf.getPdf(id)
     if (pdf !== null && pdf.previousPage()) {
-        queuePdfRender(pdf, null);
+        if (pdf.singlePageMode) {
+            queuePdfRender(pdf, null);
+        } else {
+            scrollToPage(id, pdf.currentPage);
+        }
         updateMetadata(dotnetReference, pdf);
     }
 }
@@ -45,7 +59,11 @@ export function previousPage(dotnetReference: any, id: string) {
 export function nextPage(dotnetReference: any, id: string) {
     const pdf = Pdf.getPdf(id)
     if (pdf !== null && pdf.nextPage()) {
-        queuePdfRender(pdf, null);
+        if (pdf.singlePageMode) {
+            queuePdfRender(pdf, null);
+        } else {
+            scrollToPage(id, pdf.currentPage);
+        }
         updateMetadata(dotnetReference, pdf);
     }
 }
@@ -54,12 +72,18 @@ export function zoom(dotnetReference: any, id: string, scale: number) {
     const pdf = Pdf.getPdf(id)
     pdf.zoom(scale);
     queuePdfRender(pdf, null);
+    if (pdf.singlePageMode) {
+        scrollToPage(id, pdf.currentPage);
+    }
 }
 
 export function rotate(dotnetReference: any, id: string, rotation: number) {
     const pdf = Pdf.getPdf(id)
     pdf.rotate(rotation);
     queuePdfRender(pdf, null);
+    if (pdf.singlePageMode) {
+        scrollToPage(id, pdf.currentPage);
+    }
 }
 
 export function goToPage(dotnetReference: any, id: string, pageNumber: number) {
@@ -72,16 +96,20 @@ export function goToPage(dotnetReference: any, id: string, pageNumber: number) {
             updateMetadata(dotnetReference, pdf);
         } else {
             // Scroll to page
-            const container = document.getElementById(id);
-            const targetPage = document.getElementById(`${id}-page-${pageNumber}`);
-            if (container && targetPage) {
-                container.scrollTo({
-                    top: targetPage.offsetTop - container.offsetTop,
-                    behavior: 'smooth'
-                });
-                updateMetadata(dotnetReference, pdf);
-            }
+           scrollToPage(id, pageNumber);
+           updateMetadata(dotnetReference, pdf);
         }
+    }
+}
+
+function scrollToPage(id: string, pageNumber: number) {
+    const container = document.getElementById(id);
+    const targetPage = document.getElementById(`${id}-page-${pageNumber}`);
+    if (container && targetPage) {
+        container.scrollTo({
+            top: targetPage.offsetTop - container.offsetTop,
+            behavior: 'smooth'
+        });
     }
 }
 
@@ -121,17 +149,15 @@ function renderPdf(pdf: Pdf) {
                 }
             })
         })
-    }
-    else
-    {
+    } else {
         const container = document.getElementById(pdf.id);
         container.innerHTML = '';
-        
+
         // @ts-ignore
         getDocument(pdf.url).promise.then(async function (doc) {
             for (let pageNum = 1; pageNum <= pdf.pageCount; pageNum++) {
                 const page = await doc.getPage(pageNum);
-                const viewport = page.getViewport({ scale: pdf.scale, rotation: pdf.rotation });
+                const viewport = page.getViewport({scale: pdf.scale, rotation: pdf.rotation});
 
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
@@ -142,9 +168,11 @@ function renderPdf(pdf: Pdf) {
                 canvas.height = viewport.height;
                 container.appendChild(canvas);
 
-                await page.render({ canvasContext: ctx, viewport }).promise;
+                await page.render({canvasContext: ctx, viewport}).promise;
             }
         })
+
+        pdf.renderInProgress = false;
     }
 }
 

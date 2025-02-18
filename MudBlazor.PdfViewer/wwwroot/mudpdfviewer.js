@@ -19787,7 +19787,11 @@ __name(init, "init");
 function firstPage(dotnetReference, id) {
   const pdf = Pdf.getPdf(id);
   if (pdf !== null && pdf.firstPage()) {
-    queuePdfRender(pdf, null);
+    if (pdf.singlePageMode) {
+      queuePdfRender(pdf, null);
+    } else {
+      scrollToPage(id, pdf.currentPage);
+    }
     updateMetadata(dotnetReference, pdf);
   }
 }
@@ -19795,7 +19799,11 @@ __name(firstPage, "firstPage");
 function lastPage(dotnetReference, id) {
   const pdf = Pdf.getPdf(id);
   if (pdf !== null && pdf.lastPage()) {
-    queuePdfRender(pdf, null);
+    if (pdf.singlePageMode) {
+      queuePdfRender(pdf, null);
+    } else {
+      scrollToPage(id, pdf.currentPage);
+    }
     updateMetadata(dotnetReference, pdf);
   }
 }
@@ -19803,7 +19811,11 @@ __name(lastPage, "lastPage");
 function previousPage(dotnetReference, id) {
   const pdf = Pdf.getPdf(id);
   if (pdf !== null && pdf.previousPage()) {
-    queuePdfRender(pdf, null);
+    if (pdf.singlePageMode) {
+      queuePdfRender(pdf, null);
+    } else {
+      scrollToPage(id, pdf.currentPage);
+    }
     updateMetadata(dotnetReference, pdf);
   }
 }
@@ -19811,7 +19823,11 @@ __name(previousPage, "previousPage");
 function nextPage(dotnetReference, id) {
   const pdf = Pdf.getPdf(id);
   if (pdf !== null && pdf.nextPage()) {
-    queuePdfRender(pdf, null);
+    if (pdf.singlePageMode) {
+      queuePdfRender(pdf, null);
+    } else {
+      scrollToPage(id, pdf.currentPage);
+    }
     updateMetadata(dotnetReference, pdf);
   }
 }
@@ -19820,12 +19836,18 @@ function zoom(dotnetReference, id, scale) {
   const pdf = Pdf.getPdf(id);
   pdf.zoom(scale);
   queuePdfRender(pdf, null);
+  if (pdf.singlePageMode) {
+    scrollToPage(id, pdf.currentPage);
+  }
 }
 __name(zoom, "zoom");
 function rotate(dotnetReference, id, rotation) {
   const pdf = Pdf.getPdf(id);
   pdf.rotate(rotation);
   queuePdfRender(pdf, null);
+  if (pdf.singlePageMode) {
+    scrollToPage(id, pdf.currentPage);
+  }
 }
 __name(rotate, "rotate");
 function goToPage(dotnetReference, id, pageNumber) {
@@ -19835,19 +19857,23 @@ function goToPage(dotnetReference, id, pageNumber) {
       queuePdfRender(pdf, null);
       updateMetadata(dotnetReference, pdf);
     } else {
-      const container = document.getElementById(id);
-      const targetPage = document.getElementById(`${id}-page-${pageNumber}`);
-      if (container && targetPage) {
-        container.scrollTo({
-          top: targetPage.offsetTop - container.offsetTop,
-          behavior: "smooth"
-        });
-        updateMetadata(dotnetReference, pdf);
-      }
+      scrollToPage(id, pageNumber);
+      updateMetadata(dotnetReference, pdf);
     }
   }
 }
 __name(goToPage, "goToPage");
+function scrollToPage(id, pageNumber) {
+  const container = document.getElementById(id);
+  const targetPage = document.getElementById(`${id}-page-${pageNumber}`);
+  if (container && targetPage) {
+    container.scrollTo({
+      top: targetPage.offsetTop - container.offsetTop,
+      behavior: "smooth"
+    });
+  }
+}
+__name(scrollToPage, "scrollToPage");
 function queuePdfRender(pdf, pageNumber) {
   if (pdf.renderInProgress) {
     if (!pageNumber) {
@@ -19880,12 +19906,11 @@ function renderPdf(pdf) {
     });
   } else {
     const container = document.getElementById(pdf.id);
-    const scale = pdf.scale;
     container.innerHTML = "";
     __webpack_exports__getDocument(pdf.url).promise.then(async function(doc) {
       for (let pageNum = 1; pageNum <= pdf.pageCount; pageNum++) {
         const page = await doc.getPage(pageNum);
-        const viewport = page.getViewport({ scale });
+        const viewport = page.getViewport({ scale: pdf.scale, rotation: pdf.rotation });
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
         canvas.id = `${pdf.id}-page-${pageNum}`;
@@ -19896,6 +19921,7 @@ function renderPdf(pdf) {
         await page.render({ canvasContext: ctx, viewport }).promise;
       }
     });
+    pdf.renderInProgress = false;
   }
 }
 __name(renderPdf, "renderPdf");

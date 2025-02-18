@@ -34,14 +34,28 @@ public partial class MudPdfViewer : MudComponentBase
     /// </remarks>
     [Parameter] public Orientation Orientation { get; set; } = Orientation.Portrait;
 
-
+    /// <summary>
+    /// Determines the height of the PDF viewer when <c>SinglePageMode</c> is set to <c>true</c>.
+    /// This can be any valid CSS height value (250px, 100vh, 85% etc.)
+    /// </summary>
+    /// <remarks>
+    /// Defaults to <c>65vh</c>
+    /// </remarks>
     [Parameter] public string Height { get; set; } = "65vh";
+    
+    /// <summary>
+    /// If this is set to true then the pages of the PDF document will be displayed one at a time,
+    /// if this is set to false then all pages are shown at once with the ability to scroll between them.
+    /// </summary>
+    /// <remarks>
+    /// Defaults to <c>true</c>
+    /// </remarks>
     [Parameter] public bool SinglePageMode { get; set; } = true;
     
     /// <summary>
     /// URL of the PDF to be displayed, this can also be a base64 string 
     /// </summary>
-    [Parameter] public string? Url { get; set; }
+    [EditorRequired, Parameter] public string? Url { get; set; }
     
     /// <summary>
     /// Hides the thumbnail bar as well as the option to display it
