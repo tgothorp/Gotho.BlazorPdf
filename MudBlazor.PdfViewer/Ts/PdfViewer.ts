@@ -1,6 +1,8 @@
 import {Pdf} from "./Pdf";
 
 import {getDocument, GlobalWorkerOptions} from "pdfjs-dist"
+// @ts-ignore
+import printjs from "print-js"
 
 GlobalWorkerOptions.workerSrc = "./pdfjs-4.0.379.worker.min.js";
 
@@ -96,9 +98,16 @@ export function goToPage(dotnetReference: any, id: string, pageNumber: number) {
             updateMetadata(dotnetReference, pdf);
         } else {
             // Scroll to page
-           scrollToPage(id, pageNumber);
-           updateMetadata(dotnetReference, pdf);
+            scrollToPage(id, pageNumber);
+            updateMetadata(dotnetReference, pdf);
         }
+    }
+}
+
+export function printDocument(dotnetReference: any, id: string) {
+    const pdf = Pdf.getPdf(id);
+    if (pdf.url) {
+        printjs(pdf.url);
     }
 }
 

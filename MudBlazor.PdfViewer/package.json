@@ -28,6 +28,7 @@
     "typescript": "^5.7.3"
   },
   "dependencies": {
-    "pdfjs-dist": "^4.0.379"
+    "pdfjs-dist": "^4.0.379",
+    "print-js": "^1.6.0"
   }
 }

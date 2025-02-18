@@ -53,6 +53,12 @@ internal class PdfInterop(IJSRuntime jsRuntime) : IAsyncDisposable
         await module.InvokeVoidAsync("rotate", objRef, elementId, rotation);
     }
 
+    public async Task PrintDocumentAsync(object objRef, string elementId)
+    {
+        var module = await js.Value;
+        await module.InvokeVoidAsync("printDocument", objRef, elementId);
+    }
+
     public async ValueTask DisposeAsync()
     {
         if (js.IsValueCreated)
