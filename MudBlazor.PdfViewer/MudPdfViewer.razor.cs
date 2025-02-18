@@ -235,6 +235,11 @@ public partial class MudPdfViewer : MudComponentBase
         await PdfInterop.RotateAsync(_objectReference!, _id!, _rotation);
     }
 
+    private async Task PrintDocumentAsync()
+    {
+        await PdfInterop.PrintDocumentAsync(_objectReference!, _id!);
+    }
+
     private void ToggleThumbnails()
     {
         _toggleThumbnails = !_toggleThumbnails;
