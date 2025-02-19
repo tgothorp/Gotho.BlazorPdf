@@ -10,7 +10,7 @@
                                    Size="Size.Medium"
                                    Color="@Config.Colors.IconColor"
                                    OnClick="ToggleThumbnails"
-                                   Disabled="_passwordRequired"
+                                   Disabled="PdfErrored"
                                    aria-label="@Config.Labels.ToggleThumbnails"/>
                 </MudTooltip>
             }
@@ -19,7 +19,7 @@
                                Size="Size.Medium"
                                Color="@Config.Colors.IconColor"
                                OnClick="PreviousPageAsync"
-                               Disabled="_passwordRequired"
+                               Disabled="PdfErrored"
                                aria-label="@Config.Labels.PreviousPage"/>
             </MudTooltip>
             <MudTooltip Text="@Config.Labels.NextPage" Arrow="true" Placement="Placement.Top">
@@ -27,7 +27,7 @@
                                Size="Size.Medium"
                                Color="@Config.Colors.IconColor"
                                OnClick="NextPageAsync"
-                               Disabled="_passwordRequired"
+                               Disabled="PdfErrored"
                                aria-label="@Config.Labels.NextPage"/>
             </MudTooltip>
             <div style="max-width: 60px;">
@@ -37,7 +37,7 @@
                     Variant="Variant.Filled"
                     Margin="Margin.Dense"
                     HideSpinButtons="true"
-                    Disabled="_passwordRequired"
+                    Disabled="PdfErrored"
                     ValueChanged="PageNumberChanged"/>
             </div>
             <MudText Typo="Typo.body1" Class="ml-2 mr-2">@Config.Labels.PageOf</MudText>
@@ -48,7 +48,7 @@
                                Size="Size.Medium"
                                Color="@Config.Colors.IconColor"
                                OnClick="ZoomOutAsync"
-                               Disabled="_passwordRequired"
+                               Disabled="PdfErrored"
                                aria-label="@Config.Labels.ZoomOut"/>
             </MudTooltip>
             <MudChip T="string" Variant="Variant.Text">@_zoomPercentage</MudChip>
@@ -57,11 +57,11 @@
                                Size="Size.Medium"
                                Color="@Config.Colors.IconColor"
                                OnClick="ZoomInAsync"
-                               Disabled="_passwordRequired"
+                               Disabled="PdfErrored"
                                aria-label="@Config.Labels.ZoomIn"/>
             </MudTooltip>
             <MudSpacer/>
-            <MudMenu Icon="@Config.Icons.Menu" AriaLabel="@Config.Labels.OpenMenu" Disabled="_passwordRequired">
+            <MudMenu Icon="@Config.Icons.Menu" AriaLabel="@Config.Labels.OpenMenu" Disabled="PdfErrored">
                 <MudMenuItem Icon="@Config.Icons.RotateClockwise" Label="@Config.Labels.RotateClockwise" OnClick="RotateClockwiseAsync"/>
                 <MudMenuItem Icon="@Config.Icons.RotateCounterclockwise" Label="@Config.Labels.RotateCounterclockwise" OnClick="RotateCounterclockwiseAsync"/>
                 <MudMenuItem Icon="@Config.Icons.SwitchOrientation" Label="@Config.Labels.SwitchOrientation" OnClick="SwitchOrientationAsync"/>
@@ -74,39 +74,57 @@
                 <MudMenuItem Icon="@Config.Icons.PrintDocument" Label="@Config.Labels.PrintDocument" OnClick="PrintDocumentAsync"/>
             </MudMenu>
         </MudToolBar>
+        @if (_loading)
+        {
+            <MudProgressLinear Color="Color.Primary" Indeterminate="true"/>
+        }
     </MudItem>
     <MudItem xs="12">
         <MudGrid Class="flex-column">
             <MudItem xs="12" Class="justify-center d-flex mudpdf_container" Style="@ColorStyle()">
-                @if (_passwordRequired)
+                @if (PdfErrored)
                 {
                     <div class="mudpdf_password">
                         <MudCard Class="pa-2">
                             <MudCardHeader>
                                 <CardHeaderContent>
                                     <MudStack Row="true" Justify="Justify.Center">
-                                        <MudIcon Icon="@Icons.Material.Filled.Warning" Color="Color.Warning" Size="Size.Large"/>
-                                        <MudText Typo="Typo.h5">Password Required</MudText>
+                                        @if (_pdfError?.ErrorType == PdfErrorType.PasswordRequired)
+                                        {
+                                            <MudIcon Icon="@Icons.Material.Filled.Warning" Color="Color.Warning" Size="Size.Large"/>
+                                            <MudText Typo="Typo.h5">Password Required</MudText>
+                                        }
+                                        else
+                                        {
+                                            <MudIcon Icon="@Icons.Material.Filled.Error" Color="Color.Error" Size="Size.Large"/>
+                                            <MudText Typo="Typo.h5">PDF Error</MudText>
+                                        }
                                     </MudStack>
                                 </CardHeaderContent>
                             </MudCardHeader>
                             <MudCardContent>
-                                <MudTextField @bind-Value="_password" InputType="InputType.Password" Label="Password" Variant="Variant.Filled" HelperText="Please enter the password for the PDF document."></MudTextField>
-                                @if (_passwordError)
+                                @if (_pdfError?.ErrorType == PdfErrorType.PasswordRequired)
                                 {
-                                    <MudAlert Class="mt-3" Severity="Severity.Warning">@_passwordErrorText</MudAlert>
+                                    <MudTextField @bind-Value="_password" InputType="InputType.Password" Label="Password" Variant="Variant.Filled" HelperText="Please enter the password for the PDF document."></MudTextField>
+                                    @if (!string.IsNullOrEmpty(_pdfError?.Message))
+                                    {
+                                        <MudAlert Class="mt-3" Severity="Severity.Warning">@_pdfError.Message</MudAlert>
+                                    }
+                                }
+                                else
+                                {
+                                    <MudAlert Class="mt-3" Severity="Severity.Error">@_pdfError?.Message</MudAlert>
                                 }
                             </MudCardContent>
                             <MudCardActions Style="flex-direction: row-reverse">
-                                <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="SubmitPasswordAsync">Submit</MudButton>
+                                <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="ReloadPdfAsync">@(_pdfError?.ErrorType == PdfErrorType.PasswordRequired ? "Submit" : "Retry")</MudButton>
                             </MudCardActions>
                         </MudCard>
                     </div>
                 }
 
-                <div class="@(_passwordRequired ? "d-none" : "")">
+                <div class="@(PdfErrored ? "d-none" : "")">
                     <div id="@($"{_id}_thumbs")" class="@ThumbnailClass()" style="@ColorStyle()"></div>
-
                     @if (!SinglePageMode)
                     {
                         <div id="@_id" class="mudpdf_scroll" style="@ScrollStyle()"></div>

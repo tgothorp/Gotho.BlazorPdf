@@ -7,6 +7,8 @@ namespace MudBlazorPdf;
 
 public partial class MudPdfViewer : MudComponentBase
 {
+    private bool _loading = true;
+
     private ElementReference _element;
     private DotNetObjectReference<MudPdfViewer>? _objectReference;
     private string? _id;
@@ -20,16 +22,16 @@ public partial class MudPdfViewer : MudComponentBase
 
     private int _pageNumber = 0;
     private int _pageCount = 0;
-    
+
     private Orientation _oldOrientation = Orientation.Portrait;
     private double _rotation = 0;
-    
+
     private bool _toggleThumbnails = true;
-    
+
     private string? _password = null;
-    private bool _passwordRequired = false;
-    private bool _passwordError = false;
-    private string? _passwordErrorText = null;
+
+    private bool PdfErrored => _pdfError != null;
+    private PdfError? _pdfError = null;
 
     /// <summary>
     /// Sets the display orientation of the PDF document
@@ -37,7 +39,8 @@ public partial class MudPdfViewer : MudComponentBase
     /// <remarks>
     /// Defaults to <c>Orientation.Portrait</c>
     /// </remarks>
-    [Parameter] public Orientation Orientation { get; set; } = Orientation.Portrait;
+    [Parameter]
+    public Orientation Orientation { get; set; } = Orientation.Portrait;
 
     /// <summary>
     /// Determines the height of the PDF viewer when <c>SinglePageMode</c> is set to <c>true</c>.
@@ -46,8 +49,9 @@ public partial class MudPdfViewer : MudComponentBase
     /// <remarks>
     /// Defaults to <c>65vh</c>
     /// </remarks>
-    [Parameter] public string Height { get; set; } = "65vh";
-    
+    [Parameter]
+    public string Height { get; set; } = "65vh";
+
     /// <summary>
     /// If this is set to true then the pages of the PDF document will be displayed one at a time,
     /// if this is set to false then all pages are shown at once with the ability to scroll between them.
@@ -55,30 +59,35 @@ public partial class MudPdfViewer : MudComponentBase
     /// <remarks>
     /// Defaults to <c>true</c>
     /// </remarks>
-    [Parameter] public bool SinglePageMode { get; set; } = true;
-    
+    [Parameter]
+    public bool SinglePageMode { get; set; } = true;
+
     /// <summary>
     /// URL of the PDF to be displayed, this can also be a base64 string 
     /// </summary>
-    [EditorRequired, Parameter] public string? Url { get; set; }
-    
+    [EditorRequired, Parameter]
+    public string? Url { get; set; }
+
     /// <summary>
     /// Hides the thumbnail bar as well as the option to display it
     /// </summary>
     /// <remarks>
     /// Defaults to <c>false</c>
     /// </remarks>
-    [Parameter] public bool HideThumbnails { get; set; } = false;
+    [Parameter]
+    public bool HideThumbnails { get; set; } = false;
 
     /// <summary>
     /// This event fires immediately after the PDF document is loaded.
     /// </summary>
-    [Parameter] public EventCallback<PdfViewerEventArgs> OnDocumentLoaded { get; set; }
-    
+    [Parameter]
+    public EventCallback<PdfViewerEventArgs> OnDocumentLoaded { get; set; }
+
     /// <summary>
     /// This event fires immediately after the page is changed.
     /// </summary>
-    [Parameter] public EventCallback<PdfViewerEventArgs> OnPageChanged { get; set; }
+    [Parameter]
+    public EventCallback<PdfViewerEventArgs> OnPageChanged { get; set; }
 
     [Inject] private PdfInterop PdfInterop { get; set; } = default!;
     [Inject] private MudPdfViewerConfig Config { get; set; } = default!;
@@ -106,6 +115,8 @@ public partial class MudPdfViewer : MudComponentBase
     [JSInvokable]
     public void DocumentLoaded(PdfViewerModel? pdfViewerModel)
     {
+        _loading = false;
+
         if (pdfViewerModel is null)
             return;
 
@@ -126,7 +137,7 @@ public partial class MudPdfViewer : MudComponentBase
 
         _pageNumber = pdfViewerModel.PageNumber;
         _pageCount = pdfViewerModel.PagesCount;
-        
+
         StateHasChanged();
 
         if (OnPageChanged.HasDelegate)
@@ -136,20 +147,13 @@ public partial class MudPdfViewer : MudComponentBase
     [JSInvokable]
     public void PdfViewerError(PdfViewerError error)
     {
-        switch (error.Name)
+        _loading = false;
+        _pdfError = error.Name switch
         {
-            case "PasswordException":
-                _passwordRequired = true;
-                if (error.Message != null && error.Message.ToLower().Contains("incorrect password"))
-                {
-                    _passwordError = true;
-                    _passwordErrorText = error.Message;
-                }
-                break;
-            default:
-                break;
-        }
-        
+            "PasswordException" => new PdfError { ErrorType = PdfErrorType.PasswordRequired, Message = error.Message?.ToLower() == "no password given" ? null : error.Message },
+            _ => new PdfError { ErrorType = PdfErrorType.Error, Message = error.Message }
+        };
+
         StateHasChanged();
     }
 
@@ -157,6 +161,7 @@ public partial class MudPdfViewer : MudComponentBase
     private async Task LastPageAsync() => await PdfInterop.LastPageAsync(_objectReference!, _id!);
     private async Task NextPageAsync() => await PdfInterop.NextPageAsync(_objectReference!, _id!);
     private async Task PreviousPageAsync() => await PdfInterop.PreviousPageAsync(_objectReference!, _id!);
+
     private async Task PageNumberChanged(int value)
     {
         if (value < 1 || value > _pageCount)
@@ -213,7 +218,7 @@ public partial class MudPdfViewer : MudComponentBase
         _scale = 0.01 * zp;
         await PdfInterop.ZoomInOutAsync(_objectReference!, _id!, _scale);
     }
-    
+
     private async Task ResetZoomAsync()
     {
         _zoomLevel = _defaultZoomLevel;
@@ -222,7 +227,7 @@ public partial class MudPdfViewer : MudComponentBase
         _scale = 0.01 * zp;
         await PdfInterop.ZoomInOutAsync(_objectReference!, _id!, _scale);
     }
-    
+
     private async Task RotateClockwiseAsync()
     {
         _rotation += 90;
@@ -256,7 +261,7 @@ public partial class MudPdfViewer : MudComponentBase
         _oldOrientation = Orientation;
         Orientation = Orientation == Orientation.Portrait ? Orientation.Landscape : Orientation.Portrait;
         _rotation = Orientation == Orientation.Portrait ? 0 : -90;
-        
+
         await PdfInterop.RotateAsync(_objectReference!, _id!, _rotation);
     }
 
@@ -265,25 +270,22 @@ public partial class MudPdfViewer : MudComponentBase
         await PdfInterop.PrintDocumentAsync(_objectReference!, _id!);
     }
 
-    private async Task SubmitPasswordAsync()
+    private async Task ReloadPdfAsync()
     {
-        if (string.IsNullOrEmpty(_password))
+        if (_pdfError is not null && _pdfError.ErrorType == PdfErrorType.PasswordRequired && string.IsNullOrEmpty(_password))
         {
-            _passwordError = true;
-            _passwordErrorText = "Password is required!";
+            _pdfError.Message = "Please supply a password.";
             StateHasChanged();
-            
             return;
         }
 
-        _passwordRequired = false;
-        _passwordError = false;
-
+        _loading = true;
+        _pdfError = null;
         StateHasChanged();
-        
+
         await PdfInterop.InitializeAsync(_objectReference!, _id!, Url!, _scale, _rotation, SinglePageMode, _password);
     }
-    
+
     private void ToggleThumbnails()
     {
         _toggleThumbnails = !_toggleThumbnails;
