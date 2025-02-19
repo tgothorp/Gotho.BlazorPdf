@@ -25,6 +25,11 @@ public partial class MudPdfViewer : MudComponentBase
     private double _rotation = 0;
     
     private bool _toggleThumbnails = true;
+    
+    private string? _password = null;
+    private bool _passwordRequired = false;
+    private bool _passwordError = false;
+    private string? _passwordErrorText = null;
 
     /// <summary>
     /// Sets the display orientation of the PDF document
@@ -126,6 +131,26 @@ public partial class MudPdfViewer : MudComponentBase
 
         if (OnPageChanged.HasDelegate)
             OnPageChanged.InvokeAsync(new PdfViewerEventArgs(_pageNumber, _pageCount));
+    }
+
+    [JSInvokable]
+    public void PdfViewerError(PdfViewerError error)
+    {
+        switch (error.Name)
+        {
+            case "PasswordException":
+                _passwordRequired = true;
+                if (error.Message != null && error.Message.ToLower().Contains("incorrect password"))
+                {
+                    _passwordError = true;
+                    _passwordErrorText = error.Message;
+                }
+                break;
+            default:
+                break;
+        }
+        
+        StateHasChanged();
     }
 
     private async Task FirstPageAsync() => await PdfInterop.FirstPageAsync(_objectReference!, _id!);
@@ -240,6 +265,25 @@ public partial class MudPdfViewer : MudComponentBase
         await PdfInterop.PrintDocumentAsync(_objectReference!, _id!);
     }
 
+    private async Task SubmitPasswordAsync()
+    {
+        if (string.IsNullOrEmpty(_password))
+        {
+            _passwordError = true;
+            _passwordErrorText = "Password is required!";
+            StateHasChanged();
+            
+            return;
+        }
+
+        _passwordRequired = false;
+        _passwordError = false;
+
+        StateHasChanged();
+        
+        await PdfInterop.InitializeAsync(_objectReference!, _id!, Url!, _scale, _rotation, SinglePageMode, _password);
+    }
+    
     private void ToggleThumbnails()
     {
         _toggleThumbnails = !_toggleThumbnails;

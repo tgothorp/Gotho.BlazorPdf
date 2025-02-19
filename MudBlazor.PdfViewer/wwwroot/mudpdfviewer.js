@@ -693,11 +693,11 @@ var require_print = __commonJS({
                 /*! ./js/init */
                 "./src/js/init.js"
               );
-              var printJS = _js_init__WEBPACK_IMPORTED_MODULE_1__["default"].init;
+              var printJS2 = _js_init__WEBPACK_IMPORTED_MODULE_1__["default"].init;
               if (typeof window !== "undefined") {
-                window.printJS = printJS;
+                window.printJS = printJS2;
               }
-              __webpack_exports__2["default"] = printJS;
+              __webpack_exports__2["default"] = printJS2;
             }, "./src/index.js")
           ),
           /***/
@@ -1522,7 +1522,8 @@ var Pdf = class _Pdf {
   pageCount;
   currentPage;
   queuedPage;
-  constructor(id, scale, rotation, url, singlePageMode) {
+  password;
+  constructor(id, scale, rotation, url, singlePageMode, password = null) {
     this.id = id;
     this.canvas = _Pdf.getCanvas(id);
     this.scale = scale;
@@ -1534,6 +1535,7 @@ var Pdf = class _Pdf {
     this.pageCount = 0;
     this.currentPage = 1;
     this.queuedPage = null;
+    this.password = password;
     pdfInstances[this.id] = this;
   }
   static getPdf(id) {
@@ -20684,15 +20686,18 @@ var __webpack_exports__version = __webpack_exports__.version;
 // Ts/PdfViewer.ts
 var import_print_js = __toESM(require_print());
 __webpack_exports__GlobalWorkerOptions.workerSrc = "./pdfjs-4.0.379.worker.min.js";
-function init(dotnetReference, id, documentUrl, scale, rotation, singlePageMode) {
+function init(dotnetReference, id, documentUrl, scale, rotation, singlePageMode, password = null) {
   console.log("Initializing PDF " + id);
   if (documentUrl) {
-    const pdf = new Pdf(id, scale, rotation, documentUrl, singlePageMode);
-    __webpack_exports__getDocument(pdf.url).promise.then((doc) => {
+    const pdf = new Pdf(id, scale, rotation, documentUrl, singlePageMode, password);
+    const documentInit = pdf.password ? { url: pdf.url, password: pdf.password } : { url: pdf.url };
+    __webpack_exports__getDocument(documentInit).promise.then((doc) => {
       pdf.setDocument(doc);
       renderPdf(pdf);
       renderThumbnails(dotnetReference, pdf);
       dotnetReference.invokeMethodAsync("DocumentLoaded", { pagesCount: pdf.pageCount, pageNumber: pdf.currentPage });
+    }).catch((err) => {
+      dotnetReference.invokeMethodAsync("PdfViewerError", { name: err.name, message: err.message });
     });
   }
 }
@@ -20765,7 +20770,7 @@ function rotate(dotnetReference, id, rotation) {
 __name(rotate, "rotate");
 function goToPage(dotnetReference, id, pageNumber) {
   const pdf = Pdf.getPdf(id);
-  if (pdf !== null && pdf.gotoPage(pageNumber)) {
+  if (pdf.gotoPage(pageNumber)) {
     if (pdf.singlePageMode) {
       queuePdfRender(pdf, null);
       updateMetadata(dotnetReference, pdf);
@@ -20778,8 +20783,27 @@ function goToPage(dotnetReference, id, pageNumber) {
 __name(goToPage, "goToPage");
 function printDocument(dotnetReference, id) {
   const pdf = Pdf.getPdf(id);
-  if (pdf.url) {
-    (0, import_print_js.default)(pdf.url);
+  if (!pdf.password) {
+    if (pdf.url) {
+      (0, import_print_js.default)({ printable: pdf.url, type: "pdf" });
+    }
+  } else {
+    const pagePromises = [];
+    for (let pageNum = 1; pageNum <= pdf.pageCount; pageNum++) {
+      pagePromises.push(
+        pdf.document.getPage(pageNum).then((page) => {
+          const viewport = page.getViewport({ scale: 2 });
+          const canvas = document.createElement("canvas");
+          const context = canvas.getContext("2d");
+          canvas.width = viewport.width;
+          canvas.height = viewport.height;
+          return page.render({ canvasContext: context, viewport }).promise.then(() => canvas.toDataURL("image/png"));
+        })
+      );
+      Promise.all(pagePromises).then((imageDataArray) => {
+        printJS({ printable: imageDataArray, type: "image" });
+      });
+    }
   }
 }
 __name(printDocument, "printDocument");
