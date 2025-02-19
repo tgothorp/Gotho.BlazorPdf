@@ -28,7 +28,8 @@ public partial class MudPdfViewer : MudComponentBase
     
     private string? _password = null;
     private bool _passwordRequired = false;
-    private bool _passwordIncorrect = false;
+    private bool _passwordError = false;
+    private string? _passwordErrorText = null;
 
     /// <summary>
     /// Sets the display orientation of the PDF document
@@ -139,8 +140,11 @@ public partial class MudPdfViewer : MudComponentBase
         {
             case "PasswordException":
                 _passwordRequired = true;
-                if (error.Message != null && error.Message.ToLower().Contains("incorrect password")) 
-                    _passwordIncorrect = true;
+                if (error.Message != null && error.Message.ToLower().Contains("incorrect password"))
+                {
+                    _passwordError = true;
+                    _passwordErrorText = error.Message;
+                }
                 break;
             default:
                 break;
@@ -263,8 +267,17 @@ public partial class MudPdfViewer : MudComponentBase
 
     private async Task SubmitPasswordAsync()
     {
+        if (string.IsNullOrEmpty(_password))
+        {
+            _passwordError = true;
+            _passwordErrorText = "Password is required!";
+            StateHasChanged();
+            
+            return;
+        }
+
         _passwordRequired = false;
-        _passwordIncorrect = false;
+        _passwordError = false;
 
         StateHasChanged();
         

@@ -117,7 +117,7 @@ export function printDocument(dotnetReference: any, id: string) {
         }
     } else {
         // Workaround for printing encrypted PDFs, we can't use the encrypted raw PDF data
-        // so we will instead, load all pages as images and then pass those images to printJS
+        // so we will instead load all pages as images and then pass those images to printJS
         const pagePromises = [];
         for (let pageNum = 1; pageNum <= pdf.pageCount; pageNum++) {
             pagePromises.push(

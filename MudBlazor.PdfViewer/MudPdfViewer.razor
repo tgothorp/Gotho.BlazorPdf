@@ -10,6 +10,7 @@
                                    Size="Size.Medium"
                                    Color="@Config.Colors.IconColor"
                                    OnClick="ToggleThumbnails"
+                                   Disabled="_passwordRequired"
                                    aria-label="@Config.Labels.ToggleThumbnails"/>
                 </MudTooltip>
             }
@@ -18,6 +19,7 @@
                                Size="Size.Medium"
                                Color="@Config.Colors.IconColor"
                                OnClick="PreviousPageAsync"
+                               Disabled="_passwordRequired"
                                aria-label="@Config.Labels.PreviousPage"/>
             </MudTooltip>
             <MudTooltip Text="@Config.Labels.NextPage" Arrow="true" Placement="Placement.Top">
@@ -25,11 +27,18 @@
                                Size="Size.Medium"
                                Color="@Config.Colors.IconColor"
                                OnClick="NextPageAsync"
+                               Disabled="_passwordRequired"
                                aria-label="@Config.Labels.NextPage"/>
             </MudTooltip>
             <div style="max-width: 60px;">
-                <MudNumericField T="int" Text="@_pageNumber.ToString()" Variant="Variant.Filled"
-                                 Margin="Margin.Dense" HideSpinButtons="true" ValueChanged="PageNumberChanged"/>
+                <MudNumericField
+                    T="int"
+                    Text="@_pageNumber.ToString()"
+                    Variant="Variant.Filled"
+                    Margin="Margin.Dense"
+                    HideSpinButtons="true"
+                    Disabled="_passwordRequired"
+                    ValueChanged="PageNumberChanged"/>
             </div>
             <MudText Typo="Typo.body1" Class="ml-2 mr-2">@Config.Labels.PageOf</MudText>
             <MudText Typo="Typo.body1">@_pageCount</MudText>
@@ -39,6 +48,7 @@
                                Size="Size.Medium"
                                Color="@Config.Colors.IconColor"
                                OnClick="ZoomOutAsync"
+                               Disabled="_passwordRequired"
                                aria-label="@Config.Labels.ZoomOut"/>
             </MudTooltip>
             <MudChip T="string" Variant="Variant.Text">@_zoomPercentage</MudChip>
@@ -47,19 +57,16 @@
                                Size="Size.Medium"
                                Color="@Config.Colors.IconColor"
                                OnClick="ZoomInAsync"
+                               Disabled="_passwordRequired"
                                aria-label="@Config.Labels.ZoomIn"/>
             </MudTooltip>
             <MudSpacer/>
-            <MudMenu Icon="@Config.Icons.Menu" AriaLabel="@Config.Labels.OpenMenu">
-                <MudMenuItem Icon="@Config.Icons.RotateClockwise" Label="@Config.Labels.RotateClockwise"
-                             OnClick="RotateClockwiseAsync"/>
-                <MudMenuItem Icon="@Config.Icons.RotateCounterclockwise"
-                             Label="@Config.Labels.RotateCounterclockwise" OnClick="RotateCounterclockwiseAsync"/>
-                <MudMenuItem Icon="@Config.Icons.SwitchOrientation" Label="@Config.Labels.SwitchOrientation"
-                             OnClick="SwitchOrientationAsync"/>
+            <MudMenu Icon="@Config.Icons.Menu" AriaLabel="@Config.Labels.OpenMenu" Disabled="_passwordRequired">
+                <MudMenuItem Icon="@Config.Icons.RotateClockwise" Label="@Config.Labels.RotateClockwise" OnClick="RotateClockwiseAsync"/>
+                <MudMenuItem Icon="@Config.Icons.RotateCounterclockwise" Label="@Config.Labels.RotateCounterclockwise" OnClick="RotateCounterclockwiseAsync"/>
+                <MudMenuItem Icon="@Config.Icons.SwitchOrientation" Label="@Config.Labels.SwitchOrientation" OnClick="SwitchOrientationAsync"/>
                 <MudDivider/>
-                <MudMenuItem Icon="@Config.Icons.FirstPage" Label="@Config.Labels.FirstPage"
-                             OnClick="FirstPageAsync"/>
+                <MudMenuItem Icon="@Config.Icons.FirstPage" Label="@Config.Labels.FirstPage" OnClick="FirstPageAsync"/>
                 <MudMenuItem Icon="@Config.Icons.LastPage" Label="@Config.Labels.LastPage" OnClick="LastPageAsync"/>
                 <MudDivider/>
                 <MudMenuItem Icon="@Config.Icons.ResetZoom" Label="@Config.Labels.ResetZoom" OnClick="ResetZoomAsync"/>
@@ -77,7 +84,7 @@
                         <MudCard Class="pa-2">
                             <MudCardHeader>
                                 <CardHeaderContent>
-                                    <MudStack Row="true">
+                                    <MudStack Row="true" Justify="Justify.Center">
                                         <MudIcon Icon="@Icons.Material.Filled.Warning" Color="Color.Warning" Size="Size.Large"/>
                                         <MudText Typo="Typo.h5">Password Required</MudText>
                                     </MudStack>
@@ -85,9 +92,9 @@
                             </MudCardHeader>
                             <MudCardContent>
                                 <MudTextField @bind-Value="_password" InputType="InputType.Password" Label="Password" Variant="Variant.Filled" HelperText="Please enter the password for the PDF document."></MudTextField>
-                                @if (_passwordIncorrect)
+                                @if (_passwordError)
                                 {
-                                    <MudAlert Class="mt-1" Severity="Severity.Warning">Password is incorrect!</MudAlert>
+                                    <MudAlert Class="mt-3" Severity="Severity.Warning">@_passwordErrorText</MudAlert>
                                 }
                             </MudCardContent>
                             <MudCardActions Style="flex-direction: row-reverse">
@@ -109,7 +116,7 @@
                         <canvas @ref="_element" id="@_id" style="overflow: auto"></canvas>
                     }
                 </div>
-                
+
             </MudItem>
         </MudGrid>
     </MudItem>
