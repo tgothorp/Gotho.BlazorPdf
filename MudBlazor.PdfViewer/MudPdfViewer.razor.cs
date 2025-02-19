@@ -29,6 +29,9 @@ public partial class MudPdfViewer : MudComponentBase
     private bool _toggleThumbnails = true;
 
     private string? _password = null;
+    private InputType _passwordInputType = InputType.Password;
+    private string _passwordInputIcon = Icons.Material.Filled.VisibilityOff;
+    private bool _passwordVisible = false;
 
     private bool PdfErrored => _pdfError != null;
     private PdfError? _pdfError = null;
@@ -285,6 +288,22 @@ public partial class MudPdfViewer : MudComponentBase
 
         await PdfInterop.InitializeAsync(_objectReference!, _id!, Url!, _scale, _rotation, SinglePageMode, _password);
     }
+
+    private void PeekPassword()
+    {
+        if (_passwordVisible)
+        {
+            _passwordVisible = false;
+            _passwordInputIcon = Icons.Material.Filled.VisibilityOff;
+            _passwordInputType = InputType.Password;
+        }
+        else {
+            _passwordVisible = true;
+            _passwordInputIcon = Icons.Material.Filled.Visibility;
+            _passwordInputType = InputType.Text;
+        }
+    }
+    
 
     private void ToggleThumbnails()
     {

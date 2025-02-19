@@ -105,7 +105,7 @@
                             <MudCardContent>
                                 @if (_pdfError?.ErrorType == PdfErrorType.PasswordRequired)
                                 {
-                                    <MudTextField @bind-Value="_password" InputType="InputType.Password" Label="Password" Variant="Variant.Filled" HelperText="Please enter the password for the PDF document."></MudTextField>
+                                    <MudTextField @bind-Value="_password" InputType="_passwordInputType" Adornment="Adornment.End" AdornmentIcon="@_passwordInputIcon" OnAdornmentClick="PeekPassword" Label="Password" Variant="Variant.Filled" HelperText="Please enter the password for the PDF document."></MudTextField>
                                     @if (!string.IsNullOrEmpty(_pdfError?.Message))
                                     {
                                         <MudAlert Class="mt-3" Severity="Severity.Warning">@_pdfError.Message</MudAlert>
