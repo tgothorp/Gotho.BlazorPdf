@@ -6,17 +6,23 @@ import printjs from "print-js"
 
 GlobalWorkerOptions.workerSrc = "./pdfjs-4.0.379.worker.min.js";
 
-export function init(dotnetReference: any, id: string, documentUrl: string, scale: number, rotation: number, singlePageMode: boolean) {
+export function init(dotnetReference: any, id: string, documentUrl: string, scale: number, rotation: number, singlePageMode: boolean, password: string = null) {
     console.log("Initializing PDF " + id);
 
     if (documentUrl) {
-        const pdf = new Pdf(id, scale, rotation, documentUrl, singlePageMode)
-        getDocument(pdf.url).promise.then((doc) => {
+        const pdf = new Pdf(id, scale, rotation, documentUrl, singlePageMode, password)
+        const documentInit = pdf.password
+            ? {url: pdf.url, password: pdf.password}
+            : {url: pdf.url};
+        
+        getDocument(documentInit).promise.then((doc) => {
             pdf.setDocument(doc);
             renderPdf(pdf);
             renderThumbnails(dotnetReference, pdf);
 
             dotnetReference.invokeMethodAsync('DocumentLoaded', {pagesCount: pdf.pageCount, pageNumber: pdf.currentPage});
+        }).catch((err) => {
+            dotnetReference.invokeMethodAsync('PdfViewerError', {name: err.name, message: err.message});
         })
     }
 }
@@ -90,8 +96,7 @@ export function rotate(dotnetReference: any, id: string, rotation: number) {
 
 export function goToPage(dotnetReference: any, id: string, pageNumber: number) {
     const pdf = Pdf.getPdf(id);
-    if (pdf !== null && pdf.gotoPage(pageNumber)) {
-
+    if (pdf.gotoPage(pageNumber)) {
         if (pdf.singlePageMode) {
             // Change page
             queuePdfRender(pdf, null);
@@ -105,9 +110,11 @@ export function goToPage(dotnetReference: any, id: string, pageNumber: number) {
 }
 
 export function printDocument(dotnetReference: any, id: string) {
+    // TODO: Need alternative method when attempting to print password protected PDFs
+
     const pdf = Pdf.getPdf(id);
     if (pdf.url) {
-        printjs(pdf.url);
+        printjs({printable: pdf.url, type: 'pdf', showModal:true});
     }
 }
 

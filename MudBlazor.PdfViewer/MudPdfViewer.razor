@@ -71,15 +71,45 @@
     <MudItem xs="12">
         <MudGrid Class="flex-column">
             <MudItem xs="12" Class="justify-center d-flex mudpdf_container" Style="@ColorStyle()">
-                <div id="@($"{_id}_thumbs")" class="@ThumbnailClass()" style="@ColorStyle()"></div>
-                @if (!SinglePageMode)
+                @if (_passwordRequired)
                 {
-                    <div id="@_id" class="mudpdf_scroll" style="@ScrollStyle()"></div>
+                    <div class="mudpdf_password">
+                        <MudCard Class="pa-2">
+                            <MudCardHeader>
+                                <CardHeaderContent>
+                                    <MudStack Row="true">
+                                        <MudIcon Icon="@Icons.Material.Filled.Warning" Color="Color.Warning" Size="Size.Large"/>
+                                        <MudText Typo="Typo.h5">Password Required</MudText>
+                                    </MudStack>
+                                </CardHeaderContent>
+                            </MudCardHeader>
+                            <MudCardContent>
+                                <MudTextField @bind-Value="_password" InputType="InputType.Password" Label="Password" Variant="Variant.Filled" HelperText="Please enter the password for the PDF document."></MudTextField>
+                                @if (_passwordIncorrect)
+                                {
+                                    <MudAlert Class="mt-1" Severity="Severity.Warning">Password is incorrect!</MudAlert>
+                                }
+                            </MudCardContent>
+                            <MudCardActions Style="flex-direction: row-reverse">
+                                <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="SubmitPasswordAsync">Submit</MudButton>
+                            </MudCardActions>
+                        </MudCard>
+                    </div>
                 }
-                else
-                {
-                    <canvas @ref="_element" id="@_id" style="overflow: auto"></canvas>
-                }
+
+                <div class="@(_passwordRequired ? "d-none" : "")">
+                    <div id="@($"{_id}_thumbs")" class="@ThumbnailClass()" style="@ColorStyle()"></div>
+
+                    @if (!SinglePageMode)
+                    {
+                        <div id="@_id" class="mudpdf_scroll" style="@ScrollStyle()"></div>
+                    }
+                    else
+                    {
+                        <canvas @ref="_element" id="@_id" style="overflow: auto"></canvas>
+                    }
+                </div>
+                
             </MudItem>
         </MudGrid>
     </MudItem>

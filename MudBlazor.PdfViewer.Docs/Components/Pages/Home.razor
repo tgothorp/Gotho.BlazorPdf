@@ -30,7 +30,7 @@
             <MudText Class="py-3">@eventLog</MudText>
             <MudPdfViewer
                 Class="pt-5"
-                Url="https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf"
+                Url="https://raw.githubusercontent.com/tgothorp/MudBlazor.PdfViewer/refs/heads/main/files/test_pdf_document-protected.pdf"
                 OnDocumentLoaded="OnDocumentLoaded"
                 OnPageChanged="OnPageChanged"/>
         </MudTabPanel>
@@ -40,54 +40,54 @@
             </pre>
         </MudTabPanel>
     </MudTabs>
-
-    <MudText Typo="Typo.h2" Class="pt-5">Thumbnails</MudText>
-    <MudText Typo="Typo.body1" Class="pb-4">Thumbnails for individual pages can be toggled or hidden completely</MudText>
-
-    <MudTabs>
-        <MudTabPanel Text="Example">
-            <MudPdfViewer
-                Class="pt-5"
-                HideThumbnails="true"
-                Url="https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf"/>
-        </MudTabPanel>
-        <MudTabPanel Text="Code">
-            <pre>
-                <MudText Style="display: block; padding: 1rem; white-space: pre; background-color: #161719" HtmlTag="code">@Examples.Thumbnails</MudText>
-            </pre>
-        </MudTabPanel>
-    </MudTabs>
-
-    <MudText Typo="Typo.h2" Class="pt-5">Orientation</MudText>
-    <MudText Typo="Typo.body1" Class="pb-4">The orientation of the loaded PDF can be specified manually</MudText>
-
-    <MudTabs>
-        <MudTabPanel Text="Example">
-            <MudPdfViewer
-                Class="pt-5"
-                HideThumbnails="true"
-                Url="https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf"
-                Orientation="Orientation.Landscape"/>
-        </MudTabPanel>
-        <MudTabPanel Text="Code">
-            <pre>
-                <MudText Style="display: block; padding: 1rem; white-space: pre; background-color: #161719" HtmlTag="code">@Examples.Orientation</MudText>
-            </pre>
-        </MudTabPanel>
-    </MudTabs>
-
-    <MudText Typo="Typo.h2" Class="pt-5">Additional Configuration</MudText>
-    <MudText Typo="Typo.body1" Class="pb-4">All of the icons, icon color as well as the text within the PDF viewer can be
-        customised. The following example shows how icons and text can be changed
-    </MudText>
-
-    <MudTabs>
-        <MudTabPanel Text="Code">
-            <pre>
-                <MudText Style="display: block; padding: 1rem; white-space: pre; background-color: #161719" HtmlTag="code">@Examples.Configuration</MudText>
-            </pre>
-        </MudTabPanel>
-    </MudTabs>
+    @* *@
+    @* <MudText Typo="Typo.h2" Class="pt-5">Thumbnails</MudText> *@
+    @* <MudText Typo="Typo.body1" Class="pb-4">Thumbnails for individual pages can be toggled or hidden completely</MudText> *@
+    @* *@
+    @* <MudTabs> *@
+    @*     <MudTabPanel Text="Example"> *@
+    @*         <MudPdfViewer *@
+    @*             Class="pt-5" *@
+    @*             HideThumbnails="true" *@
+    @*             Url="https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf"/> *@
+    @*     </MudTabPanel> *@
+    @*     <MudTabPanel Text="Code"> *@
+    @*         <pre> *@
+    @*             <MudText Style="display: block; padding: 1rem; white-space: pre; background-color: #161719" HtmlTag="code">@Examples.Thumbnails</MudText> *@
+    @*         </pre> *@
+    @*     </MudTabPanel> *@
+    @* </MudTabs> *@
+    @* *@
+    @* <MudText Typo="Typo.h2" Class="pt-5">Orientation</MudText> *@
+    @* <MudText Typo="Typo.body1" Class="pb-4">The orientation of the loaded PDF can be specified manually</MudText> *@
+    @* *@
+    @* <MudTabs> *@
+    @*     <MudTabPanel Text="Example"> *@
+    @*         <MudPdfViewer *@
+    @*             Class="pt-5" *@
+    @*             HideThumbnails="true" *@
+    @*             Url="https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf" *@
+    @*             Orientation="Orientation.Landscape"/> *@
+    @*     </MudTabPanel> *@
+    @*     <MudTabPanel Text="Code"> *@
+    @*         <pre> *@
+    @*             <MudText Style="display: block; padding: 1rem; white-space: pre; background-color: #161719" HtmlTag="code">@Examples.Orientation</MudText> *@
+    @*         </pre> *@
+    @*     </MudTabPanel> *@
+    @* </MudTabs> *@
+    @* *@
+    @* <MudText Typo="Typo.h2" Class="pt-5">Additional Configuration</MudText> *@
+    @* <MudText Typo="Typo.body1" Class="pb-4">All of the icons, icon color as well as the text within the PDF viewer can be *@
+    @*     customised. The following example shows how icons and text can be changed *@
+    @* </MudText> *@
+    @* *@
+    @* <MudTabs> *@
+    @*     <MudTabPanel Text="Code"> *@
+    @*         <pre> *@
+    @*             <MudText Style="display: block; padding: 1rem; white-space: pre; background-color: #161719" HtmlTag="code">@Examples.Configuration</MudText> *@
+    @*         </pre> *@
+    @*     </MudTabPanel> *@
+    @* </MudTabs> *@
 </div>
 
 @code {

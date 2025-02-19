@@ -46,3 +46,7 @@
     display: block; /* ✅ Ensure each canvas is full-width */
     box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2); /* ✅ Optional: Adds slight shadow */
 }
+
+.mudpdf_password {
+    padding: 5rem;
+}
