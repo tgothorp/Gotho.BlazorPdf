@@ -14,7 +14,7 @@ export function init(dotnetReference: any, id: string, documentUrl: string, scal
         const documentInit = pdf.password
             ? {url: pdf.url, password: pdf.password}
             : {url: pdf.url};
-        
+
         getDocument(documentInit).promise.then((doc) => {
             pdf.setDocument(doc);
             renderPdf(pdf);
@@ -110,11 +110,35 @@ export function goToPage(dotnetReference: any, id: string, pageNumber: number) {
 }
 
 export function printDocument(dotnetReference: any, id: string) {
-    // TODO: Need alternative method when attempting to print password protected PDFs
-
     const pdf = Pdf.getPdf(id);
-    if (pdf.url) {
-        printjs({printable: pdf.url, type: 'pdf', showModal:true});
+    if (!pdf.password) {
+        if (pdf.url) {
+            printjs({printable: pdf.url, type: 'pdf'});
+        }
+    } else {
+        // Workaround for printing encrypted PDFs, we can't use the encrypted raw PDF data
+        // so we will instead, load all pages as images and then pass those images to printJS
+        const pagePromises = [];
+        for (let pageNum = 1; pageNum <= pdf.pageCount; pageNum++) {
+            pagePromises.push(
+                pdf.document.getPage(pageNum).then(page => {
+                    const viewport = page.getViewport({scale: 2});
+                    const canvas = document.createElement('canvas');
+                    const context = canvas.getContext('2d');
+                    canvas.width = viewport.width;
+                    canvas.height = viewport.height;
+
+                    return page.render({canvasContext: context, viewport: viewport}).promise
+                        .then(() => canvas.toDataURL('image/png'));
+                })
+            );
+
+            // @ts-ignore
+            Promise.all(pagePromises).then(imageDataArray => {
+                // @ts-ignore
+                printJS({printable: imageDataArray, type: 'image'});
+            });
+        }
     }
 }
 

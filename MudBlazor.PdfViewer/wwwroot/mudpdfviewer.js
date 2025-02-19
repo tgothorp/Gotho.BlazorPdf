@@ -693,11 +693,11 @@ var require_print = __commonJS({
                 /*! ./js/init */
                 "./src/js/init.js"
               );
-              var printJS = _js_init__WEBPACK_IMPORTED_MODULE_1__["default"].init;
+              var printJS2 = _js_init__WEBPACK_IMPORTED_MODULE_1__["default"].init;
               if (typeof window !== "undefined") {
-                window.printJS = printJS;
+                window.printJS = printJS2;
               }
-              __webpack_exports__2["default"] = printJS;
+              __webpack_exports__2["default"] = printJS2;
             }, "./src/index.js")
           ),
           /***/
@@ -20783,8 +20783,27 @@ function goToPage(dotnetReference, id, pageNumber) {
 __name(goToPage, "goToPage");
 function printDocument(dotnetReference, id) {
   const pdf = Pdf.getPdf(id);
-  if (pdf.url) {
-    (0, import_print_js.default)({ printable: pdf.url, type: "pdf", showModal: true });
+  if (!pdf.password) {
+    if (pdf.url) {
+      (0, import_print_js.default)({ printable: pdf.url, type: "pdf" });
+    }
+  } else {
+    const pagePromises = [];
+    for (let pageNum = 1; pageNum <= pdf.pageCount; pageNum++) {
+      pagePromises.push(
+        pdf.document.getPage(pageNum).then((page) => {
+          const viewport = page.getViewport({ scale: 2 });
+          const canvas = document.createElement("canvas");
+          const context = canvas.getContext("2d");
+          canvas.width = viewport.width;
+          canvas.height = viewport.height;
+          return page.render({ canvasContext: context, viewport }).promise.then(() => canvas.toDataURL("image/png"));
+        })
+      );
+      Promise.all(pagePromises).then((imageDataArray) => {
+        printJS({ printable: imageDataArray, type: "image" });
+      });
+    }
   }
 }
 __name(printDocument, "printDocument");
