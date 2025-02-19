@@ -20752,8 +20752,6 @@ function nextPage(dotnetReference, id) {
 __name(nextPage, "nextPage");
 function zoom(dotnetReference, id, scale) {
   const pdf = Pdf.getPdf(id);
-  if (!pdf || !pdf.document)
-    return;
   pdf.zoom(scale);
   queuePdfRender(pdf, null);
   if (pdf.singlePageMode) {
