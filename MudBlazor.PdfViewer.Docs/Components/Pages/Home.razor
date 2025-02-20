@@ -49,7 +49,10 @@
                 </MudStack>
             </MudItem>
             <MudItem xs="12" Class="mt-5" Style="text-align: center; padding-bottom: 20px; padding-top: 50px;">
-                <MudText Color="Color.Tertiary" Typo="Typo.body1">See the <MudLink Href="#" Color="Color.Primary" Typo="Typo.body1">Quickstart Guide</MudLink> to get up and running!</MudText>
+                <MudText Color="Color.Tertiary" Typo="Typo.body1">See the
+                    <MudLink Href="#" Color="Color.Primary" Typo="Typo.body1">Quickstart Guide</MudLink>
+                    to get up and running!
+                </MudText>
             </MudItem>
         </MudGrid>
     </div>
@@ -60,13 +63,32 @@
         <MudItem xs="12" Style="text-align: center">
             <div style="position: relative; width: 50%; left: 25%;">
                 <MudText Typo="Typo.h2">Demo</MudText>
-                <MudText Typo="Typo.body1">Below is a demonstration of the out-of-the-box experience the MudBlazor PDF Viewer provides. To find out how the PDF viewer can be customised, please see the <MudLink Href="#" Color="Color.Primary" Typo="Typo.body1">Documentation.</MudLink></MudText>
+                <MudText Typo="Typo.body1">Below is a demonstration of the out-of-the-box experience the MudBlazor PDF Viewer provides. To find out how the PDF viewer can be customised, please see the
+                    <MudLink Href="#" Color="Color.Primary" Typo="Typo.body1">Documentation.</MudLink>
+                </MudText>
             </div>
         </MudItem>
         <MudItem xs="12" Class="mt-5">
             <MudPdfViewer Url="https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf"/>
         </MudItem>
     </MudGrid>
+</div>
+
+<div style="width: 100vw; max-width: 100%; background-color: #1b1129; margin-top: 70px">
+    <div style="max-width: 1440px; margin: auto">
+        <MudGrid Class="py-1">
+            <MudItem sm="6" Class="py-2" Style="text-align: left">
+                <MudText Typo="Typo.body2" Color="Color.Tertiary">The MudBlazor PDF Viewer library is
+                    <MudLink Typo="Typo.body2" Color="Color.Primary" Href="https://github.com/tgothorp/MudBlazor.PdfViewer?tab=readme-ov-file#license">licensed under Apache-2.0.</MudLink>
+                </MudText>
+            </MudItem>
+            <MudItem sm="6" Class="py-2" Style="text-align: right">
+                <MudText Typo="Typo.body2" Color="Color.Tertiary">Maintained by
+                    <MudLink Typo="Typo.body2" Color="Color.Primary" Href="https://github.com/tgothorp">tgothorp</MudLink>
+                </MudText>
+            </MudItem>
+        </MudGrid>
+    </div>
 </div>
 
 @code {
