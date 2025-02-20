@@ -1,8 +1,9 @@
 @inherits MudComponentBase
 
+<!--suppress ALL -->
 <MudGrid Class="flex-wrap">
     <MudItem xs="12">
-        <MudToolBar Class="justify-space-between">
+        <MudToolBar Class="justify-space-between" Style="background-color: var(--mud-palette-surface)">
             @if (!HideThumbnails)
             {
                 <MudTooltip Text="@Config.Labels.ToggleThumbnails" Arrow="true" Placement="Placement.Top">
