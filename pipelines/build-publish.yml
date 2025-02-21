@@ -10,6 +10,12 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
+- task: Npm@1
+  name: npm
+  inputs:
+    command: 'install'
+    workingDir: 'MudBlazor.PdfViewer/'
+
 - task: DotNetCoreCLI@2
   name: restore
   inputs:
