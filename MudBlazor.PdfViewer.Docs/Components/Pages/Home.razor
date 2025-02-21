@@ -2,101 +2,95 @@
 
 @using MudBlazorPdf
 
-<PageTitle>MudBlazor PdfViewer</PageTitle>
+<PageTitle>Mud PDF</PageTitle>
+
+<div style="max-width: 1440px; margin: 3em auto auto;">
+    <MudGrid Style="align-items: center">
+        <MudItem xs="12" md="6">
+            <MudText Typo="Typo.h1">Mud PDF</MudText>
+            <MudText Typo="Typo.body1">A simple, yet powerful PDF viewer designed for
+                <MudLink Href="https://mudblazor.com/" Target="_blank" Color="Color.Primary">MudBlazor.</MudLink>
+            </MudText>
+
+            <MudStack Row="true" Class="mt-5" Justify="Justify.Center" Wrap="Wrap.NoWrap">
+                <MudButton Style="flex: 1" Href="https://github.com/tgothorp/MudBlazor.PdfViewer" Target="_blank" Variant="Variant.Filled" Size="Size.Large" Color="Color.Primary" StartIcon="@Icons.Custom.Brands.GitHub">GitHub</MudButton>
+                <MudButton Style="flex: 1" Href="https://www.nuget.org/packages/Gotho.MudBlazor.PdfViewer/#readme-body-tab" Target="_blank" Variant="Variant.Filled" Size="Size.Large" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Download">Nuget</MudButton>
+                <MudButton Style="flex: 1" Href="/docs" Variant="Variant.Filled" Size="Size.Large" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Article">Documentation</MudButton>
+            </MudStack>
+        </MudItem>
+        <MudItem xs="12" md="6" Style="text-align: center">
+            <MudImage Src="https://placehold.co/450x450/000000/FFF"/>
+        </MudItem>
+    </MudGrid>
+</div>
+
+<div style="width: 100vw; max-width: 100%; background-color: #1b1129; padding: 35px; left: 0; margin-top: 50px;">
+    <div style="max-width: 1440px; margin: auto">
+        <MudGrid Class="mt-5">
+            <MudItem xs="12" Style="text-align: center">
+                <MudText Color="Color.Tertiary" Typo="Typo.h2">Features</MudText>
+            </MudItem>
+            <MudItem xs="12" md="6" Style="text-align: center">
+                <MudStack Spacing="5">
+                    <MudText Color="Color.Tertiary" Typo="Typo.body1">Display PDF files inline with your content</MudText>
+                    <MudText Color="Color.Tertiary" Typo="Typo.body1">Fully configurable icons, labels and colours</MudText>
+                    <MudText Color="Color.Tertiary" Typo="Typo.body1">Seamless integration with your existing MudBlazor project</MudText>
+                    <MudText Color="Color.Tertiary" Typo="Typo.body1">Single page or scrolling modes</MudText>
+                    <MudText Color="Color.Tertiary" Typo="Typo.body1">Respond to document loaded & page changed events</MudText>
+                </MudStack>
+            </MudItem>
+            <MudItem xs="12" md="6" Style="text-align: center">
+                <MudStack Spacing="5">
+                    <MudText Color="Color.Tertiary" Typo="Typo.body1">Supports password protected PDF files</MudText>
+                    <MudText Color="Color.Tertiary" Typo="Typo.body1">Print PDFs directly from the component</MudText>
+                    <MudText Color="Color.Tertiary" Typo="Typo.body1">Zoom, page and rotate your PDF files inline</MudText>
+                    <MudText Color="Color.Tertiary" Typo="Typo.body1">Toggleable thumbnail page preview</MudText>
+                    <MudText Color="Color.Tertiary" Typo="Typo.body1">Apache-2.0 License</MudText>
+                </MudStack>
+            </MudItem>
+            <MudItem xs="12" Class="mt-5" Style="text-align: center; padding-bottom: 20px; padding-top: 50px;">
+                <MudText Color="Color.Tertiary" Typo="Typo.body1">See the
+                    <MudLink Href="/docs/quickstart" Color="Color.Primary" Typo="Typo.body1">Quickstart Guide</MudLink>
+                    to get up and running!
+                </MudText>
+            </MudItem>
+        </MudGrid>
+    </div>
+</div>
 
 <div style="max-width: 1440px; margin: auto">
+    <MudGrid Class="mt-5">
+        <MudItem xs="12" Style="text-align: center">
+            <div style="position: relative; width: 50%; left: 25%;">
+                <MudText Typo="Typo.h2">Demo</MudText>
+                <MudText Typo="Typo.body1">Below is a demonstration of the out-of-the-box experience the MudBlazor PDF Viewer provides. To find out how the PDF viewer can be customised, please see the
+                    <MudLink Href="/docs" Color="Color.Primary" Typo="Typo.body1">Documentation.</MudLink>
+                </MudText>
+            </div>
+        </MudItem>
+        <MudItem xs="12" Class="mt-5">
+            <MudPdfViewer Url="https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf"/>
+        </MudItem>
+    </MudGrid>
+</div>
 
-    <MudText Typo="Typo.h1">A Simple PDF Viewer for
-        <MudLink Typo="Typo.h1" Href="MudBlazor PDF Viewer" Target="_blank">MudBlazor</MudLink>
-    </MudText>
-    <MudText Typo="Typo.body1" Class="pb-4">This project ports the
-        <MudLink Href="https://demos.blazorbootstrap.com/pdf-viewer" Target="_blank">Blazor Bootstrap PDF Viewer</MudLink>
-        component to work seamlessly with MudBlazor.
-    </MudText>
-
-    <MudText Typo="Typo.h2" Class="pt-5">Installation</MudText>
-    <MudText Typo="Typo.body1" Class="pb-4">Please see the
-        <MudLink Href="https://github.com/tgothorp/MudBlazor.PdfViewer">GitHub repository</MudLink>
-        for up to date information on how to install this component.
-    </MudText>
-
-    <MudText Typo="Typo.h2" Class="pt-5">Example</MudText>
-    <MudText Typo="Typo.body1" Class="pb-4">This basic example demonstrates the basic functionality of the PDF Viewer as
-        well as the OnDocumentLoaded and OnPageChanged events that can be used by your code.
-    </MudText>
-
-    <MudTabs>
-        <MudTabPanel Text="Example">
-            <MudText Class="py-3">@eventLog</MudText>
-            <MudPdfViewer
-                Class="pt-5"
-                Url="https://raw.githubusercontent.com/tgothorp/MudBlazor.PdfViewer/refs/heads/main/files/test_pdf_document-protected.pdf"
-                OnDocumentLoaded="OnDocumentLoaded"
-                OnPageChanged="OnPageChanged"/>
-        </MudTabPanel>
-        <MudTabPanel Text="Code">
-            <pre>
-                <MudText Style="display: block; padding: 1rem; white-space: pre; background-color: #161719" HtmlTag="code">@Examples.BasicExample</MudText>
-            </pre>
-        </MudTabPanel>
-    </MudTabs>
-
-    <MudText Typo="Typo.h2" Class="pt-5">Thumbnails</MudText>
-    <MudText Typo="Typo.body1" Class="pb-4">Thumbnails for individual pages can be toggled or hidden completely</MudText>
-
-    <MudTabs>
-        <MudTabPanel Text="Example">
-            <MudPdfViewer
-                Class="pt-5"
-                HideThumbnails="true"
-                Url="https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf"/>
-        </MudTabPanel>
-        <MudTabPanel Text="Code">
-            <pre>
-                <MudText Style="display: block; padding: 1rem; white-space: pre; background-color: #161719" HtmlTag="code">@Examples.Thumbnails</MudText>
-            </pre>
-        </MudTabPanel>
-    </MudTabs>
-
-    <MudText Typo="Typo.h2" Class="pt-5">Orientation</MudText>
-    <MudText Typo="Typo.body1" Class="pb-4">The orientation of the loaded PDF can be specified manually</MudText>
-
-    <MudTabs>
-        <MudTabPanel Text="Example">
-            <MudPdfViewer
-                Class="pt-5"
-                HideThumbnails="true"
-                Url="https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf"
-                Orientation="Orientation.Landscape"/>
-        </MudTabPanel>
-        <MudTabPanel Text="Code">
-            <pre>
-                <MudText Style="display: block; padding: 1rem; white-space: pre; background-color: #161719" HtmlTag="code">@Examples.Orientation</MudText>
-            </pre>
-        </MudTabPanel>
-    </MudTabs>
-
-    <MudText Typo="Typo.h2" Class="pt-5">Additional Configuration</MudText>
-    <MudText Typo="Typo.body1" Class="pb-4">All of the icons, icon color as well as the text within the PDF viewer can be
-        customised. The following example shows how icons and text can be changed
-    </MudText>
-
-    <MudTabs>
-        <MudTabPanel Text="Code">
-            <pre>
-                <MudText Style="display: block; padding: 1rem; white-space: pre; background-color: #161719" HtmlTag="code">@Examples.Configuration</MudText>
-            </pre>
-        </MudTabPanel>
-    </MudTabs>
+<div style="width: 100vw; max-width: 100%; background-color: #1b1129; margin-top: 70px">
+    <div style="max-width: 1440px; margin: auto">
+        <MudGrid Class="py-1">
+            <MudItem sm="6" Class="py-2" Style="text-align: left">
+                <MudText Typo="Typo.body2" Color="Color.Tertiary">The MudBlazor PDF Viewer library is
+                    <MudLink Typo="Typo.body2" Color="Color.Primary" Href="https://github.com/tgothorp/MudBlazor.PdfViewer?tab=readme-ov-file#license">licensed under Apache-2.0.</MudLink>
+                </MudText>
+            </MudItem>
+            <MudItem sm="6" Class="py-2" Style="text-align: right">
+                <MudText Typo="Typo.body2" Color="Color.Tertiary">Maintained by
+                    <MudLink Typo="Typo.body2" Color="Color.Primary" Href="https://github.com/tgothorp">tgothorp</MudLink>
+                </MudText>
+            </MudItem>
+        </MudGrid>
+    </div>
 </div>
 
 @code {
-    private string eventLog { get; set; } = $"Last event: ..., CurrentPage: 0, TotalPages: 0";
-
-    private void OnDocumentLoaded(PdfViewerEventArgs args)
-        => eventLog = $"Last event: OnDocumentLoaded, CurrentPage: {args.CurrentPage}, TotalPages: {args.TotalPages}";
-
-    private void OnPageChanged(PdfViewerEventArgs args)
-        => eventLog = $"Last event: OnPageChanged, CurrentPage: {args.CurrentPage}, TotalPages: {args.TotalPages}";
 
 }

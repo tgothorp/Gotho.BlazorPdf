@@ -49,9 +49,9 @@ var require_url = __commonJS({
   }
 });
 
-// (disabled):canvas
-var require_canvas = __commonJS({
-  "(disabled):canvas"() {
+// (disabled):node_modules/canvas/browser.js
+var require_browser = __commonJS({
+  "(disabled):node_modules/canvas/browser.js"() {
   }
 });
 
@@ -17464,7 +17464,7 @@ var __webpack_modules__ = {
           if (_shared_util_js__WEBPACK_IMPORTED_MODULE_1__.isNodeJS) {
             fs = await Promise.resolve().then(() => __toESM(require_fs(), 1));
             try {
-              canvas = await Promise.resolve().then(() => __toESM(require_canvas(), 1));
+              canvas = await Promise.resolve().then(() => __toESM(require_browser(), 1));
             } catch {
             }
             try {

@@ -1,0 +1,22 @@
+@page "/docs/configuration/colours"
+@using MudBlazor.PdfViewer.Docs.Code
+
+<PageTitle>Mud PDF | Configuration</PageTitle>
+
+<div style="max-width: 1440px; margin: 3em auto auto;">
+    <MudGrid Style="flex-wrap: nowrap">
+        <MudItem>
+            <DocsMenu/>
+        </MudItem>
+        <MudItem>
+            <MudText Typo="Typo.h2" Class="mb-5">Configuration | Colours</MudText>
+            <MudText>The colour of the PDF view background and the colour of the icons can be configured. You can see the default values <MudLink Color="Color.Primary" Target="_blank" Href="https://github.com/tgothorp/MudBlazor.PdfViewer/blob/6f89103c2fb754e4d35ef7fb7e910746b2431cc6/MudBlazor.PdfViewer/MudPdfViewerConfig.cs#L53">here.</MudLink></MudText>
+            
+            <CodeSnippet Body="@Colours.Config" Lang="csharp"/>
+        </MudItem>
+    </MudGrid>
+</div>
+
+@code {
+
+}

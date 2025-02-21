@@ -1,0 +1,26 @@
+@page "/docs/configuration/icons"
+@using MudBlazor.PdfViewer.Docs.Code
+
+<PageTitle>Mud PDF | Configuration</PageTitle>
+
+<div style="max-width: 1440px; margin: 3em auto auto;">
+    <MudGrid Style="flex-wrap: nowrap">
+        <MudItem>
+            <DocsMenu/>
+        </MudItem>
+        <MudItem>
+            <MudText Typo="Typo.h2" Class="mb-5">Configuration | Icons</MudText>
+            <MudText>All icons in the PDF viewer can be changed to either icons that come with MudBlazor or to your own custom icons. This can be done when configuring Mud PDF. </MudText>
+
+            <CodeSnippet Body="@Icons.Config" Lang="csharp"/>
+
+            <MudText Class="mt-3">All icons and their defaults are listed below</MudText>
+
+            <CodeSnippet Body="@Icons.AllIcons" Lang="csharp"/>
+        </MudItem>
+    </MudGrid>
+</div>
+
+@code {
+
+}
