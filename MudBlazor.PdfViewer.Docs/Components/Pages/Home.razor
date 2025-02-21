@@ -2,20 +2,20 @@
 
 @using MudBlazorPdf
 
-<PageTitle>MudBlazor PDF Viewer</PageTitle>
+<PageTitle>Mud PDF</PageTitle>
 
-<div style="max-width: 1440px; margin: auto">
-    <MudGrid>
+<div style="max-width: 1440px; margin: 3em auto auto;">
+    <MudGrid Style="align-items: center">
         <MudItem xs="12" md="6">
-            <MudText Typo="Typo.h1">MudBlazor PDF Viewer</MudText>
-            <MudText Typo="Typo.body1">A simple, yet powerful PDF viewer component designed to work with
-                <MudLink Href="https://mudblazor.com/" Target="_blank" Color="Color.Primary">MudBlazor</MudLink>
+            <MudText Typo="Typo.h1">Mud PDF</MudText>
+            <MudText Typo="Typo.body1">A simple, yet powerful PDF viewer designed for
+                <MudLink Href="https://mudblazor.com/" Target="_blank" Color="Color.Primary">MudBlazor.</MudLink>
             </MudText>
 
             <MudStack Row="true" Class="mt-5" Justify="Justify.Center" Wrap="Wrap.NoWrap">
                 <MudButton Style="flex: 1" Href="https://github.com/tgothorp/MudBlazor.PdfViewer" Target="_blank" Variant="Variant.Filled" Size="Size.Large" Color="Color.Primary" StartIcon="@Icons.Custom.Brands.GitHub">GitHub</MudButton>
                 <MudButton Style="flex: 1" Href="https://www.nuget.org/packages/Gotho.MudBlazor.PdfViewer/#readme-body-tab" Target="_blank" Variant="Variant.Filled" Size="Size.Large" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Download">Nuget</MudButton>
-                <MudButton Style="flex: 1" Href="/docs" Target="_blank" Variant="Variant.Filled" Size="Size.Large" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Article">Documentation</MudButton>
+                <MudButton Style="flex: 1" Href="/docs" Variant="Variant.Filled" Size="Size.Large" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Article">Documentation</MudButton>
             </MudStack>
         </MudItem>
         <MudItem xs="12" md="6" Style="text-align: center">
@@ -24,7 +24,7 @@
     </MudGrid>
 </div>
 
-<div style="width: 100vw; max-width: 100%; background-color: #1b1129; padding: 35px; left: 0; margin-top: 20px;">
+<div style="width: 100vw; max-width: 100%; background-color: #1b1129; padding: 35px; left: 0; margin-top: 50px;">
     <div style="max-width: 1440px; margin: auto">
         <MudGrid Class="mt-5">
             <MudItem xs="12" Style="text-align: center">
@@ -50,7 +50,7 @@
             </MudItem>
             <MudItem xs="12" Class="mt-5" Style="text-align: center; padding-bottom: 20px; padding-top: 50px;">
                 <MudText Color="Color.Tertiary" Typo="Typo.body1">See the
-                    <MudLink Href="#" Color="Color.Primary" Typo="Typo.body1">Quickstart Guide</MudLink>
+                    <MudLink Href="/docs/quickstart" Color="Color.Primary" Typo="Typo.body1">Quickstart Guide</MudLink>
                     to get up and running!
                 </MudText>
             </MudItem>
@@ -64,7 +64,7 @@
             <div style="position: relative; width: 50%; left: 25%;">
                 <MudText Typo="Typo.h2">Demo</MudText>
                 <MudText Typo="Typo.body1">Below is a demonstration of the out-of-the-box experience the MudBlazor PDF Viewer provides. To find out how the PDF viewer can be customised, please see the
-                    <MudLink Href="#" Color="Color.Primary" Typo="Typo.body1">Documentation.</MudLink>
+                    <MudLink Href="/docs" Color="Color.Primary" Typo="Typo.body1">Documentation.</MudLink>
                 </MudText>
             </div>
         </MudItem>

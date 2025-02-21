@@ -5,7 +5,21 @@
 <MudDialogProvider/>
 <MudSnackbarProvider/>
 <MudLayout>
-    <MudMainContent Class="mt-16">
+    <MudAppBar Elevation="0">
+        <MudSpacer/>
+        <MudLink Href="/">
+            <MudImage Height="64" Width="64" Src="https://placehold.co/64x64/000000/FFF"/>
+        </MudLink>
+        <MudLink Href="/">
+            <MudText Class="ml-5" Color="Color.Tertiary">Mud PDF</MudText>
+        </MudLink>
+        
+        <MudSpacer/>
+        <MudIconButton Href="https://github.com/tgothorp/MudBlazor.PdfViewer" Icon="@Icons.Custom.Brands.GitHub"
+                       Color="Color.Tertiary" Target="_blank"/>
+        <MudSpacer/>
+    </MudAppBar>
+    <MudMainContent>
         @Body
     </MudMainContent>
 </MudLayout>
@@ -31,13 +45,15 @@
                 Primary = "#F009AF",
                 PrimaryLighten = "#f33abf",
                 PrimaryDarken = "#d8089e",
-                
+
                 Secondary = "#7CE504",
                 SecondaryLighten = "#96ea36",
                 SecondaryDarken = "#70ce04",
-                
+
+                AppbarBackground = "#7CE504",
+
                 Tertiary = "#FFFFFF",
-                
+
                 Surface = "#e8e7ea"
             },
             Typography = new Typography
@@ -61,4 +77,5 @@
             }
         };
     }
+
 }

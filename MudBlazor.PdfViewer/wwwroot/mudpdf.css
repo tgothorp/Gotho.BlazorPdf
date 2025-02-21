@@ -10,6 +10,7 @@
 
 .mudpdf_thumbnails {
     max-width: 11%;
+    min-width: 155px;
     position: absolute;
     left: 0;
     overflow-y: scroll;
