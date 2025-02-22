@@ -1,16 +1,22 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider Theme="@_theme" IsDarkMode="true"/>
+<MudThemeProvider Theme="@_theme" IsDarkMode="false"/>
 <MudPopoverProvider/>
 <MudDialogProvider/>
 <MudSnackbarProvider/>
 <MudLayout>
-    <MudAppBar Elevation="1">
-        <MudText>MudBlazor PDF Viewer</MudText>
+    <MudAppBar Elevation="0">
+        <MudLink Href="/">
+            <MudImage Height="64" Width="64" Src="/img/square_icon.png"/>
+        </MudLink>
+        <MudLink Href="/">
+            <MudText Class="ml-5" Color="Color.Tertiary">Mud PDF</MudText>
+        </MudLink>
         <MudSpacer/>
-        <MudIconButton Href="https://github.com/tgothorp/MudBlazor.PdfViewer" Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Target="_blank"/>
+        <MudIconButton Href="https://github.com/tgothorp/MudBlazor.PdfViewer" Icon="@Icons.Custom.Brands.GitHub"
+                       Color="Color.Tertiary" Target="_blank"/>
     </MudAppBar>
-    <MudMainContent Class="mt-16 pa-4">
+    <MudMainContent>
         @Body
     </MudMainContent>
 </MudLayout>
@@ -31,14 +37,40 @@
 
         _theme = new()
         {
-            PaletteDark = new PaletteDark
+            PaletteLight = new PaletteLight()
             {
-                AppbarBackground = "#180161"
+                Primary = "#F009AF",
+                PrimaryLighten = "#f33abf",
+                PrimaryDarken = "#d8089e",
+
+                Secondary = "#7CE504",
+                SecondaryLighten = "#96ea36",
+                SecondaryDarken = "#70ce04",
+
+                AppbarBackground = "#7CE504",
+
+                Tertiary = "#FFFFFF",
+
+                Surface = "#e8e7ea"
             },
             Typography = new Typography
             {
-                H1 = new H3Typography(),
-                H2 = new H4Typography(), 
+                Default = new DefaultTypography
+                {
+                    FontFamily = ["Aldrich", "elvetica", "Arial", "sans-serif"],
+                    FontSize = "1.3rem",
+                    FontWeight = "400",
+                    LineHeight = "1",
+                    LetterSpacing = "0",
+                },
+                Body1 = new Body1Typography
+                {
+                    FontFamily = ["Aldrich", "elvetica", "Arial", "sans-serif"],
+                    FontSize = "1.3rem",
+                    FontWeight = "400",
+                    LineHeight = "1",
+                    LetterSpacing = "0",
+                }
             }
         };
     }

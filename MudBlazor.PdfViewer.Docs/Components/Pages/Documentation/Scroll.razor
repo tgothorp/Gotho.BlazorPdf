@@ -1,0 +1,28 @@
+@page "/docs/scroll"
+@using MudBlazor.PdfViewer.Docs.Code
+
+<PageTitle>Mud PDF | Scroll Mode</PageTitle>
+
+<div style="max-width: 1440px; margin: 3em auto auto;">
+    <MudGrid>
+        <MudItem sm="3">
+            <DocsMenu/>
+        </MudItem>
+        <MudItem sm="9" Style="overflow: auto">
+            <MudText Typo="Typo.h2" Class="mb-5">Scroll Mode</MudText>
+            <MudText>By default, the PDF viewer will display one page at a time. However, there may be times where it would be better to display a PDF as a traditional scrolling document</MudText>
+            <MudText Class="mt-3">This can be achieved by setting <code>SinglePageMode</code> to false. Additionally, the PDF viewer also provides a <code>Height</code> parameter to control the height of the PDF viewer in single page mode (defaults to 65vh)</MudText>
+
+            <CodeSnippet Body="@ScrollExample.Scrolling"/>
+            
+            <MudPdfViewer
+                Class="mb-5"
+                SinglePageMode="false"
+                Url="https://raw.githubusercontent.com/tgothorp/MudBlazor.PdfViewer/refs/heads/main/files/test_pdf_document.pdf"/>
+        </MudItem>
+    </MudGrid>
+</div>
+
+@code {
+
+}

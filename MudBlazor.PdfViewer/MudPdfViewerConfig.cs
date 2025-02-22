@@ -32,6 +32,7 @@ public class MudPdfViewerConfig
         public string FirstPage { get; set; } = "First Page";
         public string LastPage { get; set; } = "Last Page";
         public string ResetZoom { get; set; } = "Reset Zoom";
+        public string PrintDocument { get; set; } = "Print Document";
     }
     
     public class Icon
@@ -48,6 +49,7 @@ public class MudPdfViewerConfig
         public string FirstPage { get; set; } = MudBlazor.Icons.Material.Filled.VerticalAlignTop;
         public string LastPage { get; set; } = MudBlazor.Icons.Material.Filled.VerticalAlignBottom;
         public string ResetZoom { get; set; } = MudBlazor.Icons.Material.Filled.ResetTv;
+        public string PrintDocument { get; set; } = MudBlazor.Icons.Material.Filled.Print;
     }
     
     public class Color

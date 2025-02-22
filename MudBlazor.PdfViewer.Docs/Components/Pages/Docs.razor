@@ -1,0 +1,24 @@
+@page "/docs/home"
+@page "/docs"
+
+
+<PageTitle>Mud PDF | Docs</PageTitle>
+
+<div style="max-width: 1440px; margin: 3em auto auto;">
+    <MudGrid>
+        <MudItem sm="3">
+            <DocsMenu/>
+        </MudItem>
+        <MudItem sm="9" Style="overflow: auto">
+            <MudText Typo="Typo.h2" Class="mb-5">Mud PDF</MudText>
+
+            <MudImage Src="/img/square_small.png" Class="d-block" Style="margin: auto"/>
+            
+            <MudText Class="mt-5">Getting started with Mud PDF is easy, see the <MudLink Color="Color.Primary" Href="/docs/quickstart">quickstart guide</MudLink> for installation information.</MudText>
+        </MudItem>
+    </MudGrid>
+</div>
+
+@code {
+
+}

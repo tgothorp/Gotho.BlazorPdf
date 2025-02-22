@@ -3,7 +3,7 @@ using MudBlazorPdf;
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
 
-public static class Init
+public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddMudBlazorPdfViewer(this IServiceCollection services, Action<MudPdfViewerConfig>? configure = null)
     {

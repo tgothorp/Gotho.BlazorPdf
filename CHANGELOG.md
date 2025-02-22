@@ -2,7 +2,16 @@
 
 All notable changes and releases will be documented here
 
-## [2025-02-15] - V1.1.0 (Latest Version)
+## [2025-02-22] - V2.0.0 (Latest Version)
+
+- Javascript interop code rewritten in Typescript
+- Added alternative scrolling mode
+- Added ability to print documents
+- Added support for password protected PDF documents
+- Better handling of malformed PDF files
+- Complete rewrite of documentation site
+
+## [2025-02-15] - V1.1.0
 
 - Added support for page thumbnails which can be toggled on/off
 - Add some basic code documentation to the PDF viewer parameters

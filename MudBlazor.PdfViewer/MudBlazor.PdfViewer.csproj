@@ -6,11 +6,11 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-        <Version>1.1.0</Version>
+        <Version>2.0.0</Version>
         <Title>Gotho.MudBlazor.PdfViewer</Title>
         <Authors>tgothorp</Authors>
         <Company>tgothorp</Company>
-        <Description>A simple PDF viewer for MudBlazor</Description>
+        <Description>A simple, yet powerful PDF viewer for MudBlazor</Description>
         <Copyright>tgothorp OpenSource Apache-2.0</Copyright>
         <PackageIcon>logo.png</PackageIcon>
         <PackageProjectUrl>https://github.com/tgothorp/MudBlazor.PdfViewer</PackageProjectUrl>
@@ -20,6 +20,13 @@
         <RootNamespace>MudBlazorPdf</RootNamespace>
     </PropertyGroup>
 
+    <Target Name="CompileTypeScript" BeforeTargets="Build">
+        <Exec Command="npm run ts" />
+    </Target>
+
+    <Target Name="MinifyCss" BeforeTargets="Build">
+        <Exec Command="npm run css" />
+    </Target>
 
     <ItemGroup>
         <SupportedPlatform Include="browser"/>
@@ -49,5 +56,4 @@
             <PackagePath>\</PackagePath>
         </None>
     </ItemGroup>
-
 </Project>
