@@ -6,18 +6,15 @@
 <MudSnackbarProvider/>
 <MudLayout>
     <MudAppBar Elevation="0">
-        <MudSpacer/>
         <MudLink Href="/">
             <MudImage Height="64" Width="64" Src="https://placehold.co/64x64/000000/FFF"/>
         </MudLink>
         <MudLink Href="/">
             <MudText Class="ml-5" Color="Color.Tertiary">Mud PDF</MudText>
         </MudLink>
-        
         <MudSpacer/>
         <MudIconButton Href="https://github.com/tgothorp/MudBlazor.PdfViewer" Icon="@Icons.Custom.Brands.GitHub"
                        Color="Color.Tertiary" Target="_blank"/>
-        <MudSpacer/>
     </MudAppBar>
     <MudMainContent>
         @Body

@@ -15,9 +15,7 @@ This library includes functionality derived from [Blazor Bootstrap](https://gith
 
 This library ports the functionality of the `PdfViewer` Blazor component from the Blazor Bootstrap library for use with the [MudBlazor](https://github.com/MudBlazor/MudBlazor/) Blazor component library.
 
-Some changes have been made to the original Blazor Bootstrap `PdfViewer` behaviour with the majority of changes focussing on integrating with existing MudBlazor components for styling purposes. As well as some additional changes to support new features such as thumbnails
-
-The JS Interop code has been ported wholesale with only slight changes to naming
+Multiple changes and enhancements have been made to the original Blazor Bootstrap `PdfViewer` behaviour with the majority of changes focussing on integrating with existing MudBlazor components for styling purposes. As well as some additional changes to support new features such as thumbnails, printing and support for encrypted PDF
 
 ## License Compliance
 
