@@ -2,13 +2,16 @@
 
 <h1>Mud PDF</h1>
 
-<div><img src="contrib/warp.png" width="230" alt="MudPDF" /></div>
+<div><img src="img/square_small.png" width="230" alt="MudPDF" /></div>
 
 <div><a href="https://mudpdf.info">Demo</a> | <a href="https://mudpdf.info/docs/quickstart">Quickstart</a> | <a href="https://mudpdf.info/docs">Documentation</a></div>
 
 Originally a port of the BlazorBootstrap PDF viewer, Mud PDF is a simple yet powerful PDF solution for MudBlazor.
 
 ![NuGet Version](https://img.shields.io/nuget/v/Gotho.MudBlazor.PdfViewer)
+![NuGet Downloads](https://img.shields.io/nuget/dt/Gotho.MudBlazor.PdfViewer)
+![GitHub License](https://img.shields.io/github/license/tgothorp/MudBlazor.PdfViewer)
+
 
 </div>
 
