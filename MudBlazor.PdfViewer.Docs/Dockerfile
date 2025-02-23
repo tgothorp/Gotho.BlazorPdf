@@ -14,8 +14,11 @@ COPY ["MudBlazor.PdfViewer/MudBlazor.PdfViewer.csproj", "MudBlazor.PdfViewer/"]
 
 RUN dotnet restore "MudBlazor.PdfViewer.Docs/MudBlazor.PdfViewer.Docs.csproj"
 COPY . .
-WORKDIR "/src/MudBlazor.PdfViewer.Docs"
 
+WORKDIR /src/MudBlazor.PdfViewer
+RUN apt-get update && apt-get install -y nodejs npm && npm install
+
+WORKDIR "/src/MudBlazor.PdfViewer.Docs"
 RUN dotnet build "MudBlazor.PdfViewer.Docs.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
