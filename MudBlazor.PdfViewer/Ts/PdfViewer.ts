@@ -173,11 +173,7 @@ function renderPdf(pdf: Pdf) {
             const viewport = pdfPage.getViewport({scale: pdf.scale, rotation: pdf.rotation});
             pdf.canvas.width = viewport.width;
             pdf.canvas.height = viewport.height;
-            
-            // CLEANUP!!
-            console.log("scale = " + pdf.scale)
-            
-            
+
             const renderData = {
                 canvasContext: pdf.getCanvasContext(),
                 viewport: viewport
