@@ -3,7 +3,7 @@ using Microsoft.JSInterop;
 internal class PdfInterop(IJSRuntime jsRuntime) : IAsyncDisposable
 {
     private readonly Lazy<Task<IJSObjectReference>> js =
-        new(() => jsRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Gotho.MudBlazor.PdfViewer/mudpdf.js").AsTask());
+        new(() => jsRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Gotho.MudBlazor.PdfViewer/mudpdf.min.js").AsTask());
 
     public async Task InitializeAsync(object objRef, string elementId, string documentUrl, double scale, double rotation, bool singlePageMode, string? password = null)
     {
