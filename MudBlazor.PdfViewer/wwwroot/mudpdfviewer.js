@@ -20754,6 +20754,7 @@ function zoom(dotnetReference, id, scale) {
   const pdf = Pdf.getPdf(id);
   pdf.zoom(scale);
   queuePdfRender(pdf, null);
+  document.body.style.setProperty("--scale-factor", `${scale}`);
   if (pdf.singlePageMode) {
     scrollToPage(id, pdf.currentPage);
   }
@@ -20835,6 +20836,7 @@ function renderPdf(pdf) {
       const viewport = pdfPage.getViewport({ scale: pdf.scale, rotation: pdf.rotation });
       pdf.canvas.width = viewport.width;
       pdf.canvas.height = viewport.height;
+      console.log("scale = " + pdf.scale);
       const renderData = {
         canvasContext: pdf.getCanvasContext(),
         viewport
@@ -20842,6 +20844,20 @@ function renderPdf(pdf) {
       const renderTask = pdfPage.render(renderData);
       renderTask.promise.then(() => {
         pdf.renderInProgress = false;
+        const textLayer = document.getElementById(`${pdf.id}_text`);
+        textLayer.replaceChildren();
+        textLayer.style.left = pdf.canvas.offsetLeft + "px";
+        textLayer.style.top = pdf.canvas.offsetTop + "px";
+        textLayer.style.height = pdf.canvas.offsetHeight + "px";
+        textLayer.style.width = pdf.canvas.offsetWidth + "px";
+        pdfPage.getTextContent().then((text) => {
+          __webpack_exports__renderTextLayer({
+            textContentSource: text,
+            container: textLayer,
+            viewport,
+            textDivs: []
+          });
+        });
         if (pdf.queuedPage !== null) {
           renderPdf(pdf);
           pdf.queuedPage = null;
