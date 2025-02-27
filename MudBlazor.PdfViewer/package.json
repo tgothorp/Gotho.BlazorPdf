@@ -30,6 +30,7 @@
     "uglify-js": "^3.19.3"
   },
   "dependencies": {
+    "file-saver": "^2.0.5",
     "pdfjs-dist": "^4.0.379",
     "print-js": "^1.6.0"
   }
