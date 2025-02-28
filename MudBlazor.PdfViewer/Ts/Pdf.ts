@@ -1,4 +1,4 @@
-import {PDFDocumentProxy} from "pdfjs-dist"
+import {PDFDocumentProxy, getFilenameFromUrl} from "pdfjs-dist"
 
 const pdfInstances = {}
 
@@ -9,6 +9,7 @@ export class Pdf {
     public scale: number;
     public rotation: number;
     public url: string;
+    public filename: string;
     public document: PDFDocumentProxy;
 
     public renderInProgress: boolean;
@@ -24,6 +25,7 @@ export class Pdf {
         this.scale = scale;
         this.rotation = rotation;
         this.url = url;
+        this.filename = getFilenameFromUrl(url)
         this.document = null;
         this.renderInProgress = false;
         this.singlePageMode = singlePageMode;
