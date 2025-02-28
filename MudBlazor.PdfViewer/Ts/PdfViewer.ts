@@ -1,10 +1,12 @@
 import {Pdf} from "./Pdf";
 import {saveAs} from "file-saver"
-import {getDocument, GlobalWorkerOptions, renderTextLayer} from "pdfjs-dist"
+import * as pdfjs from "pdfjs-dist"
+import { TextLayerBuilder } from 'pdfjs-dist/web/pdf_viewer.mjs';
+
 // @ts-ignore
 import printjs from "print-js"
 
-GlobalWorkerOptions.workerSrc = "./pdfjs-4.0.379.worker.min.js";
+pdfjs.GlobalWorkerOptions.workerSrc = "./pdf.worker.min.mjs";
 
 export function init(dotnetReference: any, id: string, documentUrl: string, scale: number, rotation: number, singlePageMode: boolean, password: string = null) {
     console.log("Initializing PDF " + id);
@@ -15,7 +17,7 @@ export function init(dotnetReference: any, id: string, documentUrl: string, scal
             ? {url: pdf.url, password: pdf.password}
             : {url: pdf.url};
 
-        getDocument(documentInit).promise.then((doc) => {
+        pdfjs.getDocument(documentInit).promise.then((doc) => {
             pdf.setDocument(doc);
             renderPdf(pdf);
             renderThumbnails(dotnetReference, pdf);
@@ -202,21 +204,16 @@ function renderPdf(pdf: Pdf) {
                 pdf.renderInProgress = false;
 
                 // Render text layer
-                const textLayer = document.getElementById(`${pdf.id}_text`);
+                const textLayer = document.getElementById(`${pdf.id}_text`) as HTMLDivElement;
                 textLayer.replaceChildren();
                 textLayer.style.left = pdf.canvas.offsetLeft + 'px';
                 textLayer.style.top = pdf.canvas.offsetTop + 'px';
                 textLayer.style.height = pdf.canvas.offsetHeight + 'px';
                 textLayer.style.width = pdf.canvas.offsetWidth + 'px';
 
-                pdfPage.getTextContent().then(text => {
-                    renderTextLayer({
-                        textContentSource: text,
-                        container: textLayer,
-                        viewport,
-                        textDivs: []
-                    });
-                })
+                const textLayerBuilder = new TextLayerBuilder({pdfPage})
+                textLayerBuilder.div = textLayer;
+                textLayerBuilder.render(viewport);
 
                 if (pdf.queuedPage !== null) {
                     renderPdf(pdf);
