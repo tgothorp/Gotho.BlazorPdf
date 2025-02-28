@@ -9,13 +9,17 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
+
 COPY ["MudBlazor.PdfViewer.Docs/MudBlazor.PdfViewer.Docs.csproj", "MudBlazor.PdfViewer.Docs/"]
 COPY ["MudBlazor.PdfViewer/MudBlazor.PdfViewer.csproj", "MudBlazor.PdfViewer/"]
 
 RUN dotnet restore "MudBlazor.PdfViewer.Docs/MudBlazor.PdfViewer.Docs.csproj"
 COPY . .
-WORKDIR "/src/MudBlazor.PdfViewer.Docs"
 
+WORKDIR /src/MudBlazor.PdfViewer
+RUN apt-get update && apt-get install -y nodejs npm && npm install
+
+WORKDIR "/src/MudBlazor.PdfViewer.Docs"
 RUN dotnet build "MudBlazor.PdfViewer.Docs.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish

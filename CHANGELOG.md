@@ -2,7 +2,15 @@
 
 All notable changes and releases will be documented here
 
-## [2025-02-22] - V2.0.0 (Latest Version)
+## [2025-02-29] - V2.1.0 (Latest Version)
+
+- Added text selection for single page mode
+- Added ability to download PDF to device
+- Bumped pdfjs version
+- Removed a lot of generated files from repo
+- Minified generated javascript
+
+## [2025-02-22] - V2.0.0
 
 - Javascript interop code rewritten in Typescript
 - Added alternative scrolling mode
