@@ -1,4 +1,4 @@
-import {PDFDocumentProxy} from "pdfjs-dist"
+import {PDFDocumentProxy, getFilenameFromUrl} from "pdfjs-dist"
 
 const pdfInstances = {}
 
@@ -25,7 +25,7 @@ export class Pdf {
         this.scale = scale;
         this.rotation = rotation;
         this.url = url;
-        this.filename = Pdf.getFilenameFromUrl(url)
+        this.filename = getFilenameFromUrl(url)
         this.document = null;
         this.renderInProgress = false;
         this.singlePageMode = singlePageMode;
@@ -132,15 +132,5 @@ export class Pdf {
 
     private static isDomSupported(): boolean {
         return true;
-    }
-
-    private static getFilenameFromUrl(url: string): string {
-        try {
-            const parsedUrl = new URL(url);
-            const pathSegments = parsedUrl.pathname.split('/');
-            return pathSegments.pop() || 'document.pdf';
-        } catch (error) {
-            return 'document.pdf';
-        }
     }
 }

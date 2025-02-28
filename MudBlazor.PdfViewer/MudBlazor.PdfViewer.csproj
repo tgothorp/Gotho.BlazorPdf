@@ -25,7 +25,7 @@
     </Target>
 
     <Target Name="MinifyJavaScript" BeforeTargets="Build" AfterTargets="CompileTypeScript">
-        <Exec Command="npm run ts" />
+        <Exec Command="npm run ts-min" />
     </Target>
 
     <Target Name="MinifyCss" BeforeTargets="Build">

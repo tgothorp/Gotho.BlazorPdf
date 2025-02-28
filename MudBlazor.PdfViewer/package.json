@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "file-saver": "^2.0.5",
-    "pdfjs-dist": "^4.0.379",
+    "pdfjs-dist": "^4.2.67",
     "print-js": "^1.6.0"
   }
 }
