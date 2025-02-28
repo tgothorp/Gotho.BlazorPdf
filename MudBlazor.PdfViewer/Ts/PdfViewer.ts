@@ -1,10 +1,12 @@
 import {Pdf} from "./Pdf";
+import {saveAs} from "file-saver"
+import * as pdfjs from "pdfjs-dist"
+import { TextLayerBuilder } from 'pdfjs-dist/web/pdf_viewer.mjs';
 
-import {getDocument, GlobalWorkerOptions} from "pdfjs-dist"
 // @ts-ignore
 import printjs from "print-js"
 
-GlobalWorkerOptions.workerSrc = "./pdfjs-4.0.379.worker.min.js";
+pdfjs.GlobalWorkerOptions.workerSrc = "./pdf.worker.min.mjs";
 
 export function init(dotnetReference: any, id: string, documentUrl: string, scale: number, rotation: number, singlePageMode: boolean, password: string = null) {
     console.log("Initializing PDF " + id);
@@ -15,12 +17,15 @@ export function init(dotnetReference: any, id: string, documentUrl: string, scal
             ? {url: pdf.url, password: pdf.password}
             : {url: pdf.url};
 
-        getDocument(documentInit).promise.then((doc) => {
+        pdfjs.getDocument(documentInit).promise.then((doc) => {
             pdf.setDocument(doc);
             renderPdf(pdf);
             renderThumbnails(dotnetReference, pdf);
 
-            dotnetReference.invokeMethodAsync('DocumentLoaded', {pagesCount: pdf.pageCount, pageNumber: pdf.currentPage});
+            dotnetReference.invokeMethodAsync('DocumentLoaded', {
+                pagesCount: pdf.pageCount,
+                pageNumber: pdf.currentPage
+            });
         }).catch((err) => {
             dotnetReference.invokeMethodAsync('PdfViewerError', {name: err.name, message: err.message});
         })
@@ -80,6 +85,7 @@ export function zoom(dotnetReference: any, id: string, scale: number) {
     const pdf = Pdf.getPdf(id)
     pdf.zoom(scale);
     queuePdfRender(pdf, null);
+    document.body.style.setProperty('--scale-factor', `${scale}`);
     if (pdf.singlePageMode) {
         scrollToPage(id, pdf.currentPage);
     }
@@ -142,6 +148,19 @@ export function printDocument(dotnetReference: any, id: string) {
     }
 }
 
+export function downloadDocument(dotnetReference: any, id: string) {
+    const pdf = Pdf.getPdf(id);
+    if (pdf.url) {
+        fetch(pdf.url).then(response => {
+            if (response.ok) {
+                response.blob().then(blob => {
+                    saveAs(blob, pdf.filename ?? 'document.pdf');
+                });
+            }
+        });
+    }
+}
+
 function scrollToPage(id: string, pageNumber: number) {
     const container = document.getElementById(id);
     const targetPage = document.getElementById(`${id}-page-${pageNumber}`);
@@ -183,6 +202,19 @@ function renderPdf(pdf: Pdf) {
             // Wait for rendering to finish
             renderTask.promise.then(() => {
                 pdf.renderInProgress = false;
+
+                // Render text layer
+                const textLayer = document.getElementById(`${pdf.id}_text`) as HTMLDivElement;
+                textLayer.replaceChildren();
+                textLayer.style.left = pdf.canvas.offsetLeft + 'px';
+                textLayer.style.top = pdf.canvas.offsetTop + 'px';
+                textLayer.style.height = pdf.canvas.offsetHeight + 'px';
+                textLayer.style.width = pdf.canvas.offsetWidth + 'px';
+
+                const textLayerBuilder = new TextLayerBuilder({pdfPage})
+                textLayerBuilder.div = textLayer;
+                textLayerBuilder.render(viewport);
+
                 if (pdf.queuedPage !== null) {
                     renderPdf(pdf);
                     pdf.queuedPage = null;
@@ -194,7 +226,7 @@ function renderPdf(pdf: Pdf) {
         container.innerHTML = '';
 
         // @ts-ignore
-        getDocument(pdf.url).promise.then(async function (doc) {
+        pdfjs.getDocument(pdf.url).promise.then(async function (doc) {
             for (let pageNum = 1; pageNum <= pdf.pageCount; pageNum++) {
                 const page = await doc.getPage(pageNum);
                 const viewport = page.getViewport({scale: pdf.scale, rotation: pdf.rotation});

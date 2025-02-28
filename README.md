@@ -20,7 +20,7 @@ Originally a port of the BlazorBootstrap PDF viewer, Mud PDF is a simple yet pow
 Grab the package from [nuget.org](https://www.nuget.org/packages/Gotho.MudBlazor.PdfViewer/1.0.1#readme-body-tab);
 
 ```
-dotnet add package Gotho.MudBlazor.PdfViewer --version 2.0.0
+dotnet add package Gotho.MudBlazor.PdfViewer --version 2.1.0
 ```
 
 ### Configure
