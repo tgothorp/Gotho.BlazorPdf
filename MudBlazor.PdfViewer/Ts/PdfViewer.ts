@@ -226,7 +226,7 @@ function renderPdf(pdf: Pdf) {
         container.innerHTML = '';
 
         // @ts-ignore
-        getDocument(pdf.url).promise.then(async function (doc) {
+        pdfjs.getDocument(pdf.url).promise.then(async function (doc) {
             for (let pageNum = 1; pageNum <= pdf.pageCount; pageNum++) {
                 const page = await doc.getPage(pageNum);
                 const viewport = page.getViewport({scale: pdf.scale, rotation: pdf.rotation});
