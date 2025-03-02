@@ -1,4 +1,5 @@
 import {PDFDocumentProxy, getFilenameFromUrl} from "pdfjs-dist"
+import {PdfState} from "./PdfState";
 
 const pdfInstances = {}
 
@@ -41,6 +42,13 @@ export class Pdf {
         const canvas = this.getCanvas(id);
         // @ts-ignore
         return Object.values(pdfInstances).filter((c) => c.canvas === canvas).pop();
+    }
+
+    public updatePdf(dto: PdfState)
+    {
+        this.rotation = dto.orientation;
+        this.scale = dto.scale;
+        this.currentPage = dto.currentPage;
     }
 
     public setDocument(doc: PDFDocumentProxy) {

@@ -5,36 +5,38 @@ using MudBlazorPdf.Extensions;
 
 namespace MudBlazorPdf;
 
-public partial class MudPdfViewer : MudComponentBase
+public partial class MudPdfViewer : ComponentBase
 {
     private bool _loading = true;
 
     private ElementReference _element;
     private DotNetObjectReference<MudPdfViewer>? _objectReference;
-    private string? _id;
-    private double _scale = 1.0;
-
-    private int _maxZoomLevel = 17;
-    private int _minZoomLevel = 1;
-    private int _defaultZoomLevel = 8;
-    private int _zoomLevel = 8;
-    private string _zoomPercentage = "100%";
-
-    private int _pageNumber = 0;
-    private int _pageCount = 0;
-
-    private Orientation _oldOrientation = Orientation.Portrait;
-    private double _rotation = 0;
-
-    private bool _toggleThumbnails = true;
-
-    private string? _password = null;
-    private InputType _passwordInputType = InputType.Password;
-    private string _passwordInputIcon = Icons.Material.Filled.VisibilityOff;
-    private bool _passwordVisible = false;
-
-    private bool PdfErrored => _pdfError != null;
-    private PdfError? _pdfError = null;
+    public Pdf.Pdf PdfFile { get; private set; }
+    
+    // private string? _id;
+    // private double _scale = 1.0;
+    //
+    // private int _maxZoomLevel = 17;
+    // private int _minZoomLevel = 1;
+    // private int _defaultZoomLevel = 8;
+    // private int _zoomLevel = 8;
+    // private string _zoomPercentage = "100%";
+    //
+    // private int _pageNumber = 0;
+    // private int _pageCount = 0;
+    //
+    // private PdfOrientation _oldPdfOrientation = PdfOrientation.Portrait;
+    // private double _rotation = 0;
+    //
+    // private bool _toggleThumbnails = true;
+    //
+    // private string? _password = null;
+    // private InputType _passwordInputType = InputType.Password;
+    // private string _passwordInputIcon = Icons.Material.Filled.VisibilityOff;
+    // private bool _passwordVisible = false;
+    //
+    // private bool PdfErrored => _pdfError != null;
+    // private PdfError? _pdfError = null;
 
     /// <summary>
     /// Sets the display orientation of the PDF document
@@ -43,7 +45,7 @@ public partial class MudPdfViewer : MudComponentBase
     /// Defaults to <c>Orientation.Portrait</c>
     /// </remarks>
     [Parameter]
-    public Orientation Orientation { get; set; } = Orientation.Portrait;
+    public PdfOrientation PdfOrientation { get; set; } = PdfOrientation.Portrait;
 
     /// <summary>
     /// Determines the height of the PDF viewer when <c>SinglePageMode</c> is set to <c>true</c>.
@@ -98,19 +100,17 @@ public partial class MudPdfViewer : MudComponentBase
     protected override async Task OnInitializedAsync()
     {
         _objectReference ??= DotNetObjectReference.Create(this);
-        _rotation = Orientation == Orientation.Portrait ? 0 : -90;
-        _id ??= "".GenerateRandomString();
-        _toggleThumbnails = !HideThumbnails;
-
+        PdfFile = new Pdf.Pdf("".GenerateRandomString(), Url, PdfOrientation);
+        // _rotation = PdfOrientation == PdfOrientation.Portrait ? 0 : -90;
+        // _id ??= "".GenerateRandomString();
+        // _toggleThumbnails = !HideThumbnails;
         await base.OnInitializedAsync();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
-        {
-            await PdfInterop.InitializeAsync(_objectReference!, _id!, Url!, _scale, _rotation, SinglePageMode);
-        }
+            await PdfInterop.InitializeAsync(_objectReference!, PdfFile, SinglePageMode);
 
         await base.OnAfterRenderAsync(firstRender);
     }
@@ -123,13 +123,11 @@ public partial class MudPdfViewer : MudComponentBase
         if (pdfViewerModel is null)
             return;
 
-        _pageNumber = pdfViewerModel.PageNumber;
-        _pageCount = pdfViewerModel.PagesCount;
-
+        PdfFile.Paging.Update(pdfViewerModel.CurrentPage, pdfViewerModel.TotalPages);
         StateHasChanged();
 
         if (OnDocumentLoaded.HasDelegate)
-            OnDocumentLoaded.InvokeAsync(new PdfViewerEventArgs(_pageNumber, _pageCount));
+            OnDocumentLoaded.InvokeAsync(new PdfViewerEventArgs(pdfViewerModel.CurrentPage, pdfViewerModel.TotalPages));
     }
 
     [JSInvokable]
@@ -138,196 +136,164 @@ public partial class MudPdfViewer : MudComponentBase
         if (pdfViewerModel is null)
             return;
 
-        _pageNumber = pdfViewerModel.PageNumber;
-        _pageCount = pdfViewerModel.PagesCount;
-
+        PdfFile.Paging.Update(pdfViewerModel.CurrentPage, pdfViewerModel.TotalPages);
         StateHasChanged();
 
         if (OnPageChanged.HasDelegate)
-            OnPageChanged.InvokeAsync(new PdfViewerEventArgs(_pageNumber, _pageCount));
+            OnPageChanged.InvokeAsync(new PdfViewerEventArgs(pdfViewerModel.CurrentPage, pdfViewerModel.TotalPages));
     }
 
-    [JSInvokable]
-    public void PdfViewerError(PdfViewerError error)
+    // [JSInvokable]
+    // public void PdfViewerError(PdfViewerError error)
+    // {
+    //     _loading = false;
+    //     _pdfError = error.Name switch
+    //     {
+    //         "PasswordException" => new PdfError { ErrorType = PdfErrorType.PasswordRequired, Message = error.Message?.ToLower() == "no password given" ? null : error.Message },
+    //         _ => new PdfError { ErrorType = PdfErrorType.Error, Message = error.Message }
+    //     };
+    //
+    //     StateHasChanged();
+    // }
+
+    #region Paging
+
+    private async Task FirstPageAsync()
     {
-        _loading = false;
-        _pdfError = error.Name switch
-        {
-            "PasswordException" => new PdfError { ErrorType = PdfErrorType.PasswordRequired, Message = error.Message?.ToLower() == "no password given" ? null : error.Message },
-            _ => new PdfError { ErrorType = PdfErrorType.Error, Message = error.Message }
-        };
-
-        StateHasChanged();
+        if (PdfFile.Paging.FirstPage())
+            await PdfInterop.UpdateAsync(_objectReference!, PdfFile);
     }
 
-    private async Task FirstPageAsync() => await PdfInterop.FirstPageAsync(_objectReference!, _id!);
-    private async Task LastPageAsync() => await PdfInterop.LastPageAsync(_objectReference!, _id!);
-    private async Task NextPageAsync() => await PdfInterop.NextPageAsync(_objectReference!, _id!);
-    private async Task PreviousPageAsync() => await PdfInterop.PreviousPageAsync(_objectReference!, _id!);
-
-    private async Task PageNumberChanged(int value)
+    private async Task LastPageAsync()
     {
-        if (value < 1 || value > _pageCount)
-            _pageNumber = 1;
-        else
-            _pageNumber = value;
-
-        await PdfInterop.GotoPageAsync(_objectReference!, _id!, _pageNumber);
+        if (PdfFile.Paging.LastPage())
+            await PdfInterop.UpdateAsync(_objectReference!, PdfFile);
     }
 
-    private int GetZoomPercentage(int zoomLevel) =>
-        zoomLevel switch
-        {
-            1 => 25,
-            2 => 33,
-            3 => 50,
-            4 => 67,
-            5 => 75,
-            6 => 80,
-            7 => 90,
-            8 => 100,
-            9 => 110,
-            10 => 125,
-            11 => 150,
-            12 => 175,
-            13 => 200,
-            14 => 250,
-            15 => 300,
-            16 => 400,
-            17 => 500,
-            _ => 100
-        };
-
-    private async Task ZoomInAsync()
+    private async Task NextPageAsync()
     {
-        if (_zoomLevel == _maxZoomLevel)
-            return;
-
-        _zoomLevel += 1;
-        var zp = GetZoomPercentage(_zoomLevel);
-        _zoomPercentage = $"{zp}%";
-        _scale = 0.01 * zp;
-        await PdfInterop.ZoomInOutAsync(_objectReference!, _id!, _scale);
+        if (PdfFile.Paging.NextPage())
+            await PdfInterop.UpdateAsync(_objectReference!, PdfFile);
     }
 
-    private async Task ZoomOutAsync()
+    private async Task PreviousPageAsync()
     {
-        if (_zoomLevel == _minZoomLevel)
-            return;
-
-        _zoomLevel -= 1;
-        var zp = GetZoomPercentage(_zoomLevel);
-        _zoomPercentage = $"{zp}%";
-        _scale = 0.01 * zp;
-        await PdfInterop.ZoomInOutAsync(_objectReference!, _id!, _scale);
+        if (PdfFile.Paging.PreviousPage())
+            await PdfInterop.UpdateAsync(_objectReference!, PdfFile);
     }
 
-    private async Task ResetZoomAsync()
+    protected async Task PageNumberChanged(int value)
     {
-        _zoomLevel = _defaultZoomLevel;
-        var zp = GetZoomPercentage(_defaultZoomLevel);
-        _zoomPercentage = $"{zp}%";
-        _scale = 0.01 * zp;
-        await PdfInterop.ZoomInOutAsync(_objectReference!, _id!, _scale);
+        if (PdfFile.Paging.GotoPage(value))
+            await PdfInterop.UpdateAsync(_objectReference!, PdfFile);
     }
 
-    private async Task RotateClockwiseAsync()
+    #endregion
+
+    #region Zooming
+
+    protected async Task ZoomInAsync()
     {
-        _rotation += 90;
-        _rotation = _rotation.Equals(360) ? 0 : _rotation;
-        await PdfInterop.RotateAsync(_objectReference!, _id!, _rotation);
-
-        SetOrientation();
+        if (PdfFile.Zooming.ZoomIn())
+            await PdfInterop.UpdateAsync(_objectReference!, PdfFile);
     }
 
-    private async Task RotateCounterclockwiseAsync()
+    protected async Task ZoomOutAsync()
     {
-        _rotation -= 90;
-        _rotation = _rotation.Equals(360) ? 0 : _rotation;
-        await PdfInterop.RotateAsync(_objectReference!, _id!, _rotation);
-
-        SetOrientation();
+        if (PdfFile.Zooming.ZoomOut())
+            await PdfInterop.UpdateAsync(_objectReference!, PdfFile);
     }
 
-    private void SetOrientation()
+    protected async Task ResetZoomAsync()
     {
-        _oldOrientation = _rotation switch
-        {
-            0 => Orientation = Orientation.Portrait,
-            -90 => Orientation = Orientation.Landscape,
-            _ => _oldOrientation
-        };
+        if (PdfFile.Zooming.ResetZoom())
+            await PdfInterop.UpdateAsync(_objectReference!, PdfFile);
     }
 
-    private async Task SwitchOrientationAsync()
+    #endregion
+
+    #region Rotation
+
+    protected async Task RotateClockwiseAsync()
     {
-        _oldOrientation = Orientation;
-        Orientation = Orientation == Orientation.Portrait ? Orientation.Landscape : Orientation.Portrait;
-        _rotation = Orientation == Orientation.Portrait ? 0 : -90;
-
-        await PdfInterop.RotateAsync(_objectReference!, _id!, _rotation);
+        PdfFile.Orientation.RotateClockwise();
+        await PdfInterop.UpdateAsync(_objectReference!, PdfFile);
     }
 
-    private async Task PrintDocumentAsync()
+    protected async Task RotateCounterclockwiseAsync()
     {
-        await PdfInterop.PrintDocumentAsync(_objectReference!, _id!);
+        PdfFile.Orientation.RotateCounterClockwise();
+        await PdfInterop.UpdateAsync(_objectReference!, PdfFile);
     }
 
-    private async Task DownloadDocumentAsync()
+    protected async Task SwitchOrientationAsync()
     {
-        await PdfInterop.DownloadDocumentAsync(_objectReference!, _id!);
+        PdfFile.Orientation.Flip();
+        await PdfInterop.UpdateAsync(_objectReference!, PdfFile);
     }
 
-    private async Task ReloadPdfAsync()
-    {
-        if (_pdfError is not null && _pdfError.ErrorType == PdfErrorType.PasswordRequired && string.IsNullOrEmpty(_password))
-        {
-            _pdfError.Message = "Please supply a password.";
-            StateHasChanged();
-            return;
-        }
+    #endregion
 
-        _loading = true;
-        _pdfError = null;
-        StateHasChanged();
-
-        await PdfInterop.InitializeAsync(_objectReference!, _id!, Url!, _scale, _rotation, SinglePageMode, _password);
-    }
-
-    private void PeekPassword()
-    {
-        if (_passwordVisible)
-        {
-            _passwordVisible = false;
-            _passwordInputIcon = Icons.Material.Filled.VisibilityOff;
-            _passwordInputType = InputType.Password;
-        }
-        else {
-            _passwordVisible = true;
-            _passwordInputIcon = Icons.Material.Filled.Visibility;
-            _passwordInputType = InputType.Text;
-        }
-    }
-    
-
-    private void ToggleThumbnails()
-    {
-        _toggleThumbnails = !_toggleThumbnails;
-        StateHasChanged();
-    }
-
-    private string ThumbnailClass()
-    {
-        return _toggleThumbnails
-            ? "mudpdf_thumbnails"
-            : "mudpdf_thumbnails d-none";
-    }
-
+    // private async Task PrintDocumentAsync()
+    // {
+    //     await PdfInterop.PrintDocumentAsync(_objectReference!, _id!);
+    // }
+    //
+    // private async Task DownloadDocumentAsync()
+    // {
+    //     await PdfInterop.DownloadDocumentAsync(_objectReference!, _id!);
+    // }
+    //
+    // private async Task ReloadPdfAsync()
+    // {
+    //     if (_pdfError is not null && _pdfError.ErrorType == PdfErrorType.PasswordRequired && string.IsNullOrEmpty(_password))
+    //     {
+    //         _pdfError.Message = "Please supply a password.";
+    //         StateHasChanged();
+    //         return;
+    //     }
+    //
+    //     _loading = true;
+    //     _pdfError = null;
+    //     StateHasChanged();
+    //
+    //     await PdfInterop.InitializeAsync(_objectReference!, _id!, Url!, _scale, _rotation, SinglePageMode, _password);
+    // }
+    //
+    // private void PeekPassword()
+    // {
+    //     if (_passwordVisible)
+    //     {
+    //         _passwordVisible = false;
+    //         _passwordInputIcon = Icons.Material.Filled.VisibilityOff;
+    //         _passwordInputType = InputType.Password;
+    //     }
+    //     else {
+    //         _passwordVisible = true;
+    //         _passwordInputIcon = Icons.Material.Filled.Visibility;
+    //         _passwordInputType = InputType.Text;
+    //     }
+    // }
+    //
+    //
+    // private void ToggleThumbnails()
+    // {
+    //     _toggleThumbnails = !_toggleThumbnails;
+    //     StateHasChanged();
+    // }
+    //
+    // private string ThumbnailClass()
+    // {
+    //     return _toggleThumbnails
+    //         ? "mudpdf_thumbnails"
+    //         : "mudpdf_thumbnails d-none";
+    // }
+    //
     private string ColorStyle()
     {
         return $"background-color: {Config.Colors.Background}";
     }
-
+    
     private string ScrollStyle()
     {
         return $"height: {Height}";
