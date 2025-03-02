@@ -1,5 +1,5 @@
+using Gotho.BlazorPdf.Pdf;
 using Microsoft.JSInterop;
-using MudBlazorPdf.Pdf;
 
 internal class PdfInterop(IJSRuntime jsRuntime) : IAsyncDisposable
 {

@@ -1,7 +1,5 @@
 ﻿@page "/"
 
-@using MudBlazorPdf
-
 <PageTitle>Mud PDF</PageTitle>
 
 <div style="max-width: 1440px; margin: 3em auto auto;">
@@ -69,7 +67,8 @@
             </div>
         </MudItem>
         <MudItem xs="12" Class="mt-5">
-            <MudPdfViewer Url="https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf"/>
+            <PdfViewer Url="https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf"/>
+            @* <MudPdfViewer Url="https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf"/> *@
         </MudItem>
     </MudGrid>
 </div>

@@ -1,7 +1,8 @@
-@inherits ComponentBase
+@inherits PdfViewer
+
+@namespace Gotho.BlazorPdf.MudBlazor
 
 <!--suppress ALL -->
-
 <MudGrid Class="flex-wrap">
     <MudItem xs="12">
         <MudToolBar Class="justify-space-between" Style="background-color: var(--mud-palette-surface)">
@@ -19,14 +20,14 @@
             <MudTooltip Text="@Config.Labels.PreviousPage" Arrow="true" Placement="Placement.Top">
                 <MudIconButton Icon="@Config.Icons.PreviousPage"
                                Size="Size.Medium"
-                               Color="@Config.Colors.IconColor"
+                               Color="@Config.IconColor"
                                OnClick="PreviousPageAsync"
                                aria-label="@Config.Labels.PreviousPage"/>
             </MudTooltip>
             <MudTooltip Text="@Config.Labels.NextPage" Arrow="true" Placement="Placement.Top">
                 <MudIconButton Icon="@Config.Icons.NextPage"
                                Size="Size.Medium"
-                               Color="@Config.Colors.IconColor"
+                               Color="@Config.IconColor"
                                OnClick="NextPageAsync"
                                aria-label="@Config.Labels.NextPage"/>
             </MudTooltip>
@@ -45,7 +46,7 @@
             <MudTooltip Text="@Config.Labels.ZoomOut" Arrow="true" Placement="Placement.Top">
                 <MudIconButton Icon="@Config.Icons.ZoomOut"
                                Size="Size.Medium"
-                               Color="@Config.Colors.IconColor"
+                               Color="@Config.IconColor"
                                OnClick="ZoomOutAsync"
                                aria-label="@Config.Labels.ZoomOut"/>
             </MudTooltip>
@@ -53,7 +54,7 @@
             <MudTooltip Text="@Config.Labels.ZoomIn" Arrow="true" Placement="Placement.Top">
                 <MudIconButton Icon="@Config.Icons.ZoomIn"
                                Size="Size.Medium"
-                               Color="@Config.Colors.IconColor"
+                               Color="@Config.IconColor"
                                OnClick="ZoomInAsync"
                                aria-label="@Config.Labels.ZoomIn"/>
             </MudTooltip>
@@ -72,7 +73,7 @@
                 @* <MudMenuItem Icon="@Config.Icons.DownloadDocument" Label="@Config.Labels.DownloadDocument" OnClick="DownloadDocumentAsync"/> *@
             </MudMenu>
         </MudToolBar>
-        @if (_loading)
+        @if (Loading)
         {
             <MudProgressLinear Color="Color.Primary" Indeterminate="true"/>
         }
@@ -130,7 +131,7 @@
                     }
                     else
                     {
-                        <canvas @ref="_element" id="@PdfFile.Id" style="overflow: auto"></canvas>
+                        <canvas @ref="Element" id="@PdfFile.Id" style="overflow: auto"></canvas>
                         <div id="@($"{PdfFile.Id}_text")" class="textLayer"></div>
                     }
                 </div>

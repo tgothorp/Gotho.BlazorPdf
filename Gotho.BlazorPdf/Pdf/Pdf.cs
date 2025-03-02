@@ -1,4 +1,4 @@
-namespace MudBlazorPdf.Pdf;
+namespace Gotho.BlazorPdf.Pdf;
 
 public class Pdf(string id, string url, PdfOrientation orientation)
 {

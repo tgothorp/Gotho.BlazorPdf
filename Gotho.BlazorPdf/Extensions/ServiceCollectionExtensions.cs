@@ -1,3 +1,4 @@
+using Gotho.BlazorPdf;
 using MudBlazorPdf;
 
 // ReSharper disable once CheckNamespace
@@ -5,9 +6,9 @@ namespace Microsoft.Extensions.DependencyInjection;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddMudBlazorPdfViewer(this IServiceCollection services, Action<MudPdfViewerConfig>? configure = null)
+    public static IServiceCollection AddBlazorPdfViewer(this IServiceCollection services, Action<PdfViewerConfig>? configure = null)
     {
-        var config = new MudPdfViewerConfig();
+        var config = new PdfViewerConfig();
         configure?.Invoke(config);
 
         services.AddSingleton(config);
