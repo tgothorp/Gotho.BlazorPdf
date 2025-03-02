@@ -1,4 +1,4 @@
-namespace MudBlazorPdf.Pdf;
+namespace Gotho.BlazorPdf.Pdf;
 
 public record Zoom
 {

@@ -1,33 +1,18 @@
+using Gotho.BlazorPdf.Pdf;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using MudBlazor;
 using MudBlazorPdf.Extensions;
 
-namespace MudBlazorPdf;
+namespace Gotho.BlazorPdf;
 
-public partial class MudPdfViewer : ComponentBase
+public partial class PdfViewer : ComponentBase
 {
-    private bool _loading = true;
-
-    private ElementReference _element;
-    private DotNetObjectReference<MudPdfViewer>? _objectReference;
+    protected bool Loading = true;
+    protected ElementReference Element;
+    protected DotNetObjectReference<PdfViewer>? ObjectReference;
+    
     public Pdf.Pdf PdfFile { get; private set; }
     
-    // private string? _id;
-    // private double _scale = 1.0;
-    //
-    // private int _maxZoomLevel = 17;
-    // private int _minZoomLevel = 1;
-    // private int _defaultZoomLevel = 8;
-    // private int _zoomLevel = 8;
-    // private string _zoomPercentage = "100%";
-    //
-    // private int _pageNumber = 0;
-    // private int _pageCount = 0;
-    //
-    // private PdfOrientation _oldPdfOrientation = PdfOrientation.Portrait;
-    // private double _rotation = 0;
-    //
     // private bool _toggleThumbnails = true;
     //
     // private string? _password = null;
@@ -95,11 +80,11 @@ public partial class MudPdfViewer : ComponentBase
     public EventCallback<PdfViewerEventArgs> OnPageChanged { get; set; }
 
     [Inject] private PdfInterop PdfInterop { get; set; } = default!;
-    [Inject] private MudPdfViewerConfig Config { get; set; } = default!;
+    [Inject] protected PdfViewerConfig Config { get; set; } = default!;
 
     protected override async Task OnInitializedAsync()
     {
-        _objectReference ??= DotNetObjectReference.Create(this);
+        ObjectReference ??= DotNetObjectReference.Create(this);
         PdfFile = new Pdf.Pdf("".GenerateRandomString(), Url, PdfOrientation);
         // _rotation = PdfOrientation == PdfOrientation.Portrait ? 0 : -90;
         // _id ??= "".GenerateRandomString();
@@ -110,7 +95,7 @@ public partial class MudPdfViewer : ComponentBase
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
-            await PdfInterop.InitializeAsync(_objectReference!, PdfFile, SinglePageMode);
+            await PdfInterop.InitializeAsync(ObjectReference!, PdfFile, SinglePageMode);
 
         await base.OnAfterRenderAsync(firstRender);
     }
@@ -118,7 +103,7 @@ public partial class MudPdfViewer : ComponentBase
     [JSInvokable]
     public void DocumentLoaded(PdfViewerModel? pdfViewerModel)
     {
-        _loading = false;
+        Loading = false;
 
         if (pdfViewerModel is null)
             return;
@@ -158,34 +143,34 @@ public partial class MudPdfViewer : ComponentBase
 
     #region Paging
 
-    private async Task FirstPageAsync()
+    protected async Task FirstPageAsync()
     {
         if (PdfFile.Paging.FirstPage())
-            await PdfInterop.UpdateAsync(_objectReference!, PdfFile);
+            await PdfInterop.UpdateAsync(ObjectReference!, PdfFile);
     }
 
-    private async Task LastPageAsync()
+    protected async Task LastPageAsync()
     {
         if (PdfFile.Paging.LastPage())
-            await PdfInterop.UpdateAsync(_objectReference!, PdfFile);
+            await PdfInterop.UpdateAsync(ObjectReference!, PdfFile);
     }
 
-    private async Task NextPageAsync()
+    protected async Task NextPageAsync()
     {
         if (PdfFile.Paging.NextPage())
-            await PdfInterop.UpdateAsync(_objectReference!, PdfFile);
+            await PdfInterop.UpdateAsync(ObjectReference!, PdfFile);
     }
 
-    private async Task PreviousPageAsync()
+    protected async Task PreviousPageAsync()
     {
         if (PdfFile.Paging.PreviousPage())
-            await PdfInterop.UpdateAsync(_objectReference!, PdfFile);
+            await PdfInterop.UpdateAsync(ObjectReference!, PdfFile);
     }
 
     protected async Task PageNumberChanged(int value)
     {
         if (PdfFile.Paging.GotoPage(value))
-            await PdfInterop.UpdateAsync(_objectReference!, PdfFile);
+            await PdfInterop.UpdateAsync(ObjectReference!, PdfFile);
     }
 
     #endregion
@@ -195,19 +180,19 @@ public partial class MudPdfViewer : ComponentBase
     protected async Task ZoomInAsync()
     {
         if (PdfFile.Zooming.ZoomIn())
-            await PdfInterop.UpdateAsync(_objectReference!, PdfFile);
+            await PdfInterop.UpdateAsync(ObjectReference!, PdfFile);
     }
 
     protected async Task ZoomOutAsync()
     {
         if (PdfFile.Zooming.ZoomOut())
-            await PdfInterop.UpdateAsync(_objectReference!, PdfFile);
+            await PdfInterop.UpdateAsync(ObjectReference!, PdfFile);
     }
 
     protected async Task ResetZoomAsync()
     {
         if (PdfFile.Zooming.ResetZoom())
-            await PdfInterop.UpdateAsync(_objectReference!, PdfFile);
+            await PdfInterop.UpdateAsync(ObjectReference!, PdfFile);
     }
 
     #endregion
@@ -217,19 +202,19 @@ public partial class MudPdfViewer : ComponentBase
     protected async Task RotateClockwiseAsync()
     {
         PdfFile.Orientation.RotateClockwise();
-        await PdfInterop.UpdateAsync(_objectReference!, PdfFile);
+        await PdfInterop.UpdateAsync(ObjectReference!, PdfFile);
     }
 
     protected async Task RotateCounterclockwiseAsync()
     {
         PdfFile.Orientation.RotateCounterClockwise();
-        await PdfInterop.UpdateAsync(_objectReference!, PdfFile);
+        await PdfInterop.UpdateAsync(ObjectReference!, PdfFile);
     }
 
     protected async Task SwitchOrientationAsync()
     {
         PdfFile.Orientation.Flip();
-        await PdfInterop.UpdateAsync(_objectReference!, PdfFile);
+        await PdfInterop.UpdateAsync(ObjectReference!, PdfFile);
     }
 
     #endregion
@@ -289,12 +274,12 @@ public partial class MudPdfViewer : ComponentBase
     //         : "mudpdf_thumbnails d-none";
     // }
     //
-    private string ColorStyle()
+    protected string ColorStyle()
     {
         return $"background-color: {Config.Colors.Background}";
     }
     
-    private string ScrollStyle()
+    protected string ScrollStyle()
     {
         return $"height: {Height}";
     }

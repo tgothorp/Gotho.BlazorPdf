@@ -8,10 +8,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\MudBlazor.PdfViewer\MudBlazor.PdfViewer.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.*" />
         <PackageReference Include="MudBlazor" Version="8.0.0" />
     </ItemGroup>
@@ -24,6 +20,10 @@
 
     <ItemGroup>
       <Folder Include="wwwroot\img\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Gotho.BlazorPdf.MudBlazor\Gotho.BlazorPdf.MudBlazor.csproj" />
     </ItemGroup>
 
 </Project>

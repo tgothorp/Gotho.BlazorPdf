@@ -1,0 +1,5 @@
+@inherits ComponentBase
+
+<button @onclick="ZoomInAsync">Zoom in</button>
+<canvas @ref="Element" id="@PdfFile.Id" style="overflow: auto"></canvas>
+<div id="@($"{PdfFile.Id}_text")" class="textLayer"></div>

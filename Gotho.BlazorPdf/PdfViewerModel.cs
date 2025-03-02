@@ -1,4 +1,4 @@
-namespace MudBlazorPdf;
+namespace Gotho.BlazorPdf;
 
 public class PdfViewerModel
 {
