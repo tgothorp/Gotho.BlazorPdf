@@ -1,6 +1,6 @@
 namespace MudBlazorPdf;
 
-public enum Orientation
+public enum PdfOrientation
 {
     Portrait,
     Landscape,

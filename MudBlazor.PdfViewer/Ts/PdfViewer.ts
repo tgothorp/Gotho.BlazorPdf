@@ -1,4 +1,5 @@
 import {Pdf} from "./Pdf";
+import {PdfState} from "./PdfState";
 import {saveAs} from "file-saver"
 import * as pdfjs from "pdfjs-dist"
 import { TextLayerBuilder } from 'pdfjs-dist/web/pdf_viewer.mjs';
@@ -7,6 +8,31 @@ import { TextLayerBuilder } from 'pdfjs-dist/web/pdf_viewer.mjs';
 import printjs from "print-js"
 
 pdfjs.GlobalWorkerOptions.workerSrc = "./pdf.worker.min.mjs";
+
+export function initPdfViewer(dotnetReference: any, pdfDto: PdfState, singlePageMode: boolean) {
+    console.log("Initializing PDF " + pdfDto.id);
+
+    if (pdfDto.url) {
+        const pdf = new Pdf(pdfDto.id, pdfDto.scale, pdfDto.orientation, pdfDto.url, singlePageMode, null)
+        pdfjs.getDocument({url: pdf.url}).promise.then(doc => {
+            pdf.setDocument(doc)
+            renderPdf(pdf)
+
+            dotnetReference.invokeMethodAsync('DocumentLoaded', {
+                currentPage: pdf.currentPage,
+                totalPages: pdf.pageCount
+            });
+        })
+    }
+}
+
+export function updatePdf(dotnetReference: any, pdfDto: PdfState) {
+    console.log("Updating PDF " + pdfDto.id);
+    const pdf = Pdf.getPdf(pdfDto.id)
+    pdf.updatePdf(pdfDto)
+    queuePdfRender(pdf, null);
+    updateMetadata(dotnetReference, pdf)
+}
 
 export function init(dotnetReference: any, id: string, documentUrl: string, scale: number, rotation: number, singlePageMode: boolean, password: string = null) {
     console.log("Initializing PDF " + id);
@@ -278,5 +304,5 @@ function updateMetadata(dotnetReference: any, pdf: Pdf) {
     if (dotnetReference == null)
         return;
 
-    dotnetReference.invokeMethodAsync('SetPdfViewerMetaData', {pagesCount: pdf.pageCount, pageNumber: pdf.currentPage});
+    dotnetReference.invokeMethodAsync('SetPdfViewerMetaData', {currentPage: pdf.currentPage, totalPages: pdf.pageCount});
 }
