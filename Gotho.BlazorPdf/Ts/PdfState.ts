@@ -5,4 +5,5 @@ export class PdfState {
     public scale: number
     public currentPage : number
     public singlePageMode: boolean
+    public password: string
 }

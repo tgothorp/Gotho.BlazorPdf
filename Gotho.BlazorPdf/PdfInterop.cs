@@ -4,7 +4,7 @@ using Microsoft.JSInterop;
 internal class PdfInterop(IJSRuntime jsRuntime) : IAsyncDisposable
 {
     private readonly Lazy<Task<IJSObjectReference>> js =
-        new(() => jsRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Gotho.MudBlazor.PdfViewer/mudpdf.min.js").AsTask());
+        new(() => jsRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Gotho.BlazorPdf/mudpdf.min.js").AsTask());
 
     public async Task InitializeAsync(object objRef, Pdf pdf, bool singlePageMode)
     {
@@ -16,6 +16,18 @@ internal class PdfInterop(IJSRuntime jsRuntime) : IAsyncDisposable
     {
         var module = await js.Value;
         await module.InvokeVoidAsync("updatePdf", objRef, pdf.GetPdfState());
+    }
+    
+    public async Task PrintDocumentAsync(object objRef, Pdf pdf)
+    {
+        var module = await js.Value;
+        await module.InvokeVoidAsync("printDocument", objRef, pdf.Id);
+    }
+    
+    public async Task DownloadDocumentAsync(object objRef, Pdf pdf)
+    {
+        var module = await js.Value;
+        await module.InvokeVoidAsync("downloadDocument", objRef, pdf.Id);
     }
     
     // public async Task InitializeAsync(object objRef, string elementId, string documentUrl, double scale, double rotation, bool singlePageMode, string? password = null)
@@ -64,18 +76,6 @@ internal class PdfInterop(IJSRuntime jsRuntime) : IAsyncDisposable
     // {
     //     var module = await js.Value;
     //     await module.InvokeVoidAsync("rotate", objRef, elementId, rotation);
-    // }
-    //
-    // public async Task PrintDocumentAsync(object objRef, string elementId)
-    // {
-    //     var module = await js.Value;
-    //     await module.InvokeVoidAsync("printDocument", objRef, elementId);
-    // }
-    //
-    // public async Task DownloadDocumentAsync(object objRef, string elementId)
-    // {
-    //     var module = await js.Value;
-    //     await module.InvokeVoidAsync("downloadDocument", objRef, elementId);
     // }
 
     public async ValueTask DisposeAsync()

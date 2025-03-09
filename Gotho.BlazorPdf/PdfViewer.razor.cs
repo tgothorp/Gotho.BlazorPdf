@@ -10,18 +10,10 @@ public partial class PdfViewer : ComponentBase
     protected bool Loading = true;
     protected ElementReference Element;
     protected DotNetObjectReference<PdfViewer>? ObjectReference;
+    protected PdfError? Error;
+    protected string? PdfPassword;
     
     public Pdf.Pdf PdfFile { get; private set; }
-    
-    // private bool _toggleThumbnails = true;
-    //
-    // private string? _password = null;
-    // private InputType _passwordInputType = InputType.Password;
-    // private string _passwordInputIcon = Icons.Material.Filled.VisibilityOff;
-    // private bool _passwordVisible = false;
-    //
-    // private bool PdfErrored => _pdfError != null;
-    // private PdfError? _pdfError = null;
 
     /// <summary>
     /// Sets the display orientation of the PDF document
@@ -128,18 +120,18 @@ public partial class PdfViewer : ComponentBase
             OnPageChanged.InvokeAsync(new PdfViewerEventArgs(pdfViewerModel.CurrentPage, pdfViewerModel.TotalPages));
     }
 
-    // [JSInvokable]
-    // public void PdfViewerError(PdfViewerError error)
-    // {
-    //     _loading = false;
-    //     _pdfError = error.Name switch
-    //     {
-    //         "PasswordException" => new PdfError { ErrorType = PdfErrorType.PasswordRequired, Message = error.Message?.ToLower() == "no password given" ? null : error.Message },
-    //         _ => new PdfError { ErrorType = PdfErrorType.Error, Message = error.Message }
-    //     };
-    //
-    //     StateHasChanged();
-    // }
+    [JSInvokable]
+    public void PdfViewerError(PdfViewerError error)
+    {
+        Loading = false;
+        Error = error.Name switch
+        {
+            "PasswordException" => new PdfError { ErrorType = PdfErrorType.PasswordRequired, Message = error.Message?.ToLower() == "no password given" ? null : error.Message },
+            _ => new PdfError { ErrorType = PdfErrorType.Error, Message = error.Message }
+        };
+    
+        StateHasChanged();
+    }
 
     #region Paging
 
@@ -219,66 +211,40 @@ public partial class PdfViewer : ComponentBase
 
     #endregion
 
-    // private async Task PrintDocumentAsync()
-    // {
-    //     await PdfInterop.PrintDocumentAsync(_objectReference!, _id!);
-    // }
-    //
-    // private async Task DownloadDocumentAsync()
-    // {
-    //     await PdfInterop.DownloadDocumentAsync(_objectReference!, _id!);
-    // }
-    //
-    // private async Task ReloadPdfAsync()
-    // {
-    //     if (_pdfError is not null && _pdfError.ErrorType == PdfErrorType.PasswordRequired && string.IsNullOrEmpty(_password))
-    //     {
-    //         _pdfError.Message = "Please supply a password.";
-    //         StateHasChanged();
-    //         return;
-    //     }
-    //
-    //     _loading = true;
-    //     _pdfError = null;
-    //     StateHasChanged();
-    //
-    //     await PdfInterop.InitializeAsync(_objectReference!, _id!, Url!, _scale, _rotation, SinglePageMode, _password);
-    // }
-    //
-    // private void PeekPassword()
-    // {
-    //     if (_passwordVisible)
-    //     {
-    //         _passwordVisible = false;
-    //         _passwordInputIcon = Icons.Material.Filled.VisibilityOff;
-    //         _passwordInputType = InputType.Password;
-    //     }
-    //     else {
-    //         _passwordVisible = true;
-    //         _passwordInputIcon = Icons.Material.Filled.Visibility;
-    //         _passwordInputType = InputType.Text;
-    //     }
-    // }
-    //
-    //
-    // private void ToggleThumbnails()
-    // {
-    //     _toggleThumbnails = !_toggleThumbnails;
-    //     StateHasChanged();
-    // }
-    //
-    // private string ThumbnailClass()
-    // {
-    //     return _toggleThumbnails
-    //         ? "mudpdf_thumbnails"
-    //         : "mudpdf_thumbnails d-none";
-    // }
-    //
+    private async Task DownloadDocumentAsync()
+    {
+        await PdfInterop.DownloadDocumentAsync(ObjectReference!, PdfFile);
+    }
+    
+    private async Task ReloadPdfAsync()
+    {
+        if (Error is not null && Error.ErrorType == PdfErrorType.PasswordRequired && string.IsNullOrEmpty(PdfPassword))
+        {
+            Error.Message = "Please supply a password.";
+            StateHasChanged();
+            return;
+        }
+    
+        PdfFile.UpdatePassword(PdfPassword);
+        Loading = true;
+        Error = null;
+        StateHasChanged();
+    
+        await PdfInterop.InitializeAsync(ObjectReference!, PdfFile, SinglePageMode);
+    }
+    
+    private async Task PrintDocumentAsync()
+    {
+        await PdfInterop.PrintDocumentAsync(ObjectReference!, PdfFile);
+    }
+
+    [Obsolete]
     protected string ColorStyle()
     {
         return $"background-color: {Config.Colors.Background}";
     }
     
+    [Obsolete]
     protected string ScrollStyle()
     {
         return $"height: {Height}";

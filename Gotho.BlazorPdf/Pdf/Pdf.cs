@@ -9,8 +9,12 @@ public class Pdf(string id, string url, PdfOrientation orientation)
     public Zoom Zooming { get; init; } = new();
     public Page Paging { get; init; } = new();
 
-    public bool PasswordRequired { get; private set; } = false;
     public string? Password { get; private set; } = null;
+
+    public void UpdatePassword(string? password)
+    {
+        Password = password;
+    }
 
     internal PdfState GetPdfState()
     {

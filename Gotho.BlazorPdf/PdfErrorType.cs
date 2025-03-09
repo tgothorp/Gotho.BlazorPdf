@@ -1,6 +1,6 @@
-namespace MudBlazorPdf;
+namespace Gotho.BlazorPdf;
 
-internal enum PdfErrorType
+public enum PdfErrorType
 {
     PasswordRequired,
     Error,
