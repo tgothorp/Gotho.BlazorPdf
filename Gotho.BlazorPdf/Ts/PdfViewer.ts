@@ -2,7 +2,7 @@ import {Pdf} from "./Pdf";
 import {PdfState} from "./PdfState";
 import {saveAs} from "file-saver"
 import * as pdfjs from "pdfjs-dist"
-import { TextLayerBuilder } from 'pdfjs-dist/web/pdf_viewer.mjs';
+import {TextLayerBuilder} from 'pdfjs-dist/web/pdf_viewer.mjs';
 
 // @ts-ignore
 import printjs from "print-js"
@@ -13,15 +13,22 @@ export function initPdfViewer(dotnetReference: any, pdfDto: PdfState, singlePage
     console.log("Initializing PDF " + pdfDto.id);
 
     if (pdfDto.url) {
-        const pdf = new Pdf(pdfDto.id, pdfDto.scale, pdfDto.orientation, pdfDto.url, singlePageMode, null)
-        pdfjs.getDocument({url: pdf.url}).promise.then(doc => {
+        const pdf = new Pdf(pdfDto.id, pdfDto.scale, pdfDto.orientation, pdfDto.url, singlePageMode, pdfDto.password)
+        const documentInit = pdf.password
+            ? {url: pdf.url, password: pdf.password}
+            : {url: pdf.url};
+
+        pdfjs.getDocument(documentInit).promise.then(doc => {
             pdf.setDocument(doc)
             renderPdf(pdf)
+            renderThumbnails(dotnetReference, pdf)
 
             dotnetReference.invokeMethodAsync('DocumentLoaded', {
                 currentPage: pdf.currentPage,
                 totalPages: pdf.pageCount
             });
+        }).catch((err) => {
+            dotnetReference.invokeMethodAsync('PdfViewerError', {name: err.name, message: err.message});
         })
     }
 }
@@ -30,6 +37,7 @@ export function updatePdf(dotnetReference: any, pdfDto: PdfState) {
     console.log("Updating PDF " + pdfDto.id);
     const pdf = Pdf.getPdf(pdfDto.id)
     pdf.updatePdf(pdfDto)
+    document.body.style.setProperty('--scale-factor', `${pdf.scale}`);
     queuePdfRender(pdf, null);
     updateMetadata(dotnetReference, pdf)
 }
@@ -196,7 +204,7 @@ async function renderThumbnails(dotnetReference: any, pdf: Pdf) {
 
         thumbCanvas.width = viewport.width;
         thumbCanvas.height = viewport.height;
-        thumbCanvas.classList.add('mudpdf_thumbnail');
+        thumbCanvas.classList.add('blazorpdf-pdf__thumbnails-thumbnail');
 
         sidebar.appendChild(thumbCanvas);
 
@@ -212,5 +220,8 @@ function updateMetadata(dotnetReference: any, pdf: Pdf) {
     if (dotnetReference == null)
         return;
 
-    dotnetReference.invokeMethodAsync('SetPdfViewerMetaData', {currentPage: pdf.currentPage, totalPages: pdf.pageCount});
+    dotnetReference.invokeMethodAsync('SetPdfViewerMetaData', {
+        currentPage: pdf.currentPage,
+        totalPages: pdf.pageCount
+    });
 }

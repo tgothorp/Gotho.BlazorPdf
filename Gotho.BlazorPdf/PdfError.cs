@@ -1,6 +1,6 @@
-namespace MudBlazorPdf;
+namespace Gotho.BlazorPdf;
 
-internal record PdfError
+public record PdfError
 {
     public required PdfErrorType ErrorType { get; init; }
     public required string? Message { get; set; }
