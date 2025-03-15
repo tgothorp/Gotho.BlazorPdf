@@ -10,19 +10,17 @@
         </MudItem>
         <MudItem sm="9" Style="overflow: auto">
             <MudText Typo="Typo.h2" Class="mb-5">Quickstart</MudText>
-            <MudText>This will guide you through the required steps to get Mud PDF up and running.</MudText>
+            <MudText>This will guide you through the required steps to get Blazor PDF up and running.</MudText>
             
-            <MudText Typo="Typo.h4" Class="mt-5">Prerequisites</MudText>
-            <MudText>In order to use Mud PDF, your project will need to meet the following requirements</MudText>
-            <MudText Class="mt-3 ml-3">✅ .NET Version 8.0 or 9.0</MudText>
-            <MudText Class="mt-2 ml-3">✅ MudBlazor Version 8.0.0 or later</MudText>
+            <MudText Typo="Typo.h4" Class="mt-5 mb-1">Prerequisites</MudText>
+            <MudText>In order to use Blazor PDF, your project must target either .NET 8 or .NET 9</MudText>
 
-            <MudText Typo="Typo.h4" Class="mt-5">Installation</MudText>
+            <MudText Typo="Typo.h4" Class="mt-5 mb-1">Installation</MudText>
             <MudText>Grab the latest package from <MudLink Color="Color.Primary" Href="https://www.nuget.org/packages/Gotho.MudBlazor.PdfViewer/#readme-body-tab">nuget.org</MudLink></MudText>
             
             <CodeSnippet Body="@QuickStart.Package" Lang="sh"/>
 
-            <MudText Typo="Typo.h4" Class="mt-5">Configuration</MudText>
+            <MudText Typo="Typo.h4" Class="mt-5 mb-1">Configuration</MudText>
             
             <MudText>Add the following to your application startup in <MudText HtmlTag="code">Program.cs</MudText></MudText>
             <CodeSnippet Body="@QuickStart.ProgramCs" Lang="cs"/>
@@ -33,10 +31,10 @@
             <MudText>Then, add the namespace to your <MudText HtmlTag="code">_Imports.razor</MudText> file.</MudText>
             <CodeSnippet Body="@QuickStart.ImportRazor" Lang="razor"/>
             
-            <MudText>You should now be able to use Mud PDF in your Project! 🚀</MudText>
+            <MudText>You should now be able to use Blazor PDF in your Project! 🚀</MudText>
 
-            <MudText Typo="Typo.h4" Class="mt-5">Usage</MudText>
-            <MudText>Below is a basic example of the minimum required to display a PDF document. See the rest of the documentation for full configuration options.</MudText>
+            <MudText Typo="Typo.h4" Class="mt-5 mb-1">Usage</MudText>
+            <MudText>Below is a basic example of the minimum required code in order to display a PDF document. See the rest of the documentation for full configuration options.</MudText>
 
             <CodeSnippet Body="@QuickStart.Minimum"/>
         </MudItem>

@@ -13,7 +13,7 @@ public partial class PdfViewer : ComponentBase
     protected PdfError? Error;
     protected string? PdfPassword;
     
-    public Pdf.Pdf PdfFile { get; private set; }
+    public Pdf.Pdf PdfFile { get; private set; } = null!;
 
     /// <summary>
     /// Sets the display orientation of the PDF document
@@ -77,10 +77,8 @@ public partial class PdfViewer : ComponentBase
     protected override async Task OnInitializedAsync()
     {
         ObjectReference ??= DotNetObjectReference.Create(this);
-        PdfFile = new Pdf.Pdf("".GenerateRandomString(), Url, PdfOrientation);
-        // _rotation = PdfOrientation == PdfOrientation.Portrait ? 0 : -90;
-        // _id ??= "".GenerateRandomString();
-        // _toggleThumbnails = !HideThumbnails;
+        PdfFile = new Pdf.Pdf("".GenerateRandomString(), Url!, PdfOrientation);
+
         await base.OnInitializedAsync();
     }
 

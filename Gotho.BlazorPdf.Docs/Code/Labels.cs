@@ -3,7 +3,7 @@ namespace MudBlazor.PdfViewer.Docs.Code;
 public static class Labels
 {
     public static string Config =>
-        @"builder.Services.AddMudBlazorPdfViewer(opt =>
+        @"builder.Services.AddBlazorPdfViewer(opt =>
 {
     opt.Labels.PrintDocument = ""Imprimir Documento"";
 });";

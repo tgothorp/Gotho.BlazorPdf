@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gotho.BlazorPdf", "Gotho.BlazorPdf\Gotho.BlazorPdf.csproj", "{D212443C-E455-431B-A259-9B48C2CE23A4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MudBlazor.PdfViewer.Docs", "MudBlazor.PdfViewer.Docs\MudBlazor.PdfViewer.Docs.csproj", "{871A6502-3876-4B73-B072-60711EAD525D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gotho.BlazorPdf.Docs", "Gotho.BlazorPdf.Docs\Gotho.BlazorPdf.Docs.csproj", "{871A6502-3876-4B73-B072-60711EAD525D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{66B7FF4B-BF29-4B24-87FE-788A1A5BA591}"
 EndProject

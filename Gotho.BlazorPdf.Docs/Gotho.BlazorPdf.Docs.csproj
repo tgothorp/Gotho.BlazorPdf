@@ -5,6 +5,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <RootNamespace>MudBlazor.PdfViewer.Docs</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

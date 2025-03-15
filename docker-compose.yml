@@ -1,9 +1,9 @@
 services:
-  mudpdfdocs:
+  blazorpdf:
     build:
       context: .
-      dockerfile: ./MudBlazor.PdfViewer.Docs/Dockerfile
-    container_name: mudpdfdocs
+      dockerfile: ./Gotho.BlazorPdf.Docs/Dockerfile
+    container_name: blazorpdf
     ports:
       - 8080:8080
       - 8081:8081
