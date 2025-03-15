@@ -169,15 +169,19 @@ function renderPdf(pdf: Pdf) {
 
         // @ts-ignore
         pdfjs.getDocument(pdf.url).promise.then(async function (doc) {
+
+            let fixedScale = pdf.scale
+            let fixedRotation = pdf.rotation
+            
             for (let pageNum = 1; pageNum <= pdf.pageCount; pageNum++) {
                 const page = await doc.getPage(pageNum);
-                const viewport = page.getViewport({scale: pdf.scale, rotation: pdf.rotation});
+                const viewport = page.getViewport({scale: fixedScale, rotation: fixedRotation});
 
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
 
                 canvas.id = `${pdf.id}-page-${pageNum}`;
-                canvas.classList.add('mudpdf_scroll_page');
+                canvas.classList.add('blazorpdf__scroll-page');
                 canvas.width = viewport.width;
                 canvas.height = viewport.height;
                 container.appendChild(canvas);

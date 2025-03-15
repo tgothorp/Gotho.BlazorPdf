@@ -1,0 +1,8 @@
+.blazorpdf__icon {
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    flex-shrink: 0;
+    user-select: none;
+    font-size: 1.65rem;
+}

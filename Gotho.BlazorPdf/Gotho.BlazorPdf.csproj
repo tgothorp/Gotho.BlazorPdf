@@ -45,6 +45,10 @@
         <PackageReference Include="Microsoft.AspNetCore.Components" Version="8.0.*" />
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.*" />
     </ItemGroup>
+
+    <ItemGroup>
+        <None Include="Icons/*.razor" Visible="false"/>
+    </ItemGroup>
     
     <ItemGroup>
         <None Include="README.md">
