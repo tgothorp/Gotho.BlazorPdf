@@ -34,9 +34,17 @@ export function initPdfViewer(dotnetReference: any, pdfDto: PdfState, singlePage
 }
 
 export function updatePdf(dotnetReference: any, pdfDto: PdfState) {
-    console.log("Updating PDF " + pdfDto.id);
     const pdf = Pdf.getPdf(pdfDto.id)
+    const previousPage = pdf.currentPage;
     pdf.updatePdf(pdfDto)
+
+    if (!pdf.singlePageMode && pdf.currentPage !== previousPage) {
+        scrollToPage(pdf.id, pdf.currentPage);
+        updateMetadata(dotnetReference, pdf)
+
+        return;
+    }
+    
     document.body.style.setProperty('--scale-factor', `${pdf.scale}`);
     queuePdfRender(pdf, null);
     updateMetadata(dotnetReference, pdf)
@@ -169,13 +177,13 @@ function renderPdf(pdf: Pdf) {
 
         // @ts-ignore
         pdfjs.getDocument(pdf.url).promise.then(async function (doc) {
+            let fixedScale = pdf.scale;
+            let fixedRotation = pdf.rotation;
 
-            let fixedScale = pdf.scale
-            let fixedRotation = pdf.rotation
-            
-            for (let pageNum = 1; pageNum <= pdf.pageCount; pageNum++) {
+            // @ts-ignore
+            async function renderPage(pageNum: number) {
                 const page = await doc.getPage(pageNum);
-                const viewport = page.getViewport({scale: fixedScale, rotation: fixedRotation});
+                const viewport = page.getViewport({ scale: fixedScale, rotation: fixedRotation });
 
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
@@ -186,11 +194,16 @@ function renderPdf(pdf: Pdf) {
                 canvas.height = viewport.height;
                 container.appendChild(canvas);
 
-                await page.render({canvasContext: ctx, viewport}).promise;
+                await page.render({ canvasContext: ctx, viewport }).promise;
             }
-        })
 
-        pdf.renderInProgress = false;
+            // Render pages sequentially
+            for (let pageNum = 1; pageNum <= pdf.pageCount; pageNum++) {
+                await renderPage(pageNum);
+            }
+
+            pdf.renderInProgress = false;
+        });
     }
 }
 
