@@ -7,11 +7,7 @@
             <button class="blazorpdf-toolbar__item-button" disabled="@Loading" @onclick="ToggleThumbnails"
                     aria-label="Toggle Thumbnails">
                 <span>
-                    <svg class="blazorpdf-toolbar__svg">
-                        <path d="M0 0h24v24H0z" fill="none"/>
-                        <path
-                            d="M22 5.72l-4.6-3.86-1.29 1.53 4.6 3.86L22 5.72zM7.88 3.39L6.6 1.86 2 5.71l1.29 1.53 4.59-3.85zM12.5 8H11v6l4.75 2.85.75-1.23-4-2.37V8zM12 4c-4.97 0-9 4.03-9 9s4.02 9 9 9c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 16c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z\"/>
-                    </svg>
+                    <ThumbnailsIcon/>
                 </span>
             </button>
         </div>
@@ -21,11 +17,7 @@
             <button class="blazorpdf-toolbar__item-button" disabled="@Loading" @onclick="PreviousPageAsync"
                     aria-label="Previous Page">
                 <span>
-                    <svg class="blazorpdf-toolbar__svg">
-                        <path d="M0 0h24v24H0z" fill="none"/>
-                        <path
-                            d="M22 5.72l-4.6-3.86-1.29 1.53 4.6 3.86L22 5.72zM7.88 3.39L6.6 1.86 2 5.71l1.29 1.53 4.59-3.85zM12.5 8H11v6l4.75 2.85.75-1.23-4-2.37V8zM12 4c-4.97 0-9 4.03-9 9s4.02 9 9 9c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 16c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z\"/>
-                    </svg>
+                    <PreviousPageIcon/>
                 </span>
             </button>
         </div>
@@ -35,11 +27,7 @@
             <button class="blazorpdf-toolbar__item-button" disabled="@Loading" @onclick="NextPageAsync"
                     aria-label="Next Page">
                 <span>
-                    <svg class="blazorpdf-toolbar__svg">
-                        <path d="M0 0h24v24H0z" fill="none"/>
-                        <path
-                            d="M22 5.72l-4.6-3.86-1.29 1.53 4.6 3.86L22 5.72zM7.88 3.39L6.6 1.86 2 5.71l1.29 1.53 4.59-3.85zM12.5 8H11v6l4.75 2.85.75-1.23-4-2.37V8zM12 4c-4.97 0-9 4.03-9 9s4.02 9 9 9c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 16c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z\"/>
-                    </svg>
+                    <NextPageIcon/>
                 </span>
             </button>
         </div>
@@ -65,11 +53,7 @@
         <div class="blazorpdf-toolbar__item">
             <button class="blazorpdf-toolbar__item-button" @onclick="ZoomOutAsync" aria-label="Zoom Out">
                 <span>
-                    <svg class="blazorpdf-toolbar__svg">
-                        <path d="M0 0h24v24H0z" fill="none"/>
-                        <path
-                            d="M22 5.72l-4.6-3.86-1.29 1.53 4.6 3.86L22 5.72zM7.88 3.39L6.6 1.86 2 5.71l1.29 1.53 4.59-3.85zM12.5 8H11v6l4.75 2.85.75-1.23-4-2.37V8zM12 4c-4.97 0-9 4.03-9 9s4.02 9 9 9c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 16c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z\"/>
-                    </svg>
+                    <ZoomOutIcon/>
                 </span>
             </button>
         </div>
@@ -83,11 +67,7 @@
         <div class="blazorpdf-toolbar__item">
             <button class="blazorpdf-toolbar__item-button" @onclick="ZoomInAsync" aria-label="Zoom In">
                 <span>
-                    <svg class="blazorpdf-toolbar__svg">
-                        <path d="M0 0h24v24H0z" fill="none"/>
-                        <path
-                            d="M22 5.72l-4.6-3.86-1.29 1.53 4.6 3.86L22 5.72zM7.88 3.39L6.6 1.86 2 5.71l1.29 1.53 4.59-3.85zM12.5 8H11v6l4.75 2.85.75-1.23-4-2.37V8zM12 4c-4.97 0-9 4.03-9 9s4.02 9 9 9c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 16c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z\"/>
-                    </svg>
+                    <ZoomInIcon/>
                 </span>
             </button>
         </div>
@@ -100,11 +80,7 @@
                 <input type="checkbox" id="menu-toggle" hidden>
                 <label for="menu-toggle" class="blazorpdf-toolbar__menu-trigger-button">
                   <span>
-                    <svg class="blazorpdf-toolbar__svg">
-                      <path d="M0 0h24v24H0z" fill="none"/>
-                      <path
-                          d="M22 5.72l-4.6-3.86-1.29 1.53 4.6 3.86L22 5.72zM7.88 3.39L6.6 1.86 2 5.71l1.29 1.53 4.59-3.85zM12.5 8H11v6l4.75 2.85.75-1.23-4-2.37V8zM12 4c-4.97 0-9 4.03-9 9s4.02 9 9 9c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 16c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
-                    </svg>
+                      <MenuIcon/>
                   </span>
                 </label>
                 <div class="blazorpdf-toolbar__menu">
@@ -113,84 +89,55 @@
                     <div class="blazorpdf-toolbar__menu-content">
                         <button type="button" class="blazorpdf-toolbar__menu-menu-item" @onclick="RotateClockwiseAsync">
                             <span class="blazorpdf-toolbar__menu-menu-item-icon">
-                                <svg class="blazorpdf-toolbar__svg">
-                                  <path d="M0 0h24v24H0z" fill="none"/>
-                                  <path
-                                      d="M22 5.72l-4.6-3.86-1.29 1.53 4.6 3.86L22 5.72zM7.88 3.39L6.6 1.86 2 5.71l1.29 1.53 4.59-3.85zM12.5 8H11v6l4.75 2.85.75-1.23-4-2.37V8zM12 4c-4.97 0-9 4.03-9 9s4.02 9 9 9c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 16c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
-                                </svg>
+                                <RotateCWIcon/>
                             </span>
                             <span class="blazorpdf-toolbar__menu-menu-item-text">Rotate Clockwise</span>
                         </button>
-                        <button type="button" class="blazorpdf-toolbar__menu-menu-item" @onclick="RotateCounterclockwiseAsync">
+                        <button type="button" class="blazorpdf-toolbar__menu-menu-item"
+                                @onclick="RotateCounterclockwiseAsync">
                              <span class="blazorpdf-toolbar__menu-menu-item-icon">
-                                <svg class="blazorpdf-toolbar__svg">
-                                  <path d="M0 0h24v24H0z" fill="none"/>
-                                  <path
-                                      d="M22 5.72l-4.6-3.86-1.29 1.53 4.6 3.86L22 5.72zM7.88 3.39L6.6 1.86 2 5.71l1.29 1.53 4.59-3.85zM12.5 8H11v6l4.75 2.85.75-1.23-4-2.37V8zM12 4c-4.97 0-9 4.03-9 9s4.02 9 9 9c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 16c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
-                                </svg>
+                                 <RotateCCWIcon/>
                             </span>
                             <span class="blazorpdf-toolbar__menu-menu-item-text">Rotate Counterclockwise</span>
                         </button>
-                        <button type="button" class="blazorpdf-toolbar__menu-menu-item" @onclick="SwitchOrientationAsync">
+                        <button type="button" class="blazorpdf-toolbar__menu-menu-item"
+                                @onclick="SwitchOrientationAsync">
                              <span class="blazorpdf-toolbar__menu-menu-item-icon">
-                                <svg class="blazorpdf-toolbar__svg">
-                                  <path d="M0 0h24v24H0z" fill="none"/>
-                                  <path
-                                      d="M22 5.72l-4.6-3.86-1.29 1.53 4.6 3.86L22 5.72zM7.88 3.39L6.6 1.86 2 5.71l1.29 1.53 4.59-3.85zM12.5 8H11v6l4.75 2.85.75-1.23-4-2.37V8zM12 4c-4.97 0-9 4.03-9 9s4.02 9 9 9c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 16c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
-                                </svg>
+                                 <SwitchOrientationIcon/>
                             </span>
                             <span class="blazorpdf-toolbar__menu-menu-item-text">Switch Orientation</span>
                         </button>
                         <hr class="blazorpdf-toolbar__menu-divider">
                         <button type="button" class="blazorpdf-toolbar__menu-menu-item" @onclick="FirstPageAsync">
                              <span class="blazorpdf-toolbar__menu-menu-item-icon">
-                                <svg class="blazorpdf-toolbar__svg">
-                                  <path d="M0 0h24v24H0z" fill="none"/>
-                                  <path
-                                      d="M22 5.72l-4.6-3.86-1.29 1.53 4.6 3.86L22 5.72zM7.88 3.39L6.6 1.86 2 5.71l1.29 1.53 4.59-3.85zM12.5 8H11v6l4.75 2.85.75-1.23-4-2.37V8zM12 4c-4.97 0-9 4.03-9 9s4.02 9 9 9c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 16c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
-                                </svg>
+                                 <FirstPageIcon/>
                             </span>
                             <span class="blazorpdf-toolbar__menu-menu-item-text">First Page</span>
                         </button>
                         <button type="button" class="blazorpdf-toolbar__menu-menu-item" @onclick="LastPageAsync">
                              <span class="blazorpdf-toolbar__menu-menu-item-icon">
-                                <svg class="blazorpdf-toolbar__svg">
-                                  <path d="M0 0h24v24H0z" fill="none"/>
-                                  <path
-                                      d="M22 5.72l-4.6-3.86-1.29 1.53 4.6 3.86L22 5.72zM7.88 3.39L6.6 1.86 2 5.71l1.29 1.53 4.59-3.85zM12.5 8H11v6l4.75 2.85.75-1.23-4-2.37V8zM12 4c-4.97 0-9 4.03-9 9s4.02 9 9 9c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 16c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
-                                </svg>
+                                 <LastPageIcon/>
                             </span>
                             <span class="blazorpdf-toolbar__menu-menu-item-text">Last Page</span>
                         </button>
                         <hr class="blazorpdf-toolbar__menu-divider">
                         <button type="button" class="blazorpdf-toolbar__menu-menu-item" @onclick="ResetZoomAsync">
                              <span class="blazorpdf-toolbar__menu-menu-item-icon">
-                                <svg class="blazorpdf-toolbar__svg">
-                                  <path d="M0 0h24v24H0z" fill="none"/>
-                                  <path
-                                      d="M22 5.72l-4.6-3.86-1.29 1.53 4.6 3.86L22 5.72zM7.88 3.39L6.6 1.86 2 5.71l1.29 1.53 4.59-3.85zM12.5 8H11v6l4.75 2.85.75-1.23-4-2.37V8zM12 4c-4.97 0-9 4.03-9 9s4.02 9 9 9c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 16c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
-                                </svg>
+                                 <ZoomResetIcon/>
                             </span>
                             <span class="blazorpdf-toolbar__menu-menu-item-text">Reset Zoom</span>
                         </button>
                         <hr class="blazorpdf-toolbar__menu-divider">
                         <button type="button" class="blazorpdf-toolbar__menu-menu-item" @onclick="PrintDocumentAsync">
                              <span class="blazorpdf-toolbar__menu-menu-item-icon">
-                                <svg class="blazorpdf-toolbar__svg">
-                                  <path d="M0 0h24v24H0z" fill="none"/>
-                                  <path
-                                      d="M22 5.72l-4.6-3.86-1.29 1.53 4.6 3.86L22 5.72zM7.88 3.39L6.6 1.86 2 5.71l1.29 1.53 4.59-3.85zM12.5 8H11v6l4.75 2.85.75-1.23-4-2.37V8zM12 4c-4.97 0-9 4.03-9 9s4.02 9 9 9c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 16c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
-                                </svg>
+                                 <PrintIcon/>
                             </span>
                             <span class="blazorpdf-toolbar__menu-menu-item-text">Print Document</span>
                         </button>
-                        <button type="button" class="blazorpdf-toolbar__menu-menu-item" @onclick="DownloadDocumentAsync">
+                        <button type="button" class="blazorpdf-toolbar__menu-menu-item"
+                                @onclick="DownloadDocumentAsync">
                              <span class="blazorpdf-toolbar__menu-menu-item-icon">
-                                <svg class="blazorpdf-toolbar__svg">
-                                  <path d="M0 0h24v24H0z" fill="none"/>
-                                  <path
-                                      d="M22 5.72l-4.6-3.86-1.29 1.53 4.6 3.86L22 5.72zM7.88 3.39L6.6 1.86 2 5.71l1.29 1.53 4.59-3.85zM12.5 8H11v6l4.75 2.85.75-1.23-4-2.37V8zM12 4c-4.97 0-9 4.03-9 9s4.02 9 9 9c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 16c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
-                                </svg>
+                                 <DownloadIcon/>
                             </span>
                             <span class="blazorpdf-toolbar__menu-menu-item-text">Download Document</span>
                         </button>
@@ -225,8 +172,15 @@
             <div id="@($"{PdfFile.Id}_thumbs")"
                  class="@(_showThumbnails ? "blazorpdf-pdf__thumbnails" : "blazorpdf-pdf__thumbnails blazorpdf-d-none")"></div>
             <div class="blazorpdf-pdf__pdf-container">
-                <canvas @ref="Element" id="@PdfFile.Id"></canvas>
-                <div id="@($"{PdfFile.Id}_text")" class="textLayer"></div>
+                @if (SinglePageMode)
+                {
+                    <canvas @ref="Element" id="@PdfFile.Id"></canvas>
+                    <div id="@($"{PdfFile.Id}_text")" class="textLayer"></div>
+                }
+                else
+                {
+                    <div id="@PdfFile.Id" class="blazorpdf__scroll" style="height: 65vh"></div>
+                }
             </div>
         </div>
     </div>

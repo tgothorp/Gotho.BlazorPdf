@@ -1,0 +1,82 @@
+.blazorpdf-toolbar {
+    display: flex;
+    position: relative;
+    align-items: center;
+    height: 64px;
+    justify-content: space-between;
+    background-color: rgba(232, 231, 234, 1);
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.blazorpdf-toolbar__item {
+    display: inline-block;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.blazorpdf-toolbar__item input {
+    max-width: 50px;
+    padding: 0.5rem;
+}
+
+.blazorpdf-toolbar__item input[type="number"]::-webkit-outer-spin-button,
+.blazorpdf-toolbar__item input[type="number"]::-webkit-inner-spin-button
+{
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.blazorpdf-toolbar__item-button {
+    border: 0;
+    cursor: pointer;
+    margin: 0;
+    display: inline-flex;
+    outline: 0;
+    align-items: center;
+    user-select: none;
+    padding: 12px;
+    font-size: 1.5rem;
+    text-align: center;
+    border-radius: 50%;
+    color: rgb(64, 64, 64);
+}
+
+.blazorpdf-toolbar__item button[aria-label] {
+    position: relative;
+    cursor: pointer;
+}
+
+.blazorpdf-toolbar__item button[aria-label]::after {
+    content: attr(aria-label);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0,0,0,0.75);
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+    font-size: 0.875rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease-in-out;
+    z-index: 10;
+}
+
+.blazorpdf-toolbar__item button[aria-label]:hover::after {
+    opacity: 1;
+}
+
+.blazorpdf-toolbar__item-chip {
+    display: inline-block;
+    background: rgb(218, 217, 220);
+    padding: 15px 15px;
+    border-radius: 32px;
+    font-size: 16px;
+}
+
+.blazorpdf-toolbar__spacer {
+    flex-grow: 1 !important;
+}

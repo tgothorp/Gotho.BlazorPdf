@@ -61,6 +61,10 @@ Please see the [documentation site](https://mudpdf.info/docs) for detailed examp
 
 Feel free to make contributions.
 
+## Icons
+
+This project uses the excellent [feather icons](https://github.com/feathericons/feather) icon library.
+
 ## License
 
 > ℹ️ Important
