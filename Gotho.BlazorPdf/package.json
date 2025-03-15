@@ -1,7 +1,7 @@
 {
   "name": "gotho.blazorpdf",
-  "version": "1.0.0",
-  "description": "A simple PDF viewer component for use with MudBlazor",
+  "version": "3.0.0",
+  "description": "A simple PDF viewer component for use with Blazor",
   "main": "index.js",
   "scripts": {
     "ts": "npx esbuild Ts/PdfViewer.ts --bundle --format=esm --target=esnext --outfile=wwwroot/blazorpdf.js --keep-names",

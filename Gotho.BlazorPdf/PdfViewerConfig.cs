@@ -2,14 +2,8 @@ namespace Gotho.BlazorPdf;
 
 public class PdfViewerConfig
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public Label Labels { get; set; } = new();
     
-    /// <summary>
-    /// 
-    /// </summary>
     public Color Colors { get; set; } = new();
 
     public class Label
@@ -33,6 +27,8 @@ public class PdfViewerConfig
     
     public class Color
     {
+        public string Toolbar { get; set; } = "#e8e7ea";
         public string Background { get; set; } = "#161719";
+        public string Icon { get; set; } = "#161719";
     }
 }
