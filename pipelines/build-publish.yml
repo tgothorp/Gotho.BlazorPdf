@@ -11,13 +11,13 @@ variables:
 
 steps:
 - task: Npm@1
-  name: npm (core)
+  name: npm_core
   inputs:
     command: 'install'
     workingDir: 'Gotho.BlazorPdf/'
 
 - task: Npm@1
-  name: npm (mud)
+  name: npm_mud
   inputs:
     command: 'install'
     workingDir: 'Gotho.BlazorPdf.MudBlazor/'
