@@ -25,7 +25,7 @@ public partial class PdfViewer : ComponentBase
     public PdfOrientation PdfOrientation { get; set; } = PdfOrientation.Portrait;
 
     /// <summary>
-    /// Determines the height of the PDF viewer when <c>SinglePageMode</c> is set to <c>true</c>.
+    /// Determines the height of the PDF viewer when in scrolling mode.
     /// This can be any valid CSS height value (250px, 100vh, 85% etc.)
     /// </summary>
     /// <remarks>
@@ -209,12 +209,12 @@ public partial class PdfViewer : ComponentBase
 
     #endregion
 
-    private async Task DownloadDocumentAsync()
+    protected async Task DownloadDocumentAsync()
     {
         await PdfInterop.DownloadDocumentAsync(ObjectReference!, PdfFile);
     }
     
-    private async Task ReloadPdfAsync()
+    protected async Task ReloadPdfAsync()
     {
         if (Error is not null && Error.ErrorType == PdfErrorType.PasswordRequired && string.IsNullOrEmpty(PdfPassword))
         {
@@ -231,20 +231,8 @@ public partial class PdfViewer : ComponentBase
         await PdfInterop.InitializeAsync(ObjectReference!, PdfFile, SinglePageMode);
     }
     
-    private async Task PrintDocumentAsync()
+    protected async Task PrintDocumentAsync()
     {
         await PdfInterop.PrintDocumentAsync(ObjectReference!, PdfFile);
-    }
-
-    [Obsolete]
-    protected string ColorStyle()
-    {
-        return $"background-color: {Config.Colors.Background}";
-    }
-    
-    [Obsolete]
-    protected string ScrollStyle()
-    {
-        return $"height: {Height}";
     }
 }

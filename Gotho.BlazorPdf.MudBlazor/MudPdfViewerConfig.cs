@@ -24,9 +24,10 @@ public class MudPdfViewerConfig
         public string PrintDocument { get; set; } = global::MudBlazor.Icons.Material.Filled.Print;
         public string DownloadDocument { get; set; } = global::MudBlazor.Icons.Material.Filled.Download;
     }
-    
+
     public class Color
     {
         public global::MudBlazor.Color IconColor { get; set; }
+        public string BackgroundColor { get; set; } = "#161719";
     }
 }

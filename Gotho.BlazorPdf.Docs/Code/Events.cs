@@ -5,7 +5,7 @@ public static class Events
     public static string Example =>
 @"<MudText Class=""my-2"">@eventLog</MudText>
 
-<MudPdfViewer
+<PdfViewer
   OnDocumentLoaded=""OnDocumentLoaded""
   OnPageChanged=""OnPageChanged""
   Url=""https://raw.githubusercontent.com/tgothorp/MudBlazor.PdfViewer/refs/heads/main/files/test_pdf_document.pdf""/>

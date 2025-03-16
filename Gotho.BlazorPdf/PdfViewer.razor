@@ -163,6 +163,13 @@
                         <button class="blazorpdf-pdf__error-submit" type="button" @onclick="ReloadPdfAsync">Submit
                         </button>
                     }
+                    else
+                    {
+                        <h1>⛔ PDF Error</h1>
+                        <div>
+                            <p>@Error.Message</p>
+                        </div>
+                    }
                 </div>
             </div>
         }
