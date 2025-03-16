@@ -3,6 +3,7 @@
 @import url("blazorpdf_viewer.css");
 @import url("blazorpdf_toolbar.css");
 @import url("blazorpdf_icon.css");
+@import url("blazorpdf_loader.css");
 
 :root {
     --scale-factor: 1.0;

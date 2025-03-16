@@ -20,7 +20,7 @@ Originally a port of the BlazorBootstrap PDF viewer, Mud PDF is a simple yet pow
 Grab the package from [nuget.org](https://www.nuget.org/packages/Gotho.MudBlazor.PdfViewer/1.0.1#readme-body-tab);
 
 ```
-dotnet add package Gotho.MudBlazor.PdfViewer --version 2.1.0
+dotnet add package Gotho.BlazorPdf --version 3.0.1
 ```
 
 ### Configure
@@ -28,29 +28,28 @@ dotnet add package Gotho.MudBlazor.PdfViewer --version 2.1.0
 Add the following to your application startup in `Program.cs`;
 
 ```
-builder.Services.AddMudBlazorPdfViewer();
+builder.Services.AddBlazorPdfViewer();
 ```
 
 Update your `App.razor` file to import the required CSS;
 
 ```
-<link href="_content/Gotho.MudBlazor.PdfViewer/mudpdf.min.css" rel="stylesheet"/>
+<link href="_content/Gotho.BlazorPdf/blazorpdf.min.css" rel="stylesheet"/>
 ```
 
 Then, add the namespace to your `_Imports.razor` file;
 
 ```
-@using MudBlazor.PdfViewer
+@using Gotho.BlazorPdf
 ```
 
-You should now be fully setup to use the `MudPdfViewer` component in your code!
+You should now be fully setup to use the `PdfViewer` component in your code!
 
 
 ## Prerequisites
 
 In order to use this package, your project will need to be configured with the following;
 
-- **MudBlazor** Version 8.0.0 or later
 - **.NET** Version 8.0 or 9.0
 
 ## Usage & Examples
@@ -67,14 +66,6 @@ This project uses the excellent [feather icons](https://github.com/feathericons/
 
 ## License
 
-> ℹ️ Important
->
-> Please read the following carefully as it may impact your ability to use this library.
+Licensed under Apache-2.0
 
-This library contains code from the `PdfViewer` Blazor component provided by the [Blazor Bootstrap]() component library which is licensed under the Apache 2.0 license.
-
-This means that this project is also required to use the Apache 2.0 license which different to MudBlazor's MIT license. This difference may have consequences as to your ability to use this library.
-
-It is your responsibility to determine that this license is compatible with your use-case.
-
-Please see the NOTICE.md file for more information.
+This library contains code from the `PdfViewer` Blazor component provided by the [Blazor Bootstrap](https://github.com/vikramlearning/blazorbootstrap/tree/main/blazorbootstrap) component library which is licensed under the Apache 2.0 license, See `NOTICE.md` for more information.

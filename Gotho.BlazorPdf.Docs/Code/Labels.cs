@@ -5,7 +5,14 @@ public static class Labels
     public static string Config =>
         @"builder.Services.AddBlazorPdfViewer(opt =>
 {
-    opt.Labels.PrintDocument = ""Imprimir Documento"";
+    opt.Labels.RotateClockwise = ""Kierrä myötäpäivään"";
+    opt.Labels.RotateCounterclockwise = ""Kierrä vastapäivään"";
+    opt.Labels.SwitchOrientation = ""Vaihda suunta"";
+    opt.Labels.FirstPage = ""Ensimmäinen sivu"";
+    opt.Labels.LastPage = ""Viimeinen sivu"";
+    opt.Labels.ResetZoom = ""Palauta zoomaus"";
+    opt.Labels.PrintDocument = ""Tulosta asiakirja"";
+    opt.Labels.DownloadDocument = ""Lataa asiakirja"";
 });";
 
     public static string All =>

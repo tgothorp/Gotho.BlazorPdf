@@ -2,7 +2,15 @@
 
 All notable changes and releases will be documented here
 
-## [2025-02-29] - V2.1.0 (Latest Version)
+## [2025-02-29] - V3.0.1 (Latest Version)
+
+- Rename project from MudPdf to Blazor PDF
+- Complete rewrite of core functionality to remove MudBlazor dependency
+- New package to provide dedicated MudBlazor integration
+- Rewrite of JavaScript interop code
+- Rewrite of PDF Viewer in vanilla HTML & CSS
+
+## [2025-02-29] - V2.1.0
 
 - Added text selection for single page mode
 - Added ability to download PDF to device

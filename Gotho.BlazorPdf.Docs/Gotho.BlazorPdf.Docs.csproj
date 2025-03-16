@@ -20,11 +20,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="wwwroot\img\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\Gotho.BlazorPdf.MudBlazor\Gotho.BlazorPdf.MudBlazor.csproj" />
+      <ProjectReference Include="..\Gotho.BlazorPdf\Gotho.BlazorPdf.csproj" />
     </ItemGroup>
 
 </Project>

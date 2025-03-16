@@ -28,6 +28,7 @@ public class PdfViewerConfig
     public class Color
     {
         public string Toolbar { get; set; } = "#e8e7ea";
+        public string Loader { get; set; } = "#F009AF";
         public string Background { get; set; } = "#161719";
         public string Icon { get; set; } = "#161719";
     }

@@ -18,6 +18,7 @@
 .blazorpdf-toolbar__item input {
     max-width: 50px;
     padding: 0.5rem;
+    border-radius: 10px;
 }
 
 .blazorpdf-toolbar__item input[type="number"]::-webkit-outer-spin-button,
