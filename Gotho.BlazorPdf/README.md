@@ -2,6 +2,10 @@
 
 Blazor PDF is a simple yet powerful PDF viewer build for Blazor.
 
+## Prerequisites
+
+In order to use this package, your project must target .NET Version 8.0 or 9.0
+
 ## Installation
 
 Grab the package from nuget.org;
@@ -31,10 +35,6 @@ Then, add the namespace to your `_Imports.razor` file.
 ```
 
 You should now be fully setup to use the `PdfViewer` component in your code!
-
-## Prerequisites
-
-In order to use this package, your project must target .NET Version 8.0 or 9.0
 
 ## Usage & Examples
 

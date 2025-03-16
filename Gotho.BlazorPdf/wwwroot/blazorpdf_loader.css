@@ -1,0 +1,31 @@
+.blazorpdf__loader-container {
+    width: 100%;
+    height: 8px;
+    background-color: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+.blazorpdf__loader {
+    width: 50%;
+    height: 100%;
+    background-color: #007bff;
+    position: absolute;
+    left: -50%;
+    animation: blazorpdf__loader-animation 1.5s infinite ease-in-out;
+}
+
+@keyframes blazorpdf__loader-animation {
+    0% {
+        left: -50%;
+    }
+    50% {
+        left: 25%;
+        width: 75%;
+    }
+    100% {
+        left: 100%;
+        width: 50%;
+    }
+}
