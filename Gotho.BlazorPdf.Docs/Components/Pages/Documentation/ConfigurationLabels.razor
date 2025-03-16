@@ -1,0 +1,25 @@
+@page "/docs/configuration/labels"
+@using MudBlazor.PdfViewer.Docs.Code
+
+<PageTitle>Blazor PDF | Configuration</PageTitle>
+
+<div style="max-width: 1440px; margin: 3em auto auto;">
+
+    <MudGrid>
+        <MudItem sm="3">
+            <DocsMenu/>
+        </MudItem>
+        <MudItem sm="9" Style="overflow: auto">
+            <MudText Typo="Typo.h2" Class="mb-5">Configuration | Labels</MudText>
+            <MudText>All text / labels in the PDF viewer can be changed in order to help localise the PDF experience.
+                This can be done when configuring Blazor PDF</MudText>
+
+            <CodeSnippet Body="@Labels.Config" Lang="csharp"/>
+
+        </MudItem>
+    </MudGrid>
+</div>
+
+@code {
+
+}

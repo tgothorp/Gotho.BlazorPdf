@@ -1,0 +1,21 @@
+@page "/docs/mudblazor"
+
+<PageTitle>Blazor PDF | MudBlazor Version</PageTitle>
+
+<div style="max-width: 1440px; margin: 3em auto auto;">
+    <MudGrid>
+        <MudItem sm="3">
+            <DocsMenu/>
+        </MudItem>
+        <MudItem sm="9" Style="overflow: auto">
+            <MudText Typo="Typo.h2" Class="mb-5">MudBlazor Integration</MudText>
+            <MudText></MudText>
+            
+            <MudPdfViewer Url="https://raw.githubusercontent.com/tgothorp/MudBlazor.PdfViewer/refs/heads/main/files/test_pdf_document.pdf"/>
+        </MudItem>
+    </MudGrid>
+</div>
+
+@code {
+
+}

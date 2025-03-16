@@ -1,0 +1,27 @@
+{
+  "name": "gotho.blazorpdf.mudblazor",
+  "version": "3.0.0",
+  "description": "An extension to Gotho.BlazorPdf to provide MudBlazor compatability",
+  "main": "index.js",
+  "scripts": {
+    "css": "npx cleancss -o wwwroot/blazorpdf_mudblazor.min.css wwwroot/blazorpdf_mudblazor.css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tgothorp/MudBlazor.PdfViewer.git"
+  },
+  "keywords": [
+    "blazor",
+    "mudblazor",
+    "pdf"
+  ],
+  "author": "tgothorp",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/tgothorp/MudBlazor.PdfViewer/issues"
+  },
+  "homepage": "https://github.com/tgothorp/MudBlazor.PdfViewer#readme",
+  "devDependencies": {
+    "clean-css-cli": "^5.6.3"
+  }
+}
