@@ -1,13 +1,13 @@
-# Mud PDF
+# Blazor PDF
 
-Originally a port of the BlazorBootstrap PDF viewer, Mud PDF is a simple yet powerful PDF solution for MudBlazor.
+Blazor PDF is a simple yet powerful PDF viewer build for Blazor.
 
 ## Installation
 
 Grab the package from nuget.org;
 
 ```
-dotnet add package Gotho.MudBlazor.PdfViewer --version 2.1.0
+dotnet add package Gotho.BlazorPdf
 ```
 
 ### Configure
@@ -15,29 +15,26 @@ dotnet add package Gotho.MudBlazor.PdfViewer --version 2.1.0
 Add the following to your application startup in `Program.cs`;
 
 ```
-builder.Services.AddMudBlazorPdfViewer();
+builder.Services.AddBlazorPdfViewer();
 ```
 
 Update your `App.razor` file to import the required CSS;
 
 ```
-<link href="_content/Gotho.MudBlazor.PdfViewer/mudpdf.min.css" rel="stylesheet"/>
+<link href="_content/Gotho.BlazorPdf/blazorpdf.min.css" rel="stylesheet"/>
 ```
 
 Then, add the namespace to your `_Imports.razor` file.
 
 ```
-@using MudBlazor.PdfViewer
+@using Gotho.BlazorPdf
 ```
 
-You should now be fully setup to use the `MudPdfViewer` component in your code!
+You should now be fully setup to use the `PdfViewer` component in your code!
 
 ## Prerequisites
 
-In order to use this package, your project will need to be configured with the following;
-
-- **MudBlazor** Version 8.0.0 or later
-- **.NET** Version 8.0 or 9.0
+In order to use this package, your project must target .NET Version 8.0 or 9.0
 
 ## Usage & Examples
 

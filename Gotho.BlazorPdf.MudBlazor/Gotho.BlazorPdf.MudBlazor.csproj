@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-        <Version>1.0.0</Version>
+        <Version>3.0.0</Version>
         <Title>Gotho.BlazorPdf.MudBlazor</Title>
         <Authors>tgothorp</Authors>
         <Company>tgothorp</Company>
@@ -44,6 +44,17 @@
 
     <ItemGroup>
         <PackageReference Include="MudBlazor" Version="8.0.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="README.md">
+            <Pack>true</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+        <None Include="logo.png">
+            <Pack>true</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
     </ItemGroup>
 
 </Project>
