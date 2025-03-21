@@ -41,8 +41,7 @@ steps:
   inputs:
     command: 'pack'
     packagesToPack: '**/Gotho.BlazorPdf.csproj'
-    nobuild: true
-    includesymbols: true
+    includesymbols: false
     versioningScheme: 'off'
 
 - task: DotNetCoreCLI@2
@@ -50,8 +49,7 @@ steps:
   inputs:
     command: 'pack'
     packagesToPack: '**/Gotho.BlazorPdf.MudBlazor.csproj'
-    nobuild: true
-    includesymbols: true
+    includesymbols: false
     versioningScheme: 'off'
 
 - task: PublishBuildArtifacts@1
