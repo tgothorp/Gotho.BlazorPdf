@@ -41,6 +41,7 @@
     text-align: center;
     border-radius: 50%;
     color: rgb(64, 64, 64);
+    background-color: transparent;
 }
 
 .blazorpdf-toolbar__item button[aria-label] {
