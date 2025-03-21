@@ -20,7 +20,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Gotho.BlazorPdf" Version="3.0.0"/>
-        <PackageReference Include="Gotho.BlazorPdf.MudBlazor" Version="3.0.0"/>
+        <PackageReference Include="Gotho.BlazorPdf" Version="1.0.1"/>
+        <PackageReference Include="Gotho.BlazorPdf.MudBlazor" Version="1.0.1"/>
     </ItemGroup>
 </Project>
