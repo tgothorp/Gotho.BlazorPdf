@@ -11,10 +11,16 @@ variables:
 
 steps:
 - task: Npm@1
-  name: npm
+  name: npm_core
   inputs:
     command: 'install'
-    workingDir: 'MudBlazor.PdfViewer/'
+    workingDir: 'Gotho.BlazorPdf/'
+
+- task: Npm@1
+  name: npm_mud
+  inputs:
+    command: 'install'
+    workingDir: 'Gotho.BlazorPdf.MudBlazor/'
 
 - task: DotNetCoreCLI@2
   name: restore
@@ -31,10 +37,19 @@ steps:
     arguments: '--no-restore -c Release'
 
 - task: DotNetCoreCLI@2
-  name: pack
+  name: pack_core
   inputs:
     command: 'pack'
-    packagesToPack: '**/MudBlazor.PdfViewer.csproj'
+    packagesToPack: '**/Gotho.BlazorPdf.csproj'
+    nobuild: true
+    includesymbols: true
+    versioningScheme: 'off'
+
+- task: DotNetCoreCLI@2
+  name: pack_mud
+  inputs:
+    command: 'pack'
+    packagesToPack: '**/Gotho.BlazorPdf.MudBlazor.csproj'
     nobuild: true
     includesymbols: true
     versioningScheme: 'off'

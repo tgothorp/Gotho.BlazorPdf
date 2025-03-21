@@ -1,0 +1,77 @@
+.blazorpdf-toolbar__menu-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.blazorpdf-toolbar__menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 4px;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 1000;
+    min-width: 335px;
+}
+
+#menu-toggle:checked ~ .blazorpdf-toolbar__menu {
+    opacity: 1;
+    visibility: visible;
+}
+
+.blazorpdf-toolbar__menu-trigger-button {
+    padding: 8px 16px;
+    color: rgb(64, 64, 64);
+    border-radius: 4px;
+    cursor: pointer;
+    user-select: none;
+}
+
+/* Overlay to capture clicks outside the menu (closes the menu) */
+.blazorpdf-toolbar__menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: default;
+}
+
+/* Ensure menu content is above the overlay */
+.blazorpdf-toolbar__menu-content {
+    position: relative;
+    z-index: 1001;
+}
+
+/* Menu item styles */
+.blazorpdf-toolbar__menu-menu-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    text-decoration: none;
+    color: #333;
+    width: 100%;
+    justify-content: flex-start;
+    background-color: transparent;
+    border: none;
+}
+
+.blazorpdf-toolbar__menu-menu-item:hover {
+    background: #f1f1f1;
+}
+
+.blazorpdf-toolbar__menu-menu-item-icon {
+    margin-right: 8px;
+}
+
+/* Divider styling */
+.blazorpdf-toolbar__menu-divider {
+    margin: 4px 0;
+    border: none;
+    border-top: 1px solid #eee;
+}

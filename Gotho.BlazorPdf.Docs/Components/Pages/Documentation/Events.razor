@@ -1,0 +1,34 @@
+@page "/docs/events"
+
+<PageTitle>Blazor PDF | Events</PageTitle>
+
+<div style="max-width: 1440px; margin: 3em auto auto;">
+    <MudGrid>
+        <MudItem sm="3">
+            <DocsMenu/>
+        </MudItem>
+        <MudItem sm="9" Style="overflow: auto">
+            <MudText Typo="Typo.h2" Class="mb-5">Events</MudText>
+            <MudText>Blazor PDF provides an event callback when it finishes loading a document and when a user changes a page. Select different PDF pages below to see this in action!</MudText>
+
+            <CodeSnippet Body="@Code.Events.Example"/>
+
+            <MudText Class="my-2">@eventLog</MudText>
+
+            <PdfViewer
+                OnDocumentLoaded="OnDocumentLoaded"
+                OnPageChanged="OnPageChanged"
+                Url="https://raw.githubusercontent.com/tgothorp/MudBlazor.PdfViewer/refs/heads/main/files/test_pdf_document.pdf"/>
+        </MudItem>
+    </MudGrid>
+</div>
+
+@code {
+    private string eventLog { get; set; } = $"Last event: ..., CurrentPage: 0, TotalPages: 0";
+
+    private void OnDocumentLoaded(PdfViewerEventArgs args)
+        => eventLog = $"Last event: OnDocumentLoaded, CurrentPage: {args.CurrentPage}, TotalPages: {args.TotalPages}";
+
+    private void OnPageChanged(PdfViewerEventArgs args)
+        => eventLog = $"Last event: OnPageChanged, CurrentPage: {args.CurrentPage}, TotalPages: {args.TotalPages}";
+}

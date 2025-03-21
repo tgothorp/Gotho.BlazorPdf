@@ -1,0 +1,129 @@
+@import url("../node_modules/pdfjs-dist/web/pdf_viewer.css");
+@import url("blazorpdf_menu.css");
+@import url("blazorpdf_viewer.css");
+@import url("blazorpdf_toolbar.css");
+@import url("blazorpdf_icon.css");
+@import url("blazorpdf_loader.css");
+
+:root {
+    --scale-factor: 1.0;
+}
+
+.blazorpdf-d-none {
+    display: none !important;
+}
+
+.blazorpdf-container {
+
+}
+
+.blazorpdf-pdf__pdf-container {
+    margin: auto;
+    padding-top: 25px;
+    padding-bottom: 25px;
+    background-color: rgba(22, 23, 25, 1);
+}
+
+.blazorpdf-pdf {
+    position: relative;
+    display: flex;
+    background-color: rgba(22, 23, 25, 1);
+    overflow: hidden;
+}
+
+.blazorpdf-pdf canvas {
+    overflow: auto;
+    margin: auto;
+}
+
+.blazorpdf-pdf__thumbnails {
+    max-width: 11%;
+    min-width: 155px;
+    position: absolute;
+    left: 0;
+    overflow-y: scroll;
+    margin-left: 1rem;
+    background-color: rgba(22, 23, 25, 1);
+    top: 1em;
+    bottom: 1em;
+}
+
+.blazorpdf-pdf__thumbnails-thumbnail {
+    margin: 2px 2px 2px 2px;
+    border: 5px solid #fff0;
+}
+
+.blazorpdf-pdf__thumbnails-thumbnail:hover {
+    border: 5px solid #404040;
+    cursor: pointer;
+}
+
+.blazorpdf-pdf__error {
+    margin: auto;
+    padding: 5rem;
+}
+
+.blazorpdf-pdf__error-content {
+    padding: 3rem;
+    background-color: rgba(232, 231, 234, 1);
+}
+
+.blazorpdf-pdf__error-content h1 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.blazorpdf-pdf__input {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 1rem;
+}
+
+.blazorpdf-pdf__input-field {
+    padding: 10px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+.blazorpdf-pdf__input-field:focus {
+    border-color: #007BFF;
+    outline: none;
+}
+
+.blazorpdf-pdf__input-help {
+    font-size: 14px;
+    color: #666;
+}
+
+.blazorpdf-pdf__error-submit {
+    background-color: #28a745;
+    color: white;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.blazorpdf-pdf__error-submit:hover {
+    background-color: #218838;
+}
+
+.blazorpdf-pdf__error-submit:active {
+    background-color: #1e7e34;
+    transform: scale(0.98);
+}
+
+.feather {
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    flex-shrink: 0;
+    user-select: none;
+    font-size: 1.65rem;
+}

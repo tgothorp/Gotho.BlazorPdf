@@ -1,12 +1,12 @@
 <div align="center">
 
-<h1>Mud PDF</h1>
+<h1>Blazor PDF (Formally Mud PDF)</h1>
 
 <div><img src="img/square_small.png" width="230" alt="MudPDF" /></div>
 
 <div><a href="https://mudpdf.info">Demo</a> | <a href="https://mudpdf.info/docs/quickstart">Quickstart</a> | <a href="https://mudpdf.info/docs">Documentation</a></div>
 
-Originally a port of the BlazorBootstrap PDF viewer, Mud PDF is a simple yet powerful PDF solution for MudBlazor.
+Originally a port of the BlazorBootstrap PDF viewer for the [MudBlazor](https://mudblazor.com) component library. Blazor PDF is a simple yet powerful PDF viewer for Blazor framework.
 
 ![NuGet Version](https://img.shields.io/nuget/v/Gotho.MudBlazor.PdfViewer)
 ![NuGet Downloads](https://img.shields.io/nuget/dt/Gotho.MudBlazor.PdfViewer)
@@ -15,62 +15,78 @@ Originally a port of the BlazorBootstrap PDF viewer, Mud PDF is a simple yet pow
 
 </div>
 
+## Contents
+
+- [Installation](#installation)
+  * [Configuration](#Configuration)
+- [Prerequisites](#prerequisites)
+- [Usage & Examples](#usage---examples)
+- [MudBlazor Integration](#mudblazor-integration)
+- [Contributing](#contributing)
+- [Icons](#icons)
+- [License](#license)
+
 ## Installation
 
 Grab the package from [nuget.org](https://www.nuget.org/packages/Gotho.MudBlazor.PdfViewer/1.0.1#readme-body-tab);
 
 ```
-dotnet add package Gotho.MudBlazor.PdfViewer --version 2.1.0
+dotnet add package Gotho.BlazorPdf --version 3.0.1
 ```
 
-### Configure
+### Configuration
 
 Add the following to your application startup in `Program.cs`;
 
 ```
-builder.Services.AddMudBlazorPdfViewer();
+builder.Services.AddBlazorPdfViewer();
 ```
 
 Update your `App.razor` file to import the required CSS;
 
 ```
-<link href="_content/Gotho.MudBlazor.PdfViewer/mudpdf.min.css" rel="stylesheet"/>
+<link href="_content/Gotho.BlazorPdf/blazorpdf.min.css" rel="stylesheet"/>
 ```
 
 Then, add the namespace to your `_Imports.razor` file;
 
 ```
-@using MudBlazor.PdfViewer
+@using Gotho.BlazorPdf
 ```
 
-You should now be fully setup to use the `MudPdfViewer` component in your code!
+You should now be fully setup to use the `PdfViewer` component in your code!
 
 
 ## Prerequisites
 
 In order to use this package, your project will need to be configured with the following;
 
-- **MudBlazor** Version 8.0.0 or later
 - **.NET** Version 8.0 or 9.0
 
 ## Usage & Examples
 
 Please see the [documentation site](https://mudpdf.info/docs) for detailed examples
 
+## MudBlazor Integration
+
+This project was previously known as MudPdf / MudBlazor.PdfViewer. This repo was updated and renamed from Version 3.0.0 onwards to remove the MudBlazor dependency such that the library can be used by any Blazor project.
+
+However, in keeping with the original spirit of this project, a separate, dedicated package for MudBlazor is available.
+
+See the [documentation website](https://blazorpdf.info/docs/mudblazor) for installation & usage details.
+
 ## Contributing
 
-Feel free to make contributions.
+Feel free to make contributions, see the `CONTRIBUTING.md` file for more information.
+
+## Icons
+
+This project uses the excellent [feather icons](https://github.com/feathericons/feather) icon library.
 
 ## License
 
-> ℹ️ Important
->
-> Please read the following carefully as it may impact your ability to use this library.
+Licensed under Apache-2.0
 
-This library contains code from the `PdfViewer` Blazor component provided by the [Blazor Bootstrap]() component library which is licensed under the Apache 2.0 license.
+This library contains code from the `PdfViewer` Blazor component provided by the [Blazor Bootstrap](https://github.com/vikramlearning/blazorbootstrap/tree/main/blazorbootstrap) component library which is licensed under the Apache 2.0 license. 
 
-This means that this project is also required to use the Apache 2.0 license which different to MudBlazor's MIT license. This difference may have consequences as to your ability to use this library.
-
-It is your responsibility to determine that this license is compatible with your use-case.
-
-Please see the NOTICE.md file for more information.
+See `NOTICE.md` for more information.

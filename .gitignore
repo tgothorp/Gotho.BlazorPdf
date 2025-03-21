@@ -510,5 +510,6 @@ dist
 
 # End of https://www.toptal.com/developers/gitignore/api/node
 
-mudpdf.js
-mudpdf.min.js
+*.js
+*.min.js
+*.min.css
