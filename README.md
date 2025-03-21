@@ -69,7 +69,7 @@ Please see the [documentation site](https://mudpdf.info/docs) for detailed examp
 
 ## MudBlazor Integration
 
-This project was previously known as MudPdf / MudBlazor.PdfViewer. This repo was updated and renamed from Version 3.0.0 onwards to remove the MudBlazor dependency such that the library can be used by any Blazor project.
+This project was previously known as MudPdf / MudBlazor.PdfViewer. This repo was updated and renamed to remove the MudBlazor dependency such that the library can be used by any Blazor project.
 
 However, in keeping with the original spirit of this project, a separate, dedicated package for MudBlazor is available.
 
