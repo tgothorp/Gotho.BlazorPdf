@@ -57,6 +57,8 @@
     color: #333;
     width: 100%;
     justify-content: flex-start;
+    background-color: transparent;
+    border: none;
 }
 
 .blazorpdf-toolbar__menu-menu-item:hover {
