@@ -3,7 +3,8 @@ export class PdfState {
     public url: string
     public orientation: number
     public scale: number
-    public currentPage : number
+    public currentPage: number
     public singlePageMode: boolean
     public password: string
+    public source: string
 }

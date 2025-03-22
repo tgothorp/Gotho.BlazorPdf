@@ -14,11 +14,8 @@ export function initPdfViewer(dotnetReference: any, pdfDto: PdfState, singlePage
 
     if (pdfDto.url) {
         const pdf = new Pdf(pdfDto.id, pdfDto.scale, pdfDto.orientation, pdfDto.url, singlePageMode, pdfDto.password)
-        const documentInit = pdf.password
-            ? {url: pdf.url, password: pdf.password}
-            : {url: pdf.url};
 
-        pdfjs.getDocument(documentInit).promise.then(doc => {
+        pdfjs.getDocument(getDocumentInit(pdfDto)).promise.then(doc => {
             pdf.setDocument(doc)
             renderPdf(pdf)
             renderThumbnails(dotnetReference, pdf)
@@ -241,4 +238,18 @@ function updateMetadata(dotnetReference: any, pdf: Pdf) {
         currentPage: pdf.currentPage,
         totalPages: pdf.pageCount
     });
+}
+
+function getDocumentInit(pdfDto: PdfState) {
+    let documentInit : any = {};
+
+    if (pdfDto.source == "Base64")
+        documentInit.data = atob(pdfDto.url);
+    else
+        documentInit.url = pdfDto.url;
+
+    if (pdfDto.password)
+        documentInit.password = pdfDto.password;
+
+    return documentInit;
 }
