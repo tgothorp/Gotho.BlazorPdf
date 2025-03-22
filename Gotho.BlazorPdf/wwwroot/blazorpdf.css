@@ -37,7 +37,8 @@
 }
 
 .blazorpdf-pdf__thumbnails {
-    max-width: 11%;
+    width: 11%;
+    max-width: 160px;
     min-width: 155px;
     position: absolute;
     left: 0;

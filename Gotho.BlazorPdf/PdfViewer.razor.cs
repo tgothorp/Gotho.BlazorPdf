@@ -1,7 +1,7 @@
+using Gotho.BlazorPdf.Extensions;
 using Gotho.BlazorPdf.Pdf;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using MudBlazorPdf.Extensions;
 
 namespace Gotho.BlazorPdf;
 

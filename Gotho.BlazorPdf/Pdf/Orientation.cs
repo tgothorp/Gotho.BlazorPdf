@@ -1,5 +1,3 @@
-using MudBlazorPdf;
-
 namespace Gotho.BlazorPdf.Pdf;
 
 public record Orientation(PdfOrientation PdfOrientation)
