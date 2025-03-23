@@ -2,7 +2,17 @@
 
 All notable changes and releases will be documented here
 
-## [2025-03-21] - V1.0.1 (Latest Version)
+## [2025-03-23] - V1.0.2 (Latest Version)
+
+- Added fix to allow base64 encoded PDFs to be loaded
+- Added `UseProjectWorker` config option to allow Blazor PDF to work with MAUI Hybrid applications
+- Mark some internal classes as internal
+- Fix thumbnails displaying incorrectly on very wide displays
+- Updated readme to point to new url
+- Dedicated core test project now docs site is using packages
+- Fixed some namespaces using the old project name
+
+## [2025-03-21] - V1.0.1
 
 - Rename project from MudPdf to Blazor PDF
 - Complete rewrite of core functionality to remove MudBlazor dependency

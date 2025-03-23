@@ -16,4 +16,10 @@ public static class QuickStart
     
     public static string Minimum =>
 @"<PdfViewer Url=""https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf""/>";
+    
+    public static string Maui =>
+@"builder.Services.AddBlazorPdfViewer(opt => 
+{
+    opt.UseProjectWorker = true
+});";
 }

@@ -4,13 +4,13 @@
 
 <div><img src="img/square_small.png" width="230" alt="MudPDF" /></div>
 
-<div><a href="https://mudpdf.info">Demo</a> | <a href="https://mudpdf.info/docs/quickstart">Quickstart</a> | <a href="https://mudpdf.info/docs">Documentation</a></div>
+<div><a href="https://blazorpdf.info">Demo</a> | <a href="https://blazorpdf.info/docs/quickstart">Quickstart</a> | <a href="https://blazorpdf.info/docs">Documentation</a></div>
 
 Originally a port of the BlazorBootstrap PDF viewer for the [MudBlazor](https://mudblazor.com) component library. Blazor PDF is a simple yet powerful PDF viewer for Blazor framework.
 
-![NuGet Version](https://img.shields.io/nuget/v/Gotho.MudBlazor.PdfViewer)
-![NuGet Downloads](https://img.shields.io/nuget/dt/Gotho.MudBlazor.PdfViewer)
-![GitHub License](https://img.shields.io/github/license/tgothorp/MudBlazor.PdfViewer)
+![NuGet Version](https://img.shields.io/nuget/v/Gotho.BlazorPdf)
+![NuGet Downloads](https://img.shields.io/nuget/dt/Gotho.BlazorPdf)
+![GitHub License](https://img.shields.io/github/license/tgothorp/Gotho.BlazorPdf)
 
 
 </div>
@@ -28,7 +28,7 @@ Originally a port of the BlazorBootstrap PDF viewer for the [MudBlazor](https://
 
 ## Installation
 
-Grab the package from [nuget.org](https://www.nuget.org/packages/Gotho.MudBlazor.PdfViewer/1.0.1#readme-body-tab);
+Grab the package from [nuget.org](www.nuget.org/packages/Gotho.BlazorPdf);
 
 ```
 dotnet add package Gotho.BlazorPdf
@@ -65,7 +65,7 @@ In order to use this package, your project will need to be configured with the f
 
 ## Usage & Examples
 
-Please see the [documentation site](https://mudpdf.info/docs) for detailed examples
+Please see the [documentation site](https://blazorpdf.info/docs) for detailed examples
 
 ## MudBlazor Integration
 

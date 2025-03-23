@@ -1,7 +1,7 @@
+using Gotho.BlazorPdf.Extensions;
 using Gotho.BlazorPdf.Pdf;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using MudBlazorPdf.Extensions;
 
 namespace Gotho.BlazorPdf;
 
@@ -12,8 +12,8 @@ public partial class PdfViewer : ComponentBase
     protected DotNetObjectReference<PdfViewer>? ObjectReference;
     protected PdfError? Error;
     protected string? PdfPassword;
-    
-    public Pdf.Pdf PdfFile { get; private set; } = null!;
+
+    private Pdf.Pdf PdfFile { get; set; } = null!;
 
     /// <summary>
     /// Sets the display orientation of the PDF document
@@ -85,7 +85,7 @@ public partial class PdfViewer : ComponentBase
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
-            await PdfInterop.InitializeAsync(ObjectReference!, PdfFile, SinglePageMode);
+            await PdfInterop.InitializeAsync(ObjectReference!, PdfFile, SinglePageMode, Config.UseProjectWorker);
 
         await base.OnAfterRenderAsync(firstRender);
     }
@@ -127,7 +127,7 @@ public partial class PdfViewer : ComponentBase
             "PasswordException" => new PdfError { ErrorType = PdfErrorType.PasswordRequired, Message = error.Message?.ToLower() == "no password given" ? null : error.Message },
             _ => new PdfError { ErrorType = PdfErrorType.Error, Message = error.Message }
         };
-    
+
         StateHasChanged();
     }
 
@@ -213,7 +213,7 @@ public partial class PdfViewer : ComponentBase
     {
         await PdfInterop.DownloadDocumentAsync(ObjectReference!, PdfFile);
     }
-    
+
     protected async Task ReloadPdfAsync()
     {
         if (Error is not null && Error.ErrorType == PdfErrorType.PasswordRequired && string.IsNullOrEmpty(PdfPassword))
@@ -222,15 +222,15 @@ public partial class PdfViewer : ComponentBase
             StateHasChanged();
             return;
         }
-    
+
         PdfFile.UpdatePassword(PdfPassword);
         Loading = true;
         Error = null;
         StateHasChanged();
-    
-        await PdfInterop.InitializeAsync(ObjectReference!, PdfFile, SinglePageMode);
+
+        await PdfInterop.InitializeAsync(ObjectReference!, PdfFile, SinglePageMode, Config.UseProjectWorker);
     }
-    
+
     protected async Task PrintDocumentAsync()
     {
         await PdfInterop.PrintDocumentAsync(ObjectReference!, PdfFile);
