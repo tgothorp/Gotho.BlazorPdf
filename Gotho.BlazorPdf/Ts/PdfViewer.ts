@@ -9,8 +9,28 @@ import printjs from "print-js"
 
 pdfjs.GlobalWorkerOptions.workerSrc = "./pdf.worker.min.mjs";
 
-export function initPdfViewer(dotnetReference: any, pdfDto: PdfState, singlePageMode: boolean) {
+let workerInitialised = false;
+
+// @ts-ignore
+async function setupProjectWorker() {
+    const response = await fetch('./pdf.worker.min.mjs');
+    const workerCode = await response.text();
+
+    const blob = new Blob([workerCode], {type: 'application/javascript'});
+    const blobUrl = URL.createObjectURL(blob);
+
+    pdfjs.GlobalWorkerOptions.workerSrc = blobUrl;
+    workerInitialised = true;
+}
+
+export function initPdfViewer(dotnetReference: any, pdfDto: PdfState, singlePageMode: boolean, useProjectWorker: boolean) {
     console.log("Initializing PDF " + pdfDto.id);
+
+    if (useProjectWorker && !workerInitialised) {
+        setupProjectWorker();
+    } else {
+        workerInitialised = true;
+    }
 
     if (pdfDto.url) {
         const pdf = new Pdf(pdfDto.id, pdfDto.scale, pdfDto.orientation, pdfDto.url, singlePageMode, pdfDto.password)
@@ -41,7 +61,7 @@ export function updatePdf(dotnetReference: any, pdfDto: PdfState) {
 
         return;
     }
-    
+
     document.body.style.setProperty('--scale-factor', `${pdf.scale}`);
     queuePdfRender(pdf, null);
     updateMetadata(dotnetReference, pdf)
@@ -180,7 +200,7 @@ function renderPdf(pdf: Pdf) {
             // @ts-ignore
             async function renderPage(pageNum: number) {
                 const page = await doc.getPage(pageNum);
-                const viewport = page.getViewport({ scale: fixedScale, rotation: fixedRotation });
+                const viewport = page.getViewport({scale: fixedScale, rotation: fixedRotation});
 
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
@@ -191,7 +211,7 @@ function renderPdf(pdf: Pdf) {
                 canvas.height = viewport.height;
                 container.appendChild(canvas);
 
-                await page.render({ canvasContext: ctx, viewport }).promise;
+                await page.render({canvasContext: ctx, viewport}).promise;
             }
 
             // Render pages sequentially
@@ -241,7 +261,7 @@ function updateMetadata(dotnetReference: any, pdf: Pdf) {
 }
 
 function getDocumentInit(pdfDto: PdfState) {
-    let documentInit : any = {};
+    let documentInit: any = {};
 
     if (pdfDto.source == "Base64")
         documentInit.data = atob(pdfDto.url);
