@@ -71,6 +71,17 @@ public partial class PdfViewer : ComponentBase
     [Parameter]
     public EventCallback<PdfViewerEventArgs> OnPageChanged { get; set; }
 
+    /// <summary>
+    /// Setting this to <c>true</c> will instruct the library to load the pdf.js worker from your projects
+    /// wwwroot folder instead of using the bundled worker. This is useful when the browser doesn't support
+    /// the use of web workers (for example, the MAUI Blazor Hybrid WebView) 
+    /// </summary>
+    /// <remarks>
+    /// Defaults to <c>false</c>
+    /// </remarks>
+    [Parameter]
+    public bool UseProjectWorker { get; set; } = false;
+
     [Inject] private PdfInterop PdfInterop { get; set; } = default!;
     [Inject] protected PdfViewerConfig Config { get; set; } = default!;
 
@@ -85,7 +96,7 @@ public partial class PdfViewer : ComponentBase
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
-            await PdfInterop.InitializeAsync(ObjectReference!, PdfFile, SinglePageMode);
+            await PdfInterop.InitializeAsync(ObjectReference!, PdfFile, SinglePageMode, UseProjectWorker);
 
         await base.OnAfterRenderAsync(firstRender);
     }
@@ -228,7 +239,7 @@ public partial class PdfViewer : ComponentBase
         Error = null;
         StateHasChanged();
     
-        await PdfInterop.InitializeAsync(ObjectReference!, PdfFile, SinglePageMode);
+        await PdfInterop.InitializeAsync(ObjectReference!, PdfFile, SinglePageMode, UseProjectWorker);
     }
     
     protected async Task PrintDocumentAsync()
