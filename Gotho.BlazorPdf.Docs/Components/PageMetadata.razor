@@ -1,0 +1,15 @@
+<HeadContent>
+    <title>@Title</title>
+    <meta name="description" content="@Description" />
+    <meta property="og:title" content="@Title" />
+    <meta property="og:description" content="@Description" />
+    <meta property="og:url" content="@Url" />
+    <meta name="twitter:title" content="@Title" />
+    <meta name="twitter:description" content="@Description" />
+</HeadContent>
+
+@code {
+    [Parameter] public string Title { get; set; } = "Blazor PDF";
+    [Parameter] public string Description { get; set; } = "A simple, yet powerful PDF viewer for Blazor.";
+    [Parameter] public string Url { get; set; } = "https://blazorpdf.info";
+}
