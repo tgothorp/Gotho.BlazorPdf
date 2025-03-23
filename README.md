@@ -28,7 +28,7 @@ Originally a port of the BlazorBootstrap PDF viewer for the [MudBlazor](https://
 
 ## Installation
 
-Grab the package from [nuget.org](https://www.nuget.org/packages/Gotho.MudBlazor.PdfViewer/1.0.1#readme-body-tab);
+Grab the package from [nuget.org](www.nuget.org/packages/Gotho.BlazorPdf);
 
 ```
 dotnet add package Gotho.BlazorPdf
