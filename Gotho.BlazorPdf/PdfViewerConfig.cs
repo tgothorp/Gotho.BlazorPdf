@@ -2,6 +2,17 @@ namespace Gotho.BlazorPdf;
 
 public class PdfViewerConfig
 {
+    /// <summary>
+    /// Indicates whether the PDF.js worker script should be loaded from a local project path using a Blob URL,
+    /// instead of the default method used by the browser.
+    /// </summary>
+    /// <remarks>
+    /// This setting exists to support platforms where standard Web Workers cannot be loaded using script URLs,
+    /// such as in .NET MAUI Blazor Hybrid applications.
+    /// 
+    /// <para><b>Default:</b> <c>false</c></para>
+    /// </remarks>
+    public bool UseProjectWorker { get; set; } = false;
     public Label Labels { get; set; } = new();
     
     public Color Colors { get; set; } = new();
@@ -14,7 +25,6 @@ public class PdfViewerConfig
         public string PageOf { get; set; } = "of";
         public string ZoomIn { get; set; } = "Zoom In";
         public string ZoomOut { get; set; } = "Zoom Out";
-        public string OpenMenu { get; set; } = "Menu";
         public string RotateClockwise { get; set; } = "Rotate Clockwise";
         public string RotateCounterclockwise { get; set; } = "Rotate Counterclockwise";
         public string SwitchOrientation { get; set; } = "Switch Orientation";

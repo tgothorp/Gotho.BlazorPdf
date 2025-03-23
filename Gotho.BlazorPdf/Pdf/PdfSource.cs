@@ -1,6 +1,6 @@
 namespace Gotho.BlazorPdf.Pdf;
 
-public enum PdfSource
+internal enum PdfSource
 {
     Url,
     Base64,

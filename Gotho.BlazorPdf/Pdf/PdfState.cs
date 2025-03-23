@@ -1,6 +1,6 @@
 namespace Gotho.BlazorPdf.Pdf;
 
-public class PdfState
+internal class PdfState
 {
     public required string? Id { get; set; }
     public required string? Url { get; set; }

@@ -2,7 +2,7 @@ using Gotho.BlazorPdf.Extensions;
 
 namespace Gotho.BlazorPdf.Pdf;
 
-public class Pdf
+internal class Pdf
 {
     public Pdf(string id, string url, PdfOrientation orientation)
     {
