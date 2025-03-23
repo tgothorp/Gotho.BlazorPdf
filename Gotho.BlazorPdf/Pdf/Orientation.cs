@@ -1,6 +1,6 @@
 namespace Gotho.BlazorPdf.Pdf;
 
-public record Orientation(PdfOrientation PdfOrientation)
+internal record Orientation(PdfOrientation PdfOrientation)
 {
     public PdfOrientation PdfOrientation { get; private set; } = PdfOrientation;
 

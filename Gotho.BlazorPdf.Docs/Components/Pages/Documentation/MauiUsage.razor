@@ -1,0 +1,27 @@
+@page "/docs/maui"
+@using MudBlazor.PdfViewer.Docs.Code
+
+<PageTitle>Blazor PDF | MAUI Integration</PageTitle>
+
+<div style="max-width: 1440px; margin: 3em auto auto;">
+    <MudGrid>
+        <MudItem sm="3">
+            <DocsMenu/>
+        </MudItem>
+        <MudItem sm="9" Style="overflow: auto">
+            <MudText Typo="Typo.h2" Class="mb-5">MAUI Integration</MudText>
+            <MudText>The MAUI WebView does not support loading the required PDF worker JS file via relative URLs. In order to mitigate this additional configuration is required.</MudText>
+
+            <MudText Typo="Typo.h4" Class="mt-5 mb-1">Worker File</MudText>
+            <MudText>Grab a copy of the <MudLink Href="https://github.com/tgothorp/Gotho.BlazorPdf/blob/main/Gotho.BlazorPdf/wwwroot/pdf.worker.min.mjs">pdf worker file</MudLink> from the Blazor PDF repo and put in the wwwroot folder of your project.</MudText>
+
+            <MudText Typo="Typo.h4" Class="mt-5 mb-1">UseProjectWorker</MudText>
+            <MudText>You will need to set 'UseProjectWorker' to 'true' when configuring Blazor PDF in your Startup.cs file</MudText>
+            
+            <CodeSnippet Body="@QuickStart.Maui"/>
+
+            <MudText Typo="Typo.h4" Class="mt-5 mb-1">Sample</MudText>
+            <MudText>See the <MudLink Href="https://github.com/tgothorp/MauiSample.BlazorPdf">sample application</MudLink> for a working example</MudText>
+        </MudItem>
+    </MudGrid>
+</div>

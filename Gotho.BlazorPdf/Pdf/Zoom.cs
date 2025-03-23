@@ -1,6 +1,6 @@
 namespace Gotho.BlazorPdf.Pdf;
 
-public record Zoom
+internal record Zoom
 {
     private const int MinZoomLevel = 1;
     private const int MaxZoomLevel = 17;

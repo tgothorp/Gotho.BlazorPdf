@@ -10,7 +10,9 @@
         </MudItem>
         <MudItem sm="9" Style="overflow: auto">
             <MudText Typo="Typo.h2" Class="mb-5">Quickstart</MudText>
-            <MudText>This will guide you through the required steps to get Blazor PDF up and running.</MudText>
+            <MudText Class="mb-2">This will guide you through the required steps to get Blazor PDF up and running.</MudText>
+
+            <MudAlert Severity="Severity.Info">Using Blazor Pdf with a MAUI Blazor Hybrid Application requires additional configuration. Please see the <MudLink Href="/docs/maui">maui specific documentation</MudLink> for more info</MudAlert>
             
             <MudText Typo="Typo.h4" Class="mt-5 mb-1">Prerequisites</MudText>
             <MudText>In order to use Blazor PDF, your project must target either .NET 8 or .NET 9</MudText>
@@ -37,6 +39,7 @@
             <MudText>Below is a basic example of the minimum required code in order to display a PDF document. See the rest of the documentation for full configuration options.</MudText>
 
             <CodeSnippet Body="@QuickStart.Minimum"/>
+
         </MudItem>
     </MudGrid>
 </div>
