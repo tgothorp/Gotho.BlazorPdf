@@ -1,5 +1,6 @@
 import {PDFDocumentProxy, getFilenameFromUrl} from "pdfjs-dist"
 import {PdfState} from "./PdfState";
+import {PdfDrawingLayer} from "./PdfDrawingLayer";
 
 const pdfInstances = {}
 
@@ -19,6 +20,8 @@ export class Pdf {
     public currentPage: number;
     public queuedPage: number;
     public password: string;
+
+    public drawingLayer: PdfDrawingLayer
 
     constructor(id: string, scale: number, rotation: number, url: string, singlePageMode: boolean, password: string = null) {
         this.id = id;
@@ -44,11 +47,21 @@ export class Pdf {
         return Object.values(pdfInstances).filter((c) => c.canvas === canvas).pop();
     }
 
-    public updatePdf(dto: PdfState)
-    {
+    public updatePdf(dto: PdfState) {
         this.rotation = dto.orientation;
         this.scale = dto.scale;
         this.currentPage = dto.currentPage;
+
+        if (!this.drawingLayer) {
+            this.drawingLayer = new PdfDrawingLayer(this.id);
+            this.drawingLayer.initialize(this.canvas);
+        }
+
+        if (dto.draw) {
+            this.drawingLayer.enableLayer();
+        } else {
+            this.drawingLayer.disableLayer();
+        }
     }
 
     public setDocument(doc: PDFDocumentProxy) {
@@ -117,7 +130,7 @@ export class Pdf {
     public zoom(scale: number) {
         this.scale = scale;
     }
-    
+
     public getCanvasContext(): any {
         return this.canvas.getContext("2d");
     }

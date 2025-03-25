@@ -235,4 +235,10 @@ public partial class PdfViewer : ComponentBase
     {
         await PdfInterop.PrintDocumentAsync(ObjectReference!, PdfFile);
     }
+
+    protected async Task ToggleDrawing()
+    {
+        PdfFile.ToggleDrawing();
+        await PdfInterop.UpdateAsync(ObjectReference!, PdfFile);
+    }
 }

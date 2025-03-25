@@ -11,4 +11,6 @@ internal class PdfState
     public required double Scale { get; set; }
 
     public required string? Password { get; set; }
+
+    public required bool Draw { get; set; }
 }

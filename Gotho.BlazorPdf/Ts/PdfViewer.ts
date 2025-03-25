@@ -67,6 +67,63 @@ export function updatePdf(dotnetReference: any, pdfDto: PdfState) {
     updateMetadata(dotnetReference, pdf)
 }
 
+// export function initDrawingCanvas(dotnetReference: any, id: string) {
+//     // Hide text layer (display = none)
+//     // Take left & top value from text layer
+//    
+//     // Hide text layer
+//     const textLayer = document.getElementById(`${id}_text`)
+//     textLayer.style.display = 'none';
+//
+//     const pdf = Pdf.getPdf(id)
+//     const canvas = document.getElementById(`${id}_drawing`) as HTMLCanvasElement;
+//     const container = pdf.canvas as HTMLCanvasElement;
+//
+//     canvas.width = container.offsetWidth;
+//     canvas.height = container.offsetHeight;
+//     canvas.style.width = container.offsetWidth + "px";
+//     canvas.style.height = container.offsetHeight + "px";
+//     canvas.style.top = textLayer.style.top;
+//     canvas.style.left = textLayer.style.left;
+//
+//     let ctx = canvas.getContext("2d");
+//     ctx.strokeStyle = "#FF0000";
+//     ctx.lineWidth = 2;
+//
+//     let drawing = false;
+//
+//     canvas.addEventListener("mousedown", function (e) {
+//         drawing = true;
+//         ctx.beginPath();
+//         const [x, y] = getMousePos(canvas, e);
+//         ctx.moveTo(x, y);
+//     });
+//
+//     canvas.addEventListener("mousemove", function (e) {
+//         if (!drawing) return;
+//         const [x, y] = getMousePos(canvas, e);
+//         ctx.lineTo(x, y);
+//         ctx.stroke();
+//     });
+//
+//     canvas.addEventListener("mouseup", function () {
+//         drawing = false;
+//     });
+//
+//     canvas.addEventListener("mouseleave", function () {
+//         drawing = false;
+//     });
+//
+//     function getMousePos(canvas, evt) {
+//         const rect = canvas.getBoundingClientRect();
+//         return [
+//             evt.clientX - rect.left,
+//             evt.clientY - rect.top
+//         ];
+//     }
+// }
+
+
 export function goToPage(dotnetReference: any, id: string, pageNumber: number) {
     const pdf = Pdf.getPdf(id);
     if (pdf.gotoPage(pageNumber)) {

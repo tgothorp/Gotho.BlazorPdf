@@ -140,6 +140,14 @@
                             </span>
                             <span class="blazorpdf-toolbar__menu-menu-item-text">@Config.Labels.DownloadDocument</span>
                         </button>
+                        <hr class="blazorpdf-toolbar__menu-divider">
+                        <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
+                                @onclick="ToggleDrawing">
+                            <span class="blazorpdf-toolbar__menu-menu-item-icon">
+                                <DownloadIcon Color="@Config.Colors.Icon"/>
+                            </span>
+                            <span class="blazorpdf-toolbar__menu-menu-item-text">Draw</span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -187,6 +195,7 @@
                 @if (SinglePageMode)
                 {
                     <canvas @ref="Element" id="@PdfFile.Id"></canvas>
+                    <canvas id="@($"{PdfFile.Id}_drawing")" style="position: absolute; top: 0; left: 0; outline: solid orange 5px;"></canvas>
                     <div id="@($"{PdfFile.Id}_text")" class="textLayer"></div>
                 }
                 else
