@@ -166,7 +166,7 @@
                             <span
                                 class="blazorpdf-pdf__input-help">Please enter the password for the PDF document</span>
                         </div>
-                        <button class="blazorpdf-pdf__error-submit" type="button" @onclick="ReloadPdfAsync">Submit
+                        <button class="blazorpdf-pdf__error-submit" type="button" @onclick="@(() => LoadPdfAsync())">Submit
                         </button>
                     }
                     else
