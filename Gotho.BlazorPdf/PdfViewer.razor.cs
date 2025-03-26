@@ -238,7 +238,7 @@ public partial class PdfViewer : ComponentBase
 
     protected async Task ToggleDrawing()
     {
-        PdfFile.ToggleDrawing();
+        PdfFile.AnnotationLayer.ToggleAnnotationLayer();
         await PdfInterop.UpdateAsync(ObjectReference!, PdfFile);
     }
 }

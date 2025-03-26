@@ -24,18 +24,13 @@ internal class Pdf
     public Orientation Orientation { get; init; }
     public Zoom Zooming { get; init; } = new();
     public Page Paging { get; init; } = new();
+    public Annotation AnnotationLayer { get; init; } = new();
 
     public string? Password { get; private set; } = null;
-    public bool Draw { get; private set; }
 
     public void UpdatePassword(string? password)
     {
         Password = password;
-    }
-
-    public void ToggleDrawing()
-    {
-        Draw = !Draw;
     }
 
     internal PdfState GetPdfState()
@@ -49,7 +44,7 @@ internal class Pdf
             Orientation = Orientation.GetOrientation(),
             Scale = Zooming.GetScale(),
             Password = Password,
-            Draw = Draw,
+            Draw = AnnotationLayer.Enabled,
         };
     }
 }

@@ -188,19 +188,93 @@
             </div>
         }
 
-        <div class="@(Error is not null ? "blazorpdf-d-none" : "")" style="margin: auto">
-            <div id="@($"{PdfFile.Id}_thumbs")"
-                 class="@(_showThumbnails ? "blazorpdf-pdf__thumbnails" : "blazorpdf-pdf__thumbnails blazorpdf-d-none")" style="background-color: @Config.Colors.Background"></div>
-            <div class="blazorpdf-pdf__pdf-container" style="background-color: @Config.Colors.Background">
+        @* <div class="@(Error is not null ? "blazorpdf-d-none" : "")" style="margin: auto"> *@
+        @*     <div id="@($"{PdfFile.Id}_thumbs")" *@
+        @*          class="@(_showThumbnails ? "blazorpdf-pdf__thumbnails" : "blazorpdf-pdf__thumbnails blazorpdf-d-none")" style="background-color: @Config.Colors.Background"></div> *@
+        @*     <div class="blazorpdf-pdf__pdf-container" style="background-color: @Config.Colors.Background"> *@
+        @*         @if (SinglePageMode) *@
+        @*         { *@
+        @*             <canvas @ref="Element" id="@PdfFile.Id"></canvas> *@
+        @*             <canvas id="@($"{PdfFile.Id}_drawing")" style="position: absolute; top: 0; left: 0; outline: solid orange 5px;"></canvas> *@
+        @*             <div id="@($"{PdfFile.Id}_text")" class="textLayer"></div> *@
+        @*         } *@
+        @*         else *@
+        @*         { *@
+        @*             <div id="@PdfFile.Id" class="blazorpdf__scroll" style="height: 65vh"></div> *@
+        @*         } *@
+        @*          *@
+        @*         @if (PdfFile.AnnotationLayer.Enabled) *@
+        @*         { *@
+        @*             <div class="blazorpdf-drawing__container"> *@
+        @*                 <span>Drawing Tools</span> *@
+        @*                 <div class="blazorpdf-drawing__input-group"> *@
+        @*                     <label for="@($"{PdfFile.Id}_drawing_color")">Color</label> *@
+        @*                     <input id="@($"{PdfFile.Id}_drawing_color")" type="color" @oninput="PenColorChanged"/> *@
+        @*                 </div> *@
+        @*                 <div class="blazorpdf-drawing__input-group"> *@
+        @*                     <label for="@($"{PdfFile.Id}_drawing_thickness")">Thickness</label> *@
+        @*                     <input id="@($"{PdfFile.Id}_drawing_thickness")" type="range" min="1" max="10" value="1"/> *@
+        @*                 </div> *@
+        @*                 <div class="blazorpdf-drawing__input-group"> *@
+        @*                     <label for="@($"{PdfFile.Id}_drawing_opacity")">Opacity</label> *@
+        @*                     <input id="@($"{PdfFile.Id}_drawing_opacity")" type="range" min="1" max="255" value="255"/> *@
+        @*                 </div> *@
+        @*             </div> *@
+        @*         } *@
+        @*     </div> *@
+        @* </div> *@
+
+        
+        <div>
+            <div id="@($"{PdfFile.Id}_thumbs")" class="@(_showThumbnails ? "blazorpdf-pdf__thumbnails" : "blazorpdf-pdf__thumbnails blazorpdf-d-none")" style="background-color: @Config.Colors.Background"></div>
+        </div>
+
+        <div>
+            @if (PdfFile.AnnotationLayer.Enabled)
+            {
+                <div class="blazorpdf-drawing__container">
+                    <span>Drawing Tools</span>
+                    <div class="blazorpdf-drawing__input-group">
+                        <label for="@($"{PdfFile.Id}_drawing_color")">Color</label>
+                        <input id="@($"{PdfFile.Id}_drawing_color")" type="color" @oninput="PenColorChanged"/>
+                    </div>
+                    <div class="blazorpdf-drawing__input-group">
+                        <label for="@($"{PdfFile.Id}_drawing_thickness")">Thickness</label>
+                        <input id="@($"{PdfFile.Id}_drawing_thickness")" type="range" min="1" max="10" value="1"/>
+                    </div>
+                    <div class="blazorpdf-drawing__input-group">
+                        <label for="@($"{PdfFile.Id}_drawing_opacity")">Opacity</label>
+                        <input id="@($"{PdfFile.Id}_drawing_opacity")" type="range" min="1" max="255" value="255"/>
+                    </div>
+                </div>
+            }
+        </div>
+        
+        <div class="@(Error is not null ? "blazorpdf-d-none" : "")" style="margin: auto; padding: 1em">
+            <div style="position: relative; background-color: @Config.Colors.Background">
+                <div>
+                    @* PDF Canvas *@
+                    @if (SinglePageMode)
+                    {
+                        <canvas @ref="Element" id="@PdfFile.Id" style="outline: solid blue 5px"></canvas>
+                    }
+                    else
+                    {
+                        <div id="@PdfFile.Id" class="blazorpdf__scroll" style="height: 65vh"></div>
+                    }
+                </div>
+
                 @if (SinglePageMode)
                 {
-                    <canvas @ref="Element" id="@PdfFile.Id"></canvas>
-                    <canvas id="@($"{PdfFile.Id}_drawing")" style="position: absolute; top: 0; left: 0; outline: solid orange 5px;"></canvas>
-                    <div id="@($"{PdfFile.Id}_text")" class="textLayer"></div>
-                }
-                else
-                {
-                    <div id="@PdfFile.Id" class="blazorpdf__scroll" style="height: 65vh"></div>
+                    <div>
+                        @* Annotation Layer *@
+                        <canvas id="@($"{PdfFile.Id}_drawing")" style="position: absolute; top: 0; left: 0; outline: solid orange 5px;"></canvas>
+                    </div>
+
+                    <div>
+                        @* Text Layer *@
+                        <div id="@($"{PdfFile.Id}_text")" class="textLayer" style="outline: solid red 6px"></div>
+                    </div>
                 }
             </div>
         </div>
@@ -227,5 +301,10 @@
         {
             await PageNumberChanged(result);
         }
+    }
+
+    private void PenColorChanged(ChangeEventArgs obj)
+    {
+        PdfFile.AnnotationLayer.SetPenColor(obj.Value as string ?? "#FF0000");
     }
 }

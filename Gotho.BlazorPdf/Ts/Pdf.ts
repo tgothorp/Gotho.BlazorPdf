@@ -52,6 +52,11 @@ export class Pdf {
         this.scale = dto.scale;
         this.currentPage = dto.currentPage;
 
+        // Drawing layer disabled for scroll mode
+        if (this.singlePageMode === false) {
+            return;
+        }
+
         if (!this.drawingLayer) {
             this.drawingLayer = new PdfDrawingLayer(this.id);
             this.drawingLayer.initialize(this.canvas);
