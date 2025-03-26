@@ -3,8 +3,27 @@
 
 <PageTitle>Base64 Document</PageTitle>
 
-<PdfViewer Url="@PdfBase64String.File"/>
+@if (!string.IsNullOrEmpty(_pdf))
+{
+    <PdfViewer Url="@_pdf"/>
+}
 
 @code {
-    
+    private string _pdf = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var data = await Client.GetByteArrayAsync("File");
+        _pdf = $"data:application/pdf;base64,{Convert.ToBase64String(data)}";
+        await base.OnInitializedAsync();
+    }
+
+    public static class Client
+    {
+        public static async Task<byte[]> GetByteArrayAsync(string fileName)
+        {
+            await Task.Delay(1000);
+            return Convert.FromBase64String(PdfBase64String.File);
+        }
+    }
 }
