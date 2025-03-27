@@ -33,7 +33,7 @@ export function initPdfViewer(dotnetReference: any, pdfDto: PdfState, singlePage
     }
 
     if (pdfDto.url) {
-        const pdf = new Pdf(pdfDto.id, pdfDto.scale, pdfDto.orientation, pdfDto.url, singlePageMode, pdfDto.password)
+        const pdf = new Pdf(pdfDto.id, pdfDto.scale, pdfDto.orientation, pdfDto.url, singlePageMode, pdfDto.source, pdfDto.password)
 
         pdfjs.getDocument(getDocumentInit(pdfDto)).promise.then(doc => {
             pdf.setDocument(doc)
@@ -86,7 +86,11 @@ export function printDocument(dotnetReference: any, id: string) {
     const pdf = Pdf.getPdf(id);
     if (!pdf.password) {
         if (pdf.url) {
-            printjs({printable: pdf.url, type: 'pdf'});
+            if (pdf.source == "base64") {
+                printjs({printable: pdf.url, type: 'pdf', base64: true});
+            } else {
+                printjs({printable: pdf.url, type: 'pdf'});
+            }
         }
     } else {
         // Workaround for printing encrypted PDFs, we can't use the encrypted raw PDF data
@@ -118,13 +122,39 @@ export function printDocument(dotnetReference: any, id: string) {
 export function downloadDocument(dotnetReference: any, id: string) {
     const pdf = Pdf.getPdf(id);
     if (pdf.url) {
-        fetch(pdf.url).then(response => {
-            if (response.ok) {
-                response.blob().then(blob => {
-                    saveAs(blob, pdf.filename ?? 'document.pdf');
-                });
+
+        if (pdf.source == "base64") {
+
+            let base64Data = pdf.url;
+
+            if (pdf.url.indexOf('data:') === 0) {
+                const split = pdf.url.split(',');
+                base64Data = split.length > 1 ? split[1] : '';
             }
-        });
+
+            try {
+                const byteCharacters = atob(base64Data);
+                const byteNumbers = new Array(byteCharacters.length);
+                for (let i = 0; i < byteCharacters.length; i++) {
+                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                }
+                const byteArray = new Uint8Array(byteNumbers);
+                const blob = new Blob([byteArray], {type: 'application/pdf'});
+
+                saveAs(blob, "document.pdf");
+            } catch (e) {
+                console.error('Failed to decode base64 PDF:', e);
+            }
+
+        } else {
+            fetch(pdf.url).then(response => {
+                if (response.ok) {
+                    response.blob().then(blob => {
+                        saveAs(blob, pdf.filename ?? 'document.pdf');
+                    });
+                }
+            });
+        }
     }
 }
 

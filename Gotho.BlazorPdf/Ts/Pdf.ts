@@ -19,8 +19,9 @@ export class Pdf {
     public currentPage: number;
     public queuedPage: number;
     public password: string;
+    public source: string;
 
-    constructor(id: string, scale: number, rotation: number, url: string, singlePageMode: boolean, password: string = null) {
+    constructor(id: string, scale: number, rotation: number, url: string, singlePageMode: boolean, source: string, password: string = null) {
         this.id = id;
         this.canvas = Pdf.getCanvas(id);
         this.scale = scale;
@@ -33,6 +34,7 @@ export class Pdf {
         this.pageCount = 0;
         this.currentPage = 1;
         this.queuedPage = null;
+        this.source = source.toLowerCase();
         this.password = password
 
         pdfInstances[this.id] = this;
