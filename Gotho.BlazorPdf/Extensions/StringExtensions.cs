@@ -31,7 +31,7 @@ internal static class StringExtensions
         // Check upto the first 64 chars for invalid base64 chars
         for (var i = 0; i < Math.Min(64, len); i++)
         {
-            var c = input[i];
+            var c = input![i];
             if (!(char.IsLetterOrDigit(c) || c == '+' || c == '/' || c == '='))
                 return false;
         }
