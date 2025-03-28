@@ -84,7 +84,7 @@ public partial class PdfViewer : ComponentBase
     public BlazorPdfColors Colors { get; set; } = new();
 
     [Inject] private PdfInterop PdfInterop { get; set; } = default!;
-    [Inject] protected PdfViewerConfig Config { get; set; } = default!;
+    [Inject] protected BlazorPdfConfig Config { get; set; } = default!;
 
     protected override void OnParametersSet()
     {
