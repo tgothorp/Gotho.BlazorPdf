@@ -2,7 +2,13 @@ using Gotho.BlazorPdf.Extensions;
 
 namespace Gotho.BlazorPdf.Pdf;
 
-internal class Pdf
+/// <summary>
+/// An internal representation of a PDF file used by BlazorPDF to manage PDF state
+/// </summary>
+/// <remarks>
+/// You should not need to create an instance of this class
+/// </remarks>
+public class Pdf
 {
     public Pdf(string id, string? url, PdfOrientation orientation)
     {
