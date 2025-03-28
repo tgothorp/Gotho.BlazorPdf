@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Components;
-using MudBlazorPdf;
 
 namespace Gotho.BlazorPdf.MudBlazor;
 

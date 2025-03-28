@@ -1,13 +1,13 @@
 @inherits ComponentBase
 
 <div class="blazorpdf-container">
-    <div role="toolbar" class="blazorpdf-toolbar" style="background-color: @Config.Colors.Toolbar">
+    <div role="toolbar" class="blazorpdf-toolbar" style="background-color: @Colors.Toolbar">
         @*Toggle Thumbnail*@
         <div class="blazorpdf-toolbar__item">
             <button class="blazorpdf-toolbar__item-button" disabled="@InputDisabled()" @onclick="ToggleThumbnails"
-                    aria-label="@Config.Labels.ToggleThumbnails">
+                    aria-label="@LocalizedStrings.ToggleThumbnails">
                 <span>
-                    <ThumbnailsIcon Color="@Config.Colors.Icon"/>
+                    <ThumbnailsIcon Color="@Colors.Icon"/>
                 </span>
             </button>
         </div>
@@ -15,9 +15,9 @@
         @*Previous Page*@
         <div class="blazorpdf-toolbar__item">
             <button class="blazorpdf-toolbar__item-button" disabled="@InputDisabled()" @onclick="PreviousPageAsync"
-                    aria-label="@Config.Labels.PreviousPage">
+                    aria-label="@LocalizedStrings.PreviousPage">
                 <span>
-                    <PreviousPageIcon Color="@Config.Colors.Icon"/>
+                    <PreviousPageIcon Color="@Colors.Icon"/>
                 </span>
             </button>
         </div>
@@ -25,9 +25,9 @@
         @*Next Page*@
         <div class="blazorpdf-toolbar__item">
             <button class="blazorpdf-toolbar__item-button" disabled="@InputDisabled()" @onclick="NextPageAsync"
-                    aria-label="@Config.Labels.NextPage">
+                    aria-label="@LocalizedStrings.NextPage">
                 <span>
-                    <NextPageIcon Color="@Config.Colors.Icon"/>
+                    <NextPageIcon Color="@Colors.Icon"/>
                 </span>
             </button>
         </div>
@@ -39,7 +39,7 @@
 
         @* of *@
         <div class="blazorpdf-toolbar__item">
-            <p>@Config.Labels.PageOf</p>
+            <p>@LocalizedStrings.PageOf</p>
         </div>
 
         @*Page Total*@
@@ -51,9 +51,9 @@
 
         @*Zoom Out*@
         <div class="blazorpdf-toolbar__item">
-            <button class="blazorpdf-toolbar__item-button" @onclick="ZoomOutAsync" disabled="@InputDisabled()" aria-label="@Config.Labels.ZoomOut">
+            <button class="blazorpdf-toolbar__item-button" @onclick="ZoomOutAsync" disabled="@InputDisabled()" aria-label="@LocalizedStrings.ZoomOut">
                 <span>
-                    <ZoomOutIcon Color="@Config.Colors.Icon"/>
+                    <ZoomOutIcon Color="@Colors.Icon"/>
                 </span>
             </button>
         </div>
@@ -65,9 +65,9 @@
 
         @*Zoom In*@
         <div class="blazorpdf-toolbar__item">
-            <button class="blazorpdf-toolbar__item-button" @onclick="ZoomInAsync" disabled="@InputDisabled()" aria-label="@Config.Labels.ZoomIn">
+            <button class="blazorpdf-toolbar__item-button" @onclick="ZoomInAsync" disabled="@InputDisabled()" aria-label="@LocalizedStrings.ZoomIn">
                 <span>
-                    <ZoomInIcon Color="@Config.Colors.Icon"/>
+                    <ZoomInIcon Color="@Colors.Icon"/>
                 </span>
             </button>
         </div>
@@ -80,7 +80,7 @@
                 <input type="checkbox" id="menu-toggle" hidden>
                 <label for="menu-toggle" class="blazorpdf-toolbar__menu-trigger-button">
                     <span>
-                        <MenuIcon Color="@Config.Colors.Icon"/>
+                        <MenuIcon Color="@Colors.Icon"/>
                     </span>
                 </label>
                 <div class="blazorpdf-toolbar__menu">
@@ -88,57 +88,57 @@
                     <div class="blazorpdf-toolbar__menu-content">
                         <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()" @onclick="RotateClockwiseAsync">
                             <span class="blazorpdf-toolbar__menu-menu-item-icon">
-                                <RotateCWIcon Color="@Config.Colors.Icon"/>
+                                <RotateCWIcon Color="@Colors.Icon"/>
                             </span>
-                            <span class="blazorpdf-toolbar__menu-menu-item-text">@Config.Labels.RotateClockwise</span>
+                            <span class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.RotateClockwise</span>
                         </button>
                         <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
                                 @onclick="RotateCounterclockwiseAsync">
                             <span class="blazorpdf-toolbar__menu-menu-item-icon">
-                                <RotateCCWIcon Color="@Config.Colors.Icon"/>
+                                <RotateCCWIcon Color="@Colors.Icon"/>
                             </span>
-                            <span class="blazorpdf-toolbar__menu-menu-item-text">@Config.Labels.RotateCounterclockwise</span>
+                            <span class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.RotateCounterclockwise</span>
                         </button>
                         <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
                                 @onclick="SwitchOrientationAsync">
                             <span class="blazorpdf-toolbar__menu-menu-item-icon">
-                                <SwitchOrientationIcon Color="@Config.Colors.Icon"/>
+                                <SwitchOrientationIcon Color="@Colors.Icon"/>
                             </span>
-                            <span class="blazorpdf-toolbar__menu-menu-item-text">@Config.Labels.SwitchOrientation</span>
+                            <span class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.SwitchOrientation</span>
                         </button>
                         <hr class="blazorpdf-toolbar__menu-divider">
                         <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()" @onclick="FirstPageAsync">
                             <span class="blazorpdf-toolbar__menu-menu-item-icon">
-                                <FirstPageIcon Color="@Config.Colors.Icon"/>
+                                <FirstPageIcon Color="@Colors.Icon"/>
                             </span>
-                            <span class="blazorpdf-toolbar__menu-menu-item-text">@Config.Labels.FirstPage</span>
+                            <span class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.FirstPage</span>
                         </button>
                         <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()" @onclick="LastPageAsync">
                             <span class="blazorpdf-toolbar__menu-menu-item-icon">
-                                <LastPageIcon Color="@Config.Colors.Icon"/>
+                                <LastPageIcon Color="@Colors.Icon"/>
                             </span>
-                            <span class="blazorpdf-toolbar__menu-menu-item-text">@Config.Labels.LastPage</span>
+                            <span class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.LastPage</span>
                         </button>
                         <hr class="blazorpdf-toolbar__menu-divider">
                         <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()" @onclick="ResetZoomAsync">
                             <span class="blazorpdf-toolbar__menu-menu-item-icon">
-                                <ZoomResetIcon Color="@Config.Colors.Icon"/>
+                                <ZoomResetIcon Color="@Colors.Icon"/>
                             </span>
-                            <span class="blazorpdf-toolbar__menu-menu-item-text">@Config.Labels.ResetZoom</span>
+                            <span class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.ResetZoom</span>
                         </button>
                         <hr class="blazorpdf-toolbar__menu-divider">
                         <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()" @onclick="PrintDocumentAsync">
                             <span class="blazorpdf-toolbar__menu-menu-item-icon">
-                                <PrintIcon Color="@Config.Colors.Icon"/>
+                                <PrintIcon Color="@Colors.Icon"/>
                             </span>
-                            <span class="blazorpdf-toolbar__menu-menu-item-text">@Config.Labels.PrintDocument</span>
+                            <span class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.PrintDocument</span>
                         </button>
                         <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
                                 @onclick="DownloadDocumentAsync">
                             <span class="blazorpdf-toolbar__menu-menu-item-icon">
-                                <DownloadIcon Color="@Config.Colors.Icon"/>
+                                <DownloadIcon Color="@Colors.Icon"/>
                             </span>
-                            <span class="blazorpdf-toolbar__menu-menu-item-text">@Config.Labels.DownloadDocument</span>
+                            <span class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.DownloadDocument</span>
                         </button>
                     </div>
                 </div>
@@ -148,11 +148,11 @@
     </div>
     @if (Loading)
     {
-        <div class="blazorpdf__loader-container" style="background-color: @Config.Colors.Toolbar">
-            <div class="blazorpdf__loader" style="background-color: @Config.Colors.Loader"></div>
+        <div class="blazorpdf__loader-container" style="background-color: @Colors.Toolbar">
+            <div class="blazorpdf__loader" style="background-color: @Colors.Loader"></div>
         </div>
     }
-    <div class="blazorpdf-pdf" style="background-color: @Config.Colors.Background">
+    <div class="blazorpdf-pdf" style="background-color: @Colors.Background">
         @if (Error is not null)
         {
             <div class="blazorpdf-pdf__error">
@@ -182,11 +182,11 @@
 
         <div class="@(Error is not null ? "blazorpdf-d-none" : "")" style="margin: auto">
             <div id="@($"{PdfFile.Id}_thumbs")"
-                 class="@(_showThumbnails ? "blazorpdf-pdf__thumbnails" : "blazorpdf-pdf__thumbnails blazorpdf-d-none")" style="background-color: @Config.Colors.Background"></div>
-            <div class="blazorpdf-pdf__pdf-container" style="background-color: @Config.Colors.Background">
+                 class="@(_showThumbnails ? "blazorpdf-pdf__thumbnails" : "blazorpdf-pdf__thumbnails blazorpdf-d-none")" style="background-color: @Colors.Background"></div>
+            <div class="blazorpdf-pdf__pdf-container" style="background-color: @Colors.Background">
                 @if (SinglePageMode)
                 {
-                    <canvas @ref="Element" id="@PdfFile.Id"></canvas>
+                    <canvas id="@PdfFile.Id"></canvas>
                     <div id="@($"{PdfFile.Id}_text")" class="textLayer"></div>
                 }
                 else
