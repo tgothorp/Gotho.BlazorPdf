@@ -1,3 +1,4 @@
+using Gotho.BlazorPdf.Config;
 using Gotho.BlazorPdf.Extensions;
 using Gotho.BlazorPdf.Pdf;
 using Microsoft.AspNetCore.Components;
@@ -8,7 +9,6 @@ namespace Gotho.BlazorPdf;
 public partial class PdfViewer : ComponentBase
 {
     protected bool Loading = true;
-    protected ElementReference Element;
     protected DotNetObjectReference<PdfViewer>? ObjectReference;
     protected PdfError? Error;
     protected string? PdfPassword;
@@ -70,6 +70,18 @@ public partial class PdfViewer : ComponentBase
     /// </summary>
     [Parameter]
     public EventCallback<PdfViewerEventArgs> OnPageChanged { get; set; }
+
+    /// <summary>
+    /// A class containing the localized strings for the viewer 
+    /// </summary>
+    [Parameter] 
+    public BlazorPdfLocalizedStrings LocalizedStrings { get; set; } = new();
+
+    /// <summary>
+    /// A class containing the colors for the PDF viewer
+    /// </summary>
+    [Parameter]
+    public BlazorPdfColors Colors { get; set; } = new();
 
     [Inject] private PdfInterop PdfInterop { get; set; } = default!;
     [Inject] protected PdfViewerConfig Config { get; set; } = default!;

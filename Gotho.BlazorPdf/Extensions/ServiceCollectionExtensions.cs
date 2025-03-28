@@ -1,4 +1,5 @@
 using Gotho.BlazorPdf;
+using Gotho.BlazorPdf.Config;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
