@@ -14,18 +14,16 @@
         </MudItem>
         <MudItem sm="9" Style="overflow: auto">
             <MudText Typo="Typo.h2" Class="mb-5">Loading PDFs</MudText>
-            <MudText>PDFs can be loaded by providing either a URL or a base64 encoded PDF file. Simply set the Url
-                property to your PDF url / base64 string.
-            </MudText>
+            <MudText>PDFs can be loaded by providing either a URL or a base64 encoded PDF file. Either set the "Url" parameter to your pdf's url / base64 encoded pdf or use the "LoadPdfAsync"</MudText>
 
             <MudText Typo="Typo.h4" Class="mt-5 mb-1">URL Loading</MudText>
             <CodeSnippet Body="@QuickStart.Minimum"/>
-            <PdfViewer Url="https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf"/>
-            
             
             <MudText Typo="Typo.h4" Class="mt-5 mb-1">Base64 Loading</MudText>
             <CodeSnippet Body="@Base64Example.Example"/>
-            <PdfViewer Url="@Base64Example.Base64File"/>
+
+            <MudText Typo="Typo.h4" Class="mt-5 mb-1">Loading with LoadPdfAsync</MudText>
+            <CodeSnippet Body="@QuickStart.Manual"/>
         </MudItem>
     </MudGrid>
 </div>

@@ -22,4 +22,19 @@ public static class QuickStart
 {
     opt.UseProjectWorker = true
 });";
+
+    public static string Manual =>
+@"<PdfViewer @ref=""_pdfViewer""/>
+
+@code {
+
+    private PdfViewer _pdfViewer;
+    
+    protected override Task OnInitializedAsync()
+    {
+        url = PdfBase64String.File;
+        await _pdfViewer.LoadPdfAsync(url);
+        StateHasChanged();
+    }
+}";
 }
