@@ -47,7 +47,7 @@ public partial class PdfViewer : ComponentBase
     /// <summary>
     /// URL of the PDF to be displayed, this can also be a base64 string 
     /// </summary>
-    [EditorRequired, Parameter]
+    [Parameter]
     public string? Url { get; set; }
 
     /// <summary>
@@ -73,6 +73,13 @@ public partial class PdfViewer : ComponentBase
 
     [Inject] private PdfInterop PdfInterop { get; set; } = default!;
     [Inject] protected PdfViewerConfig Config { get; set; } = default!;
+
+    protected override void OnParametersSet()
+    {
+        Url ??= string.Empty;
+
+        base.OnParametersSet();
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -129,6 +136,30 @@ public partial class PdfViewer : ComponentBase
         };
 
         StateHasChanged();
+    }
+    
+    /// <summary>
+    /// Loads a PDF from the given URL, can be used as an alternative to the <c>Url</c> parameter.
+    /// </summary>
+    /// <param name="url">This can be a URL or a Base64 string</param>
+    public async Task LoadPdfAsync(string? url = null)
+    {
+        if (Error is not null && Error.ErrorType == PdfErrorType.PasswordRequired && string.IsNullOrEmpty(PdfPassword))
+        {
+            Error.Message = "Please supply a password.";
+            StateHasChanged();
+            return;
+        }
+
+        if (url is not null)
+            PdfFile.UpdateUrl(url);
+        
+        PdfFile.UpdatePassword(PdfPassword);
+        Loading = true;
+        Error = null;
+        StateHasChanged();
+
+        await PdfInterop.InitializeAsync(ObjectReference!, PdfFile, SinglePageMode, Config.UseProjectWorker);
     }
 
     #region Paging
@@ -212,23 +243,6 @@ public partial class PdfViewer : ComponentBase
     protected async Task DownloadDocumentAsync()
     {
         await PdfInterop.DownloadDocumentAsync(ObjectReference!, PdfFile);
-    }
-
-    protected async Task ReloadPdfAsync()
-    {
-        if (Error is not null && Error.ErrorType == PdfErrorType.PasswordRequired && string.IsNullOrEmpty(PdfPassword))
-        {
-            Error.Message = "Please supply a password.";
-            StateHasChanged();
-            return;
-        }
-
-        PdfFile.UpdatePassword(PdfPassword);
-        Loading = true;
-        Error = null;
-        StateHasChanged();
-
-        await PdfInterop.InitializeAsync(ObjectReference!, PdfFile, SinglePageMode, Config.UseProjectWorker);
     }
 
     protected async Task PrintDocumentAsync()

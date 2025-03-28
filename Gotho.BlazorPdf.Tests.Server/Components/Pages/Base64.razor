@@ -3,8 +3,21 @@
 
 <PageTitle>Base64 Document</PageTitle>
 
-<PdfViewer Url="@PdfBase64String.File"/>
+<PdfViewer @ref="_pdfViewer"/>
+
+<button @onclick="LoadPdf">Load it</button>
 
 @code {
+
+    private string url = string.Empty;
+
+    private PdfViewer _pdfViewer;
     
+    private async Task LoadPdf()
+    {
+        url = PdfBase64String.File;
+        await _pdfViewer.LoadPdfAsync(url);
+
+        StateHasChanged();
+    }
 }
