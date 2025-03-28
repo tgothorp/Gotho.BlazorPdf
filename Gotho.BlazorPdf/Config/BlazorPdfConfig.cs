@@ -1,6 +1,6 @@
 namespace Gotho.BlazorPdf.Config;
 
-public class PdfViewerConfig
+public class BlazorPdfConfig
 {
     /// <summary>
     /// Indicates whether the PDF.js worker script should be loaded from a local project path using a Blob URL,
