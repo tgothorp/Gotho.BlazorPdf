@@ -1,8 +1,13 @@
-# Change Log
+# CHANGELOG
 
 All notable changes and releases will be documented here
 
-## [2025-03-23] - V1.0.2 (Latest Version)
+## [2025-03-29] - V1.0.3 (Latest Release)
+
+- Added `LoadPdfAsync` method as an alternative to specifying a URL parameter
+- Fixed downloading and printing not working for PDFs loaded as a base64 string
+
+## [2025-03-23] - V1.0.2
 
 - Added fix to allow base64 encoded PDFs to be loaded
 - Added `UseProjectWorker` config option to allow Blazor PDF to work with MAUI Hybrid applications
@@ -19,6 +24,9 @@ All notable changes and releases will be documented here
 - New package to provide dedicated MudBlazor integration
 - Rewrite of JavaScript interop code
 - Rewrite of PDF Viewer in vanilla HTML & CSS
+
+
+# Legacy Releases
 
 ## [2025-02-29] - [LEGACY] V2.1.0
 
