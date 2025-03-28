@@ -1,6 +1,6 @@
 namespace Gotho.BlazorPdf.Pdf;
 
-internal record Page
+public record Page
 {
     public int CurrentPage { get; private set; } = 0;
     public int TotalPages { get; private set; } = 0;

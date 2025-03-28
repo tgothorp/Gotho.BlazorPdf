@@ -13,7 +13,7 @@ public partial class PdfViewer : ComponentBase
     protected PdfError? Error;
     protected string? PdfPassword;
 
-    private Pdf.Pdf PdfFile { get; set; } = null!;
+    protected Pdf.Pdf PdfFile { get; set; } = null!;
 
     /// <summary>
     /// Sets the display orientation of the PDF document
@@ -97,6 +97,10 @@ public partial class PdfViewer : ComponentBase
         await base.OnAfterRenderAsync(firstRender);
     }
 
+    /// <summary>
+    /// Invoked by BlazorPdf's JS interop code when a PDF file has been fully loaded
+    /// </summary>
+    /// <remarks>Do not call this method from your code</remarks>
     [JSInvokable]
     public void DocumentLoaded(PdfViewerModel? pdfViewerModel)
     {
@@ -112,6 +116,10 @@ public partial class PdfViewer : ComponentBase
             OnDocumentLoaded.InvokeAsync(new PdfViewerEventArgs(pdfViewerModel.CurrentPage, pdfViewerModel.TotalPages));
     }
 
+    /// <summary>
+    /// Invoked by BlazorPdf's JS interop code when a PDF's state has changed, usually when a user has changed page 
+    /// </summary>
+    /// <remarks>Do not call this method from your code</remarks>
     [JSInvokable]
     public void SetPdfViewerMetaData(PdfViewerModel? pdfViewerModel)
     {
@@ -125,6 +133,10 @@ public partial class PdfViewer : ComponentBase
             OnPageChanged.InvokeAsync(new PdfViewerEventArgs(pdfViewerModel.CurrentPage, pdfViewerModel.TotalPages));
     }
 
+    /// <summary>
+    /// Invoked by BlazorPdf's JS interop code when a PDF file fails to load, usually due to requiring a password
+    /// </summary>
+    /// <remarks>Do not call this method from your code</remarks>
     [JSInvokable]
     public void PdfViewerError(PdfViewerError error)
     {
