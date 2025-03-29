@@ -50,6 +50,13 @@ export class PdfDrawLayer {
     public enable() {
         this.enabled = true;
         this.canvas.style.removeProperty("display");
+        
+        // Disable text layer temporarily
+        const textLayer = document.getElementById(`${this.id}_text`)
+        if (textLayer) {
+            textLayer.style.display = "none";
+        }
+        
         this.canvas.addEventListener("mousedown", this.boundMouseDown);
         this.canvas.addEventListener("mousemove", this.boundMouseMove);
         this.canvas.addEventListener("mouseup", this.boundMouseUp);
@@ -59,7 +66,13 @@ export class PdfDrawLayer {
     public disable() {
         this.enabled = false;
         this.drawing = false;
-        this.canvas.style.display = "none";
+        
+        // Reenable text layer
+        const textLayer = document.getElementById(`${this.id}_text`)
+        if (textLayer) {
+            textLayer.style.removeProperty("display");
+        }
+        
         this.canvas.removeEventListener("mousedown", this.boundMouseDown);
         this.canvas.removeEventListener("mousemove", this.boundMouseMove);
         this.canvas.removeEventListener("mouseup", this.boundMouseUp);
