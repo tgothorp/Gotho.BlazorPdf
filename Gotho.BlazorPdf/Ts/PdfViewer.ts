@@ -217,6 +217,9 @@ function renderPdf(pdf: Pdf) {
                     pdf.queuedPage = null;
                 }
             })
+
+            // Update draw layer
+            pdf.drawLayer.updateCanvas(viewport.height, viewport.width, pdf.canvas.offsetLeft, pdf.canvas.offsetTop, pdf.rotation);
         })
     } else {
         const container = document.getElementById(pdf.id);

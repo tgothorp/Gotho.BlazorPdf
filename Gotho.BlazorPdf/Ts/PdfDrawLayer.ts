@@ -1,0 +1,126 @@
+interface Stroke {
+    color: string;
+    thickness: number;
+    points: { x: number; y: number }[];
+}
+
+export class PdfDrawLayer {
+    public canvas: HTMLCanvasElement;
+    public canvasContext: CanvasRenderingContext2D;
+    public drawing: boolean;
+
+    private strokes: Stroke[] = [];
+    private currentStroke: Stroke | null = null;
+    private rotation: number;
+
+    private boundMouseDown: (e: MouseEvent) => void;
+    private boundMouseMove: (e: MouseEvent) => void;
+    private boundMouseUp: () => void;
+    private boundMouseLeave: () => void;
+
+    constructor(id: string) {
+        this.boundMouseDown = this.onMouseDown.bind(this);
+        this.boundMouseMove = this.onMouseMove.bind(this);
+        this.boundMouseUp = this.onMouseUp.bind(this);
+        this.boundMouseLeave = this.onMouseLeave.bind(this);
+
+        this.canvas = document.getElementById(`${id}_drawing`) as HTMLCanvasElement;
+        if (this.canvas) {
+            this.canvasContext = this.canvas.getContext("2d");
+            this.canvasContext.strokeStyle = "#FF0000";
+            this.canvasContext.lineWidth = 2;
+
+            this.canvas.addEventListener("mousedown", this.boundMouseDown);
+            this.canvas.addEventListener("mousemove", this.boundMouseMove);
+            this.canvas.addEventListener("mouseup", this.boundMouseUp);
+            this.canvas.addEventListener("mouseleave", this.boundMouseLeave);
+        }
+    }
+
+    public updateCanvas(height: number, width: number, offsetLeft: number, offsetTop: number, rotation: number) {
+        // Clamp rotation to 0, 90, 180 or 270
+        this.rotation = ((rotation % 360) + 360) % 360;
+        console.log(this.rotation);
+        if (this.canvas) {
+            this.canvas.width = width;
+            this.canvas.height = height;
+            this.canvas.style.width = width + 'px';
+            this.canvas.style.height = height + 'px';
+            this.canvas.style.left = offsetLeft + 'px';
+            this.canvas.style.top = offsetTop + 'px';
+            this.redrawStrokes();
+        }
+    }
+
+    private redrawStrokes() {
+        if (!this.canvasContext || !this.canvas) return;
+
+        this.canvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        const w = this.canvas.width;
+        const h = this.canvas.height;
+
+        for (const stroke of this.strokes) {
+            this.canvasContext.beginPath();
+            this.canvasContext.strokeStyle = stroke.color;
+            this.canvasContext.lineWidth = stroke.thickness;
+
+            stroke.points.forEach((p, i) => {
+                const x = p.x * w;
+                const y = p.y * h;
+
+                if (i === 0) {
+                    this.canvasContext.moveTo(x, y);
+                } else {
+                    this.canvasContext.lineTo(x, y);
+                }
+            });
+
+            this.canvasContext.stroke();
+        }
+    }
+
+    private onMouseDown(e: MouseEvent) {
+        if (!this.canvasContext || !this.canvas) return;
+
+        this.drawing = true;
+        const [x, y] = this.getNormalizedMousePos(this.canvas, e);
+        this.canvasContext.beginPath();
+        this.canvasContext.moveTo(x * this.canvas.width, y * this.canvas.height);
+
+        this.currentStroke = {
+            color: this.canvasContext.strokeStyle as string,
+            thickness: this.canvasContext.lineWidth,
+            points: [{x, y}]
+        };
+    }
+
+    private onMouseMove(e: MouseEvent) {
+        if (!this.drawing || !this.canvasContext || !this.canvas) return;
+
+        const [x, y] = this.getNormalizedMousePos(this.canvas, e);
+        this.canvasContext.lineTo(x * this.canvas.width, y * this.canvas.height);
+        this.canvasContext.stroke();
+
+        this.currentStroke?.points.push({x, y});
+    }
+
+    private onMouseUp() {
+        this.drawing = false;
+        if (this.currentStroke) {
+            this.strokes.push(this.currentStroke);
+            this.currentStroke = null;
+        }
+    }
+
+    private onMouseLeave() {
+        this.drawing = false;
+    }
+
+    private getNormalizedMousePos(canvas: HTMLCanvasElement, evt: MouseEvent): [number, number] {
+        const rect = canvas.getBoundingClientRect();
+        const x = (evt.clientX - rect.left) / canvas.width;
+        const y = (evt.clientY - rect.top) / canvas.height;
+        return [x, y];
+    }
+}
