@@ -219,7 +219,7 @@ function renderPdf(pdf: Pdf) {
             })
 
             // Update draw layer
-            pdf.drawLayer.updateCanvas(viewport.height, viewport.width, pdf.canvas.offsetLeft, pdf.canvas.offsetTop, pdf.rotation);
+            pdf.drawLayer.updateCanvas(pdf.currentPage, viewport.height, viewport.width, pdf.canvas.offsetLeft, pdf.canvas.offsetTop, pdf.rotation);
         })
     } else {
         const container = document.getElementById(pdf.id);
