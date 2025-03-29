@@ -54,6 +54,15 @@ export function updatePdf(dotnetReference: any, pdfDto: PdfState) {
     const pdf = Pdf.getPdf(pdfDto.id)
     const previousPage = pdf.currentPage;
     pdf.updatePdf(pdfDto)
+    pdf.drawLayer.updatePenSettings(pdfDto.penColor, pdfDto.penThickness);
+    
+    if (pdf.drawLayer.enabled !== pdfDto.drawLayerEnabled) {
+        if (pdfDto.drawLayerEnabled) {
+            pdf.drawLayer.enable();
+        } else {
+            pdf.drawLayer.disable();
+        }
+    }
 
     if (!pdf.singlePageMode && pdf.currentPage !== previousPage) {
         scrollToPage(pdf.id, pdf.currentPage);

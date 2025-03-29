@@ -7,4 +7,7 @@ export class PdfState {
     public singlePageMode: boolean
     public password: string
     public source: string
+    public drawLayerEnabled: boolean
+    public penColor: string
+    public penThickness: number
 }

@@ -4,6 +4,7 @@
 @import url("blazorpdf_toolbar.css");
 @import url("blazorpdf_icon.css");
 @import url("blazorpdf_loader.css");
+@import url("blazorpdf_drawing.css");
 
 @media (max-width: 768px) {
     .blazorpdf__hide-on-mobile {
