@@ -7,11 +7,15 @@ interface Stroke {
 export class PdfDrawLayer {
     public canvas: HTMLCanvasElement;
     public canvasContext: CanvasRenderingContext2D;
+    public enabled: boolean;
     public drawing: boolean;
 
+    private id: string;
     private strokes: Stroke[] = [];
     private currentStroke: Stroke | null = null;
     private rotation: number;
+    private penColor: string = "#000000";
+    private penThickness: number = 2;
 
     private drawingStore: Record<number, Stroke[]> = {};
     private currentPage: number = 1;
@@ -22,6 +26,7 @@ export class PdfDrawLayer {
     private boundMouseLeave: () => void;
 
     constructor(id: string) {
+        this.id = id;
         this.boundMouseDown = this.onMouseDown.bind(this);
         this.boundMouseMove = this.onMouseMove.bind(this);
         this.boundMouseUp = this.onMouseUp.bind(this);
@@ -30,13 +35,46 @@ export class PdfDrawLayer {
         this.canvas = document.getElementById(`${id}_drawing`) as HTMLCanvasElement;
         if (this.canvas) {
             this.canvasContext = this.canvas.getContext("2d");
-            this.canvasContext.strokeStyle = "#FF0000";
-            this.canvasContext.lineWidth = 2;
+            this.canvasContext.strokeStyle = this.penColor;
+            this.canvasContext.lineWidth = this.penThickness;
 
             this.canvas.addEventListener("mousedown", this.boundMouseDown);
             this.canvas.addEventListener("mousemove", this.boundMouseMove);
             this.canvas.addEventListener("mouseup", this.boundMouseUp);
             this.canvas.addEventListener("mouseleave", this.boundMouseLeave);
+
+            this.canvas.style.display = "none";
+        }
+    }
+    
+    public enable() {
+        this.enabled = true;
+        this.canvas.style.removeProperty("display");
+        this.canvas.addEventListener("mousedown", this.boundMouseDown);
+        this.canvas.addEventListener("mousemove", this.boundMouseMove);
+        this.canvas.addEventListener("mouseup", this.boundMouseUp);
+        this.canvas.addEventListener("mouseleave", this.boundMouseLeave);
+    }
+    
+    public disable() {
+        this.enabled = false;
+        this.drawing = false;
+        this.canvas.style.display = "none";
+        this.canvas.removeEventListener("mousedown", this.boundMouseDown);
+        this.canvas.removeEventListener("mousemove", this.boundMouseMove);
+        this.canvas.removeEventListener("mouseup", this.boundMouseUp);
+        this.canvas.removeEventListener("mouseleave", this.boundMouseLeave);
+    }
+    
+    public updatePenSettings(penColor: string, penThickness: number) {
+        this.penColor = penColor;
+        this.penThickness = penThickness;
+
+        this.canvas = document.getElementById(`${this.id}_drawing`) as HTMLCanvasElement;
+        if (this.canvas) {
+            this.canvasContext = this.canvas.getContext("2d");
+            this.canvasContext.strokeStyle = penColor;
+            this.canvasContext.lineWidth = penThickness;
         }
     }
 
@@ -119,14 +157,17 @@ export class PdfDrawLayer {
     private onMouseDown(e: MouseEvent) {
         if (!this.canvasContext || !this.canvas) return;
 
+        this.canvasContext.strokeStyle = this.penColor;
+        this.canvasContext.lineWidth = this.penThickness;
+
         this.drawing = true;
         const [x, y] = this.getNormalizedMousePos(this.canvas, e);
         this.canvasContext.beginPath();
         this.canvasContext.moveTo(x * this.canvas.width, y * this.canvas.height);
 
         this.currentStroke = {
-            color: this.canvasContext.strokeStyle as string,
-            thickness: this.canvasContext.lineWidth,
+            color: this.penColor,
+            thickness: this.penThickness,
             points: [{x, y}]
         };
     }

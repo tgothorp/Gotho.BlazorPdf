@@ -11,4 +11,8 @@ internal class PdfState
     public required double Scale { get; set; }
 
     public required string? Password { get; set; }
+
+    public required bool DrawLayerEnabled { get; set; }
+    public required string PenColor { get; set; }
+    public required int PenThickness { get; set; }
 }
