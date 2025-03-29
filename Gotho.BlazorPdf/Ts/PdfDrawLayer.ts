@@ -101,8 +101,9 @@ export class PdfDrawLayer {
             this.canvasContext.lineWidth = stroke.thickness;
 
             stroke.points.forEach((p, i) => {
-                const x = p.x * w;
-                const y = p.y * h;
+                const [rx, ry] = this.rotatePoint(p.x, p.y, this.rotation);
+                const x = rx * w;
+                const y = ry * h;
 
                 if (i === 0) {
                     this.canvasContext.moveTo(x, y);
@@ -157,5 +158,18 @@ export class PdfDrawLayer {
         const x = (evt.clientX - rect.left) / canvas.width;
         const y = (evt.clientY - rect.top) / canvas.height;
         return [x, y];
+    }
+
+    private rotatePoint(x: number, y: number, rotation: number): [number, number] {
+        switch (rotation) {
+            case 90:
+                return [1 - y, x];
+            case 180:
+                return [1 - x, 1 - y];
+            case 270:
+                return [y, 1 - x];
+            default:
+                return [x, y];
+        }
     }
 }
