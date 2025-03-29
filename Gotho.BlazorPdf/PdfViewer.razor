@@ -247,13 +247,12 @@
                 @if (SinglePageMode)
                 {
                     <div>
-                        @* Text Layer *@
-                        <div id="@($"{PdfFile.Id}_text")" class="textLayer"></div>
+                        @* Drawing Layer *@
+                        <canvas id="@($"{PdfFile.Id}_drawing")" style="position: absolute;"></canvas>
                     </div>
                     <div>
-                        @* Drawing Layer *@
-                        <canvas id="@($"{PdfFile.Id}_drawing")"
-                                style="position: absolute; outline: solid orange 5px"></canvas>
+                        @* Text Layer *@
+                        <div id="@($"{PdfFile.Id}_text")" class="textLayer"></div>
                     </div>
                 }
             </div>
