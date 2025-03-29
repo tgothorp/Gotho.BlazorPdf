@@ -13,6 +13,9 @@ export class PdfDrawLayer {
     private currentStroke: Stroke | null = null;
     private rotation: number;
 
+    private drawingStore: Record<number, Stroke[]> = {};
+    private currentPage: number = 1;
+
     private boundMouseDown: (e: MouseEvent) => void;
     private boundMouseMove: (e: MouseEvent) => void;
     private boundMouseUp: () => void;
@@ -37,9 +40,25 @@ export class PdfDrawLayer {
         }
     }
 
-    public updateCanvas(height: number, width: number, offsetLeft: number, offsetTop: number, rotation: number) {
+    public updateCanvas(pageNumber: number,
+                        height: number,
+                        width: number,
+                        offsetLeft: number,
+                        offsetTop: number,
+                        rotation: number) {
+        
         // Clamp rotation to 0, 90, 180 or 270
         this.rotation = ((rotation % 360) + 360) % 360;
+
+        if (this.currentStroke) {
+            this.strokes.push(this.currentStroke);
+            this.currentStroke = null;
+        }
+
+        this.drawingStore[this.currentPage] = [...this.strokes];
+        this.currentPage = pageNumber;
+        this.strokes = this.drawingStore[pageNumber] ? [...this.drawingStore[pageNumber]] : [];
+
         console.log(this.rotation);
         if (this.canvas) {
             this.canvas.width = width;
@@ -50,6 +69,22 @@ export class PdfDrawLayer {
             this.canvas.style.top = offsetTop + 'px';
             this.redrawStrokes();
         }
+    }
+
+    public getAllStrokes(): Record<number, Stroke[]> {
+        if (this.currentStroke) {
+            this.strokes.push(this.currentStroke);
+            this.currentStroke = null;
+        }
+        
+        this.drawingStore[this.currentPage] = [...this.strokes];
+        return this.drawingStore;
+    }
+
+    public loadAllStrokes(data: Record<number, Stroke[]>) {
+        this.drawingStore = data;
+        this.strokes = this.drawingStore[this.currentPage] ?? [];
+        this.redrawStrokes();
     }
 
     private redrawStrokes() {
