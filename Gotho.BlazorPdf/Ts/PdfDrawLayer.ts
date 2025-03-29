@@ -4,6 +4,13 @@ interface Stroke {
     points: { x: number; y: number }[];
 }
 
+// TODO
+// - Clear all
+// - Undo button
+// - Done button
+// - Custom cursor
+// - Printing
+
 export class PdfDrawLayer {
     public canvas: HTMLCanvasElement;
     public canvasContext: CanvasRenderingContext2D;

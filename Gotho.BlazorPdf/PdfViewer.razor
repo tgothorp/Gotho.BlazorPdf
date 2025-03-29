@@ -215,13 +215,13 @@
             @if (PdfFile.DrawLayer.Enabled)
             {
                 <div class="blazorpdf-drawing__container">
-                    <span>Drawing Tools</span>
+                    <span>@LocalizedStrings.DrawingTools</span>
                     <div class="blazorpdf-drawing__input-group">
-                        <label for="@($"{PdfFile.Id}_drawing_color")">Color</label>
+                        <label for="@($"{PdfFile.Id}_drawing_color")">@LocalizedStrings.DrawingColor</label>
                         <input id="@($"{PdfFile.Id}_drawing_color")" type="color" @onchange="ColorChanged" value="@PdfFile.DrawLayer.PenColor"/>
                     </div>
                     <div class="blazorpdf-drawing__input-group">
-                        <label for="@($"{PdfFile.Id}_drawing_thickness")">Thickness</label>
+                        <label for="@($"{PdfFile.Id}_drawing_thickness")">@LocalizedStrings.DrawingThickness</label>
                         <input id="@($"{PdfFile.Id}_drawing_thickness")" type="range" min="1" max="10" value="@PdfFile.DrawLayer.PenThickness"
                                @onchange="ThicknessChanged"/>
                     </div>

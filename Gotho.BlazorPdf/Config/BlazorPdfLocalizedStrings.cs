@@ -20,4 +20,7 @@ public class BlazorPdfLocalizedStrings
     public string PrintDocument { get; set; } = "Print Document";
     public string DownloadDocument { get; set; } = "Download Document";
     public string Draw { get; set; } = "Draw";
+    public string DrawingTools { get; set; } = "Drawing Tools";
+    public string DrawingColor { get; set; } = "Color";
+    public string DrawingThickness { get; set; } = "Thickness";
 }
