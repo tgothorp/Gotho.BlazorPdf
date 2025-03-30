@@ -152,15 +152,18 @@
                             <span
                                 class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.DownloadDocument</span>
                         </button>
-                        <hr class="blazorpdf-toolbar__menu-divider">
-                        <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
-                                @onclick="ToggleDrawingAsync">
-                            <span class="blazorpdf-toolbar__menu-menu-item-icon">
-                                <DrawIcon Color="@Colors.Icon"/>
-                            </span>
-                            <span
-                                class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.Draw</span>
-                        </button>
+                        @if (SinglePageMode)
+                        {
+                            <hr class="blazorpdf-toolbar__menu-divider">
+                            <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
+                                    @onclick="ToggleDrawingAsync">
+                                <span class="blazorpdf-toolbar__menu-menu-item-icon">
+                                    <DrawIcon Color="@Colors.Icon"/>
+                                </span>
+                                <span
+                                    class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.Draw</span>
+                            </button>
+                        }
                     </div>
                 </div>
             </div>
@@ -215,6 +218,11 @@
             @if (PdfFile.DrawLayer.Enabled)
             {
                 <div class="blazorpdf-drawing__container">
+                    <div class="blazorpdf-drawing__close">
+                        <button type="button" @onclick="@ToggleDrawingAsync">
+                            <CloseIcon Color="@Colors.Icon"/>
+                        </button>
+                    </div>
                     <span>@LocalizedStrings.DrawingTools</span>
                     <div class="blazorpdf-drawing__input-group">
                         <label for="@($"{PdfFile.Id}_drawing_color")">@LocalizedStrings.DrawingColor</label>
