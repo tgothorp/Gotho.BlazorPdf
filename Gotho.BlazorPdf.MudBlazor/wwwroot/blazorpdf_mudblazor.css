@@ -53,3 +53,10 @@
 .mudpdf_password {
     padding: 5rem;
 }
+
+.mudpdf_drawcard {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    z-index: 999;
+}

@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{244FE39B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gotho.BlazorPdf.Tests.Server", "Gotho.BlazorPdf.Tests.Server\Gotho.BlazorPdf.Tests.Server.csproj", "{22D21555-5BFB-4981-91C4-2CC8649453E5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gotho.BlazorPdf.Tests.Mud", "Gotho.BlazorPdf.Tests.Mud\Gotho.BlazorPdf.Tests.Mud.csproj", "{9938825A-702C-42FD-A2B9-037326BC3C95}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,9 +36,14 @@ Global
 		{22D21555-5BFB-4981-91C4-2CC8649453E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{22D21555-5BFB-4981-91C4-2CC8649453E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{22D21555-5BFB-4981-91C4-2CC8649453E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9938825A-702C-42FD-A2B9-037326BC3C95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9938825A-702C-42FD-A2B9-037326BC3C95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9938825A-702C-42FD-A2B9-037326BC3C95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9938825A-702C-42FD-A2B9-037326BC3C95}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{871A6502-3876-4B73-B072-60711EAD525D} = {66B7FF4B-BF29-4B24-87FE-788A1A5BA591}
 		{22D21555-5BFB-4981-91C4-2CC8649453E5} = {244FE39B-552B-4255-9AFF-EF8401EC91B4}
+		{9938825A-702C-42FD-A2B9-037326BC3C95} = {244FE39B-552B-4255-9AFF-EF8401EC91B4}
 	EndGlobalSection
 EndGlobal
