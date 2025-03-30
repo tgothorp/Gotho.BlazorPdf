@@ -4,12 +4,8 @@ interface Stroke {
     points: { x: number; y: number }[];
 }
 
-// TODO
-// - Clear all
-// - Undo button
-// - Printing
-
 export class PdfDrawLayer {
+    public drawingStore: Record<number, Stroke[]> = {};
     public canvas: HTMLCanvasElement;
     public canvasContext: CanvasRenderingContext2D;
     public enabled: boolean;
@@ -22,7 +18,6 @@ export class PdfDrawLayer {
     private penColor: string = "#000000";
     private penThickness: number = 2;
 
-    private drawingStore: Record<number, Stroke[]> = {};
     private currentPage: number = 1;
 
     private boundMouseDown: (e: MouseEvent) => void;
