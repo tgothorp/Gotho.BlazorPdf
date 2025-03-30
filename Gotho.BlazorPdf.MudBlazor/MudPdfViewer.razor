@@ -1,37 +1,38 @@
+@using global::MudBlazor.Utilities
 @inherits PdfViewer
 
 @namespace Gotho.BlazorPdf.MudBlazor
 
 <!--suppress ALL -->
-<MudGrid Class="flex-wrap">
+<MudGrid Class="flex-wrap" Spacing="0">
     <MudItem xs="12">
         <MudToolBar Class="justify-space-between" Style="background-color: var(--mud-palette-surface)">
             @if (!HideThumbnails)
             {
-                <MudTooltip Text="@Config.Labels.ToggleThumbnails" Arrow="true" Placement="Placement.Top">
-                    <MudIconButton Icon="@Config.Icons.ToggleThumbnails"
+                <MudTooltip Text="@LocalizedStrings.ToggleThumbnails" Arrow="true" Placement="Placement.Top">
+                    <MudIconButton Icon="@Icons.ToggleThumbnails"
                                    Size="Size.Medium"
-                                   Color="@Config.Colors.IconColor"
+                                   Color="@PdfColors.IconColor"
                                    Disabled="InputDisabled()"
                                    OnClick="ToggleThumbnails"
-                                   aria-label="@Config.Labels.ToggleThumbnails"/>
+                                   aria-label="@LocalizedStrings.ToggleThumbnails"/>
                 </MudTooltip>
             }
-            <MudTooltip Text="@Config.Labels.PreviousPage" Arrow="true" Placement="Placement.Top">
-                <MudIconButton Icon="@Config.Icons.PreviousPage"
+            <MudTooltip Text="@LocalizedStrings.PreviousPage" Arrow="true" Placement="Placement.Top">
+                <MudIconButton Icon="@Icons.PreviousPage"
                                Size="Size.Medium"
-                               Color="@Config.Colors.IconColor"
+                               Color="@PdfColors.IconColor"
                                Disabled="InputDisabled()"
                                OnClick="PreviousPageAsync"
-                               aria-label="@Config.Labels.PreviousPage"/>
+                               aria-label="@LocalizedStrings.PreviousPage"/>
             </MudTooltip>
-            <MudTooltip Text="@Config.Labels.NextPage" Arrow="true" Placement="Placement.Top">
-                <MudIconButton Icon="@Config.Icons.NextPage"
+            <MudTooltip Text="@LocalizedStrings.NextPage" Arrow="true" Placement="Placement.Top">
+                <MudIconButton Icon="@Icons.NextPage"
                                Size="Size.Medium"
-                               Color="@Config.Colors.IconColor"
+                               Color="@PdfColors.IconColor"
                                Disabled="InputDisabled()"
                                OnClick="NextPageAsync"
-                               aria-label="@Config.Labels.NextPage"/>
+                               aria-label="@LocalizedStrings.NextPage"/>
             </MudTooltip>
             <div style="max-width: 60px;">
                 <MudNumericField
@@ -43,39 +44,50 @@
                     Disabled="InputDisabled()"
                     ValueChanged="PageNumberChanged"/>
             </div>
-            <MudText Typo="Typo.body1" Class="ml-2 mr-2">@Config.Labels.PageOf</MudText>
+            <MudText Typo="Typo.body1" Class="ml-2 mr-2">@LocalizedStrings.PageOf</MudText>
             <MudText Typo="Typo.body1">@PdfFile.Paging.TotalPages.ToString()</MudText>
             <MudSpacer/>
-            <MudTooltip Text="@Config.Labels.ZoomOut" Arrow="true" Placement="Placement.Top">
-                <MudIconButton Icon="@Config.Icons.ZoomOut"
+            <MudTooltip Text="@LocalizedStrings.ZoomOut" Arrow="true" Placement="Placement.Top">
+                <MudIconButton Icon="@Icons.ZoomOut"
                                Size="Size.Medium"
-                               Color="@Config.Colors.IconColor"
+                               Color="@PdfColors.IconColor"
                                Disabled="InputDisabled()"
                                OnClick="ZoomOutAsync"
-                               aria-label="@Config.Labels.ZoomOut"/>
+                               aria-label="@LocalizedStrings.ZoomOut"/>
             </MudTooltip>
             <MudChip T="string" Variant="Variant.Text">@PdfFile.Zooming.GetZoomPercentageString()</MudChip>
-            <MudTooltip Text="@Config.Labels.ZoomIn" Arrow="true" Placement="Placement.Top">
-                <MudIconButton Icon="@Config.Icons.ZoomIn"
+            <MudTooltip Text="@LocalizedStrings.ZoomIn" Arrow="true" Placement="Placement.Top">
+                <MudIconButton Icon="@Icons.ZoomIn"
                                Size="Size.Medium"
-                               Color="@Config.Colors.IconColor"
+                               Color="@PdfColors.IconColor"
                                Disabled="InputDisabled()"
                                OnClick="ZoomInAsync"
-                               aria-label="@Config.Labels.ZoomIn"/>
+                               aria-label="@LocalizedStrings.ZoomIn"/>
             </MudTooltip>
             <MudSpacer/>
-            <MudMenu Icon="@Config.Icons.Menu" AriaLabel="@Config.Labels.OpenMenu">
-                <MudMenuItem Icon="@Config.Icons.RotateClockwise" Label="@Config.Labels.RotateClockwise" OnClick="RotateClockwiseAsync"/>
-                <MudMenuItem Icon="@Config.Icons.RotateCounterclockwise" Label="@Config.Labels.RotateCounterclockwise" OnClick="RotateCounterclockwiseAsync"/>
-                <MudMenuItem Icon="@Config.Icons.SwitchOrientation" Label="@Config.Labels.SwitchOrientation" OnClick="SwitchOrientationAsync"/>
+            <MudMenu Icon="@Icons.Menu" Color="PdfColors.IconColor">
+                <MudMenuItem IconColor="PdfColors.IconColor" Icon="@Icons.RotateClockwise"
+                             Label="@LocalizedStrings.RotateClockwise" OnClick="RotateClockwiseAsync"/>
+                <MudMenuItem IconColor="PdfColors.IconColor" Icon="@Icons.RotateCounterclockwise"
+                             Label="@LocalizedStrings.RotateCounterclockwise" OnClick="RotateCounterclockwiseAsync"/>
+                <MudMenuItem IconColor="PdfColors.IconColor" Icon="@Icons.SwitchOrientation"
+                             Label="@LocalizedStrings.SwitchOrientation" OnClick="SwitchOrientationAsync"/>
                 <MudDivider/>
-                <MudMenuItem Icon="@Config.Icons.FirstPage" Label="@Config.Labels.FirstPage" OnClick="FirstPageAsync"/>
-                <MudMenuItem Icon="@Config.Icons.LastPage" Label="@Config.Labels.LastPage" OnClick="LastPageAsync"/>
+                <MudMenuItem IconColor="PdfColors.IconColor" Icon="@Icons.FirstPage" Label="@LocalizedStrings.FirstPage"
+                             OnClick="FirstPageAsync"/>
+                <MudMenuItem IconColor="PdfColors.IconColor" Icon="@Icons.LastPage" Label="@LocalizedStrings.LastPage"
+                             OnClick="LastPageAsync"/>
                 <MudDivider/>
-                <MudMenuItem Icon="@Config.Icons.ResetZoom" Label="@Config.Labels.ResetZoom" OnClick="ResetZoomAsync"/>
+                <MudMenuItem IconColor="PdfColors.IconColor" Icon="@Icons.ResetZoom" Label="@LocalizedStrings.ResetZoom"
+                             OnClick="ResetZoomAsync"/>
                 <MudDivider/>
-                <MudMenuItem Icon="@Config.Icons.PrintDocument" Label="@Config.Labels.PrintDocument" OnClick="PrintDocumentAsync"/>
-                <MudMenuItem Icon="@Config.Icons.DownloadDocument" Label="@Config.Labels.DownloadDocument" OnClick="DownloadDocumentAsync"/>
+                <MudMenuItem IconColor="PdfColors.IconColor" Icon="@Icons.PrintDocument"
+                             Label="@LocalizedStrings.PrintDocument" OnClick="PrintDocumentAsync"/>
+                <MudMenuItem IconColor="PdfColors.IconColor" Icon="@Icons.DownloadDocument"
+                             Label="@LocalizedStrings.DownloadDocument" OnClick="DownloadDocumentAsync"/>
+                <MudDivider/>
+                <MudMenuItem IconColor="PdfColors.IconColor" Icon="@Icons.Draw" Label="@LocalizedStrings.Draw"
+                             OnClick="ToggleDrawingAsync"/>
             </MudMenu>
         </MudToolBar>
         @if (Loading)
@@ -84,64 +96,119 @@
         }
     </MudItem>
     <MudItem xs="12">
-        <MudGrid Class="flex-column">
-            <MudItem xs="12" Class="justify-center d-flex mudpdf_container" Style="@BackgroundColor()">
-                @if (Error is not null)
-                {
-                    <div class="mudpdf_password">
-                        <MudCard Class="pa-2">
-                            <MudCardHeader>
-                                <CardHeaderContent>
-                                    <MudStack Row="true" Justify="Justify.Center">
-                                        @if (Error?.ErrorType == PdfErrorType.PasswordRequired)
-                                        {
-                                            <MudIcon Icon="@Icons.Material.Filled.Warning" Color="Color.Warning" Size="Size.Large"/>
-                                            <MudText Typo="Typo.h5">Password Required</MudText>
-                                        }
-                                        else
-                                        {
-                                            <MudIcon Icon="@Icons.Material.Filled.Error" Color="Color.Error" Size="Size.Large"/>
-                                            <MudText Typo="Typo.h5">PDF Error</MudText>
-                                        }
-                                    </MudStack>
-                                </CardHeaderContent>
-                            </MudCardHeader>
-                            <MudCardContent>
-                                @if (Error?.ErrorType == PdfErrorType.PasswordRequired)
-                                {
-                                    <MudTextField @bind-Value="_password" InputType="_passwordInputType" Adornment="Adornment.End" AdornmentIcon="@_passwordInputIcon" OnAdornmentClick="PeekPassword" Label="Password" Variant="Variant.Filled" HelperText="Please enter the password for the PDF document."></MudTextField>
-                                    @if (!string.IsNullOrEmpty(Error?.Message))
-                                    {
-                                        <MudAlert Class="mt-3" Severity="Severity.Warning">@Error.Message</MudAlert>
-                                    }
-                                }
-                                else
-                                {
-                                    <MudAlert Class="mt-3" Severity="Severity.Error">@Error?.Message</MudAlert>
-                                }
-                            </MudCardContent>
-                            <MudCardActions Style="flex-direction: row-reverse">
-                                <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="ReloadPdfAsync">@(Error?.ErrorType == PdfErrorType.PasswordRequired ? "Submit" : "Retry")</MudButton>
-                            </MudCardActions>
-                        </MudCard>
-                    </div>
-                }
+        <div class="blazorpdf-pdf" style="background-color: @Colors.Background">
 
-                <div>
-                    <div id="@($"{@PdfFile.Id}_thumbs")" class="@(_showThumbnails ? "blazorpdf-pdf__thumbnails" : "blazorpdf-pdf__thumbnails blazorpdf-d-none")" 
-                         style="@BackgroundColor()"></div>
-                    @if (!SinglePageMode)
+            @if (Error is not null)
+            {
+                <div class="blazorpdf-pdf__error">
+                    <div class="blazorpdf-pdf__error-content">
+                        @if (Error.ErrorType == PdfErrorType.PasswordRequired)
+                        {
+                            <h1>⚠ Password Required</h1>
+                            <div class="blazorpdf-pdf__input">
+                                <input type="text" @bind="PdfPassword" id="pdfPassword"
+                                       class="blazorpdf-pdf__input-field"
+                                       placeholder="Password">
+                                <span
+                                    class="blazorpdf-pdf__input-help">Please enter the password for the PDF document</span>
+                            </div>
+                            <button class="blazorpdf-pdf__error-submit" type="button"
+                                    @onclick="@(() => LoadPdfAsync())">
+                                Submit
+                            </button>
+                        }
+                        else
+                        {
+                            <h1>⛔ PDF Error</h1>
+                            <div>
+                                <p>@Error.Message</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+            <div class="@(Error is not null ? "blazorpdf-d-none" : "")">
+                <div id="@($"{PdfFile.Id}_thumbs")"
+                     class="@(_showThumbnails ? "blazorpdf-pdf__thumbnails" : "blazorpdf-pdf__thumbnails blazorpdf-d-none")"
+                     style="background-color: @Colors.Background"></div>
+            </div>
+
+            <div>
+                @if (PdfFile.DrawLayer.Enabled)
+                {
+                    <MudCard Class="mudpdf_drawcard">
+                        <MudCardHeader Class="justify-space-between">
+                            <MudText Align="Align.Center">@LocalizedStrings.DrawingTools</MudText>
+                            <MudIconButton Icon="@Icons.DrawClose" Color="Color.Default" OnClick="ToggleDrawingAsync"/>
+                        </MudCardHeader>
+                        <MudCardActions Class="justify-center">
+                            <MudStack>
+                                <MudColorPicker Label="@LocalizedStrings.DrawingColor" ShowAlpha="false"
+                                                Value="@PdfFile.DrawLayer.PenColor" ValueChanged="ColorChanged"/>
+                                <MudSlider T="int" Min="1" Max="40" Value="PdfFile.DrawLayer.PenThickness"
+                                           ValueChanged="ThicknessChanged">@LocalizedStrings.DrawingThickness</MudSlider>
+                            </MudStack>
+                        </MudCardActions>
+                        <MudCardActions Class="justify-center">
+                            <MudButton OnClick="UndoLastStrokeAsync">@LocalizedStrings.DrawingUndo</MudButton>
+                            <MudButton OnClick="ClearAllPageStrokesAsync">@LocalizedStrings.DrawingClear</MudButton>
+                        </MudCardActions>
+                    </MudCard>
+
+                    @* <div class="blazorpdf-drawing__container"> *@
+                    @*     <div class="blazorpdf-drawing__close"> *@
+                    @*         <button type="button" @onclick="@ToggleDrawingAsync"> *@
+                    @*             <CloseIcon Color="@Colors.Icon"/> *@
+                    @*         </button> *@
+                    @*     </div> *@
+                    @*     <span>@LocalizedStrings.DrawingTools</span> *@
+                    @*     <div class="blazorpdf-drawing__input-group"> *@
+                    @*         <label for="@($"{PdfFile.Id}_drawing_color")">@LocalizedStrings.DrawingColor</label> *@
+                    @*         <input id="@($"{PdfFile.Id}_drawing_color")" type="color" @onchange="ColorChanged" value="@PdfFile.DrawLayer.PenColor"/> *@
+                    @*     </div> *@
+                    @*     <div class="blazorpdf-drawing__input-group"> *@
+                    @*         <label for="@($"{PdfFile.Id}_drawing_thickness")">@LocalizedStrings.DrawingThickness</label> *@
+                    @*         <input id="@($"{PdfFile.Id}_drawing_thickness")" type="range" min="1" max="40" value="@PdfFile.DrawLayer.PenThickness" *@
+                    @*                @onchange="ThicknessChanged"/> *@
+                    @*     </div> *@
+                    @*     <hr class="blazorpdf-drawing__hr"/> *@
+                    @*     <div class="blazorpdf-drawing__button-group"> *@
+                    @*         <button type="button" @onclick="UndoLastStrokeAsync">@LocalizedStrings.DrawingUndo</button> *@
+                    @*         <button type="button" @onclick="ClearAllPageStrokesAsync">@LocalizedStrings.DrawingClear</button> *@
+                    @*     </div> *@
+                    @* </div> *@
+                }
+            </div>
+
+            <div class="@(Error is not null ? "blazorpdf-d-none" : "")" style="margin: auto">
+                <div style="position: relative; background-color: @Colors.Background; margin: 25px">
+                    <div>
+                        @* PDF Canvas *@
+                        @if (SinglePageMode)
+                        {
+                            <canvas id="@PdfFile.Id"></canvas>
+                        }
+                        else
+                        {
+                            <div id="@PdfFile.Id" class="blazorpdf__scroll" style="height: @Height"></div>
+                        }
+                    </div>
+
+                    @if (SinglePageMode)
                     {
-                        <div id="@PdfFile.Id" class="mudpdf_scroll" style="height: @Height"></div>
-                    }
-                    else
-                    {
-                        <canvas @ref="Element" id="@PdfFile.Id" style="overflow: auto"></canvas>
-                        <div id="@($"{PdfFile.Id}_text")" class="textLayer"></div>
+                        <div>
+                            @* Drawing Layer *@
+                            <canvas id="@($"{PdfFile.Id}_drawing")" class="blazorpdf-drawing__canvas"></canvas>
+                        </div>
+                        <div>
+                            @* Text Layer *@
+                            <div id="@($"{PdfFile.Id}_text")" class="textLayer"></div>
+                        </div>
                     }
                 </div>
-            </MudItem>
-        </MudGrid>
+            </div>
+        </div>
     </MudItem>
 </MudGrid>
 
@@ -150,7 +217,7 @@
     private bool _showThumbnails = true;
     private string? _password = null;
     private InputType _passwordInputType = InputType.Password;
-    private string _passwordInputIcon = Icons.Material.Filled.VisibilityOff;
+    private string _passwordInputIcon = global::MudBlazor.Icons.Material.Filled.VisibilityOff;
     private bool _passwordVisible = false;
 
     private bool InputDisabled()
@@ -165,24 +232,24 @@
 
     private string BackgroundColor()
     {
-        return $"background-color: {Config.Colors.BackgroundColor}";
+        return $"background-color: {PdfColors.BackgroundColor}";
     }
-    
+
     private void PeekPassword()
     {
         if (_passwordVisible)
         {
             _passwordVisible = false;
-            _passwordInputIcon = Icons.Material.Filled.VisibilityOff;
+            _passwordInputIcon = global::MudBlazor.Icons.Material.Filled.VisibilityOff;
             _passwordInputType = InputType.Password;
         }
-        else {
+        else
+        {
             _passwordVisible = true;
-            _passwordInputIcon = Icons.Material.Filled.Visibility;
+            _passwordInputIcon = global::MudBlazor.Icons.Material.Filled.Visibility;
             _passwordInputType = InputType.Text;
         }
     }
-
 
     private async Task PageChanged(ChangeEventArgs obj)
     {
@@ -191,4 +258,15 @@
             await PageNumberChanged(result);
         }
     }
+
+    private async Task ColorChanged(MudColor obj)
+    {
+        await UpdatePenColorAsync(obj.Value);
+    }
+
+    private async Task ThicknessChanged(int obj)
+    {
+        await UpdatePenThickness(obj);
+    }
+
 }

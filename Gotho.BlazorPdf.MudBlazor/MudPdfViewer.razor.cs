@@ -1,8 +1,10 @@
+using Gotho.BlazorPdf.MudBlazor.Config;
 using Microsoft.AspNetCore.Components;
 
 namespace Gotho.BlazorPdf.MudBlazor;
 
 public partial class MudPdfViewer : PdfViewer
 {
-    [Inject] private new MudPdfViewerConfig Config { get; set; } = default!;
+    [Parameter] public MudPdfIconConfig Icons { get; set; } = new();
+    [Parameter] public MudPdfColorConfig PdfColors { get; set; } = new();
 }
