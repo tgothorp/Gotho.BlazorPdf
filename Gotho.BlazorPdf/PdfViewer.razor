@@ -222,8 +222,13 @@
                     </div>
                     <div class="blazorpdf-drawing__input-group">
                         <label for="@($"{PdfFile.Id}_drawing_thickness")">@LocalizedStrings.DrawingThickness</label>
-                        <input id="@($"{PdfFile.Id}_drawing_thickness")" type="range" min="1" max="10" value="@PdfFile.DrawLayer.PenThickness"
+                        <input id="@($"{PdfFile.Id}_drawing_thickness")" type="range" min="1" max="20" value="@PdfFile.DrawLayer.PenThickness"
                                @onchange="ThicknessChanged"/>
+                    </div>
+                    <hr class="blazorpdf-drawing__hr"/>
+                    <div class="blazorpdf-drawing__button-group">
+                        <button type="button" @onclick="UndoLastStrokeAsync">@LocalizedStrings.DrawingUndo</button>
+                        <button type="button" @onclick="ClearAllPageStrokesAsync">@LocalizedStrings.DrawingClear</button>
                     </div>
                 </div>
             }
@@ -248,7 +253,7 @@
                 {
                     <div>
                         @* Drawing Layer *@
-                        <canvas id="@($"{PdfFile.Id}_drawing")" style="position: absolute;"></canvas>
+                        <canvas id="@($"{PdfFile.Id}_drawing")" class="blazorpdf-drawing__canvas"></canvas>
                     </div>
                     <div>
                         @* Text Layer *@
