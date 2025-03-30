@@ -24,6 +24,7 @@ public class Pdf
     public Orientation Orientation { get; init; }
     public Zoom Zooming { get; init; } = new();
     public Page Paging { get; init; } = new();
+    public DrawLayer DrawLayer { get; set; } = new();
 
     public string? Password { get; private set; } = null;
 
@@ -57,6 +58,9 @@ public class Pdf
             Orientation = Orientation.GetOrientation(),
             Scale = Zooming.GetScale(),
             Password = Password,
+            DrawLayerEnabled = DrawLayer.Enabled,
+            PenColor = DrawLayer.PenColor,
+            PenThickness = DrawLayer.PenThickness,
         };
     }
 }

@@ -152,6 +152,15 @@
                             <span
                                 class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.DownloadDocument</span>
                         </button>
+                        <hr class="blazorpdf-toolbar__menu-divider">
+                        <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
+                                @onclick="ToggleDrawingAsync">
+                            <span class="blazorpdf-toolbar__menu-menu-item-icon">
+                                <DrawIcon Color="@Colors.Icon"/>
+                            </span>
+                            <span
+                                class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.Draw</span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -202,6 +211,29 @@
                  style="background-color: @Colors.Background"></div>
         </div>
 
+        <div>
+            @if (PdfFile.DrawLayer.Enabled)
+            {
+                <div class="blazorpdf-drawing__container">
+                    <span>@LocalizedStrings.DrawingTools</span>
+                    <div class="blazorpdf-drawing__input-group">
+                        <label for="@($"{PdfFile.Id}_drawing_color")">@LocalizedStrings.DrawingColor</label>
+                        <input id="@($"{PdfFile.Id}_drawing_color")" type="color" @onchange="ColorChanged" value="@PdfFile.DrawLayer.PenColor"/>
+                    </div>
+                    <div class="blazorpdf-drawing__input-group">
+                        <label for="@($"{PdfFile.Id}_drawing_thickness")">@LocalizedStrings.DrawingThickness</label>
+                        <input id="@($"{PdfFile.Id}_drawing_thickness")" type="range" min="1" max="40" value="@PdfFile.DrawLayer.PenThickness"
+                               @onchange="ThicknessChanged"/>
+                    </div>
+                    <hr class="blazorpdf-drawing__hr"/>
+                    <div class="blazorpdf-drawing__button-group">
+                        <button type="button" @onclick="UndoLastStrokeAsync">@LocalizedStrings.DrawingUndo</button>
+                        <button type="button" @onclick="ClearAllPageStrokesAsync">@LocalizedStrings.DrawingClear</button>
+                    </div>
+                </div>
+            }
+        </div>
+
 
         <div class="@(Error is not null ? "blazorpdf-d-none" : "")" style="margin: auto">
             <div style="position: relative; background-color: @Colors.Background; margin: 25px">
@@ -219,6 +251,10 @@
 
                 @if (SinglePageMode)
                 {
+                    <div>
+                        @* Drawing Layer *@
+                        <canvas id="@($"{PdfFile.Id}_drawing")" class="blazorpdf-drawing__canvas"></canvas>
+                    </div>
                     <div>
                         @* Text Layer *@
                         <div id="@($"{PdfFile.Id}_text")" class="textLayer"></div>
@@ -249,5 +285,19 @@
         {
             await PageNumberChanged(result);
         }
+    }
+
+    private async Task ColorChanged(ChangeEventArgs obj)
+    {
+        await UpdatePenColorAsync(obj.Value as string ?? "#FF0000");
+    }
+
+    private async Task ThicknessChanged(ChangeEventArgs obj)
+    {
+        var thickness = 2;
+        if (int.TryParse(obj.Value?.ToString(), out var parsedInt))
+            thickness = parsedInt;
+
+        await UpdatePenThickness(thickness);
     }
 }

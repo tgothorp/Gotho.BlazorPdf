@@ -30,6 +30,18 @@ internal class PdfInterop(IJSRuntime jsRuntime) : IAsyncDisposable
         await module.InvokeVoidAsync("downloadDocument", objRef, pdf.Id);
     }
 
+    public async Task UndoLastStrokeAsync(object objRef, Pdf pdf)
+    {
+        var module = await js.Value;
+        await module.InvokeVoidAsync("undoLastStroke", objRef, pdf.Id);
+    }
+    
+    public async Task ClearStrokesForPageAsync(object objRef, Pdf pdf)
+    {
+        var module = await js.Value;
+        await module.InvokeVoidAsync("clearStrokesForPage", objRef, pdf.Id);
+    }
+
     public async ValueTask DisposeAsync()
     {
         if (js.IsValueCreated)

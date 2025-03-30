@@ -264,6 +264,38 @@ public partial class PdfViewer : ComponentBase
 
     #endregion
 
+    #region Drawing
+
+    protected async Task ToggleDrawingAsync()
+    {
+        PdfFile.DrawLayer.Toggle();
+        await PdfInterop.UpdateAsync(ObjectReference!, PdfFile);
+    }
+    
+    protected async Task UpdatePenColorAsync(string color)
+    {
+        PdfFile.DrawLayer.UpdateColor(color);
+        await PdfInterop.UpdateAsync(ObjectReference!, PdfFile);
+    }
+
+    protected async Task UpdatePenThickness(int thickness)
+    {
+        PdfFile.DrawLayer.UpdateThickness(thickness);
+        await PdfInterop.UpdateAsync(ObjectReference!, PdfFile);
+    }
+
+    protected async Task UndoLastStrokeAsync()
+    {
+        await PdfInterop.UndoLastStrokeAsync(ObjectReference!, PdfFile);
+    }
+    
+    protected async Task ClearAllPageStrokesAsync()
+    {
+        await PdfInterop.ClearStrokesForPageAsync(ObjectReference!, PdfFile);
+    }
+
+    #endregion
+    
     protected async Task DownloadDocumentAsync()
     {
         await PdfInterop.DownloadDocumentAsync(ObjectReference!, PdfFile);
