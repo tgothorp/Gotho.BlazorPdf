@@ -1,6 +1,6 @@
 # Blazor PDF
 
-Blazor PDF is a simple yet powerful PDF viewer build for Blazor.
+Blazor PDF is a simple yet powerful PDF viewer built for Blazor.
 
 ## Prerequisites
 

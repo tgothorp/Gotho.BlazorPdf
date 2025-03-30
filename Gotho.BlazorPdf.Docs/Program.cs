@@ -8,7 +8,8 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddMudServices();
-builder.Services.AddMudBlazorPdfViewer();
+builder.Services.AddBlazorPdfViewer();
+// builder.Services.AddMudBlazorPdfViewer();
 builder.Services.AddHealthChecks();
 
 var app = builder.Build();

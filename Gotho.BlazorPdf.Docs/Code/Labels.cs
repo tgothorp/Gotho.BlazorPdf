@@ -3,17 +3,37 @@ namespace MudBlazor.PdfViewer.Docs.Code;
 public static class Labels
 {
     public static string Config =>
-        @"builder.Services.AddBlazorPdfViewer(opt =>
-{
-    opt.Labels.RotateClockwise = ""Kierrä myötäpäivään"";
-    opt.Labels.RotateCounterclockwise = ""Kierrä vastapäivään"";
-    opt.Labels.SwitchOrientation = ""Vaihda suunta"";
-    opt.Labels.FirstPage = ""Ensimmäinen sivu"";
-    opt.Labels.LastPage = ""Viimeinen sivu"";
-    opt.Labels.ResetZoom = ""Palauta zoomaus"";
-    opt.Labels.PrintDocument = ""Tulosta asiakirja"";
-    opt.Labels.DownloadDocument = ""Lataa asiakirja"";
-});";
+@"
+<PdfViewer 
+    LocalizedStrings=""FinnishStrings"" 
+    Url=""https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf""/>
+
+@code {
+    private BlazorPdfLocalizedStrings FinnishStrings = new()
+    { 
+        ToggleThumbnails = ""Näytä esikatselukuvat"",
+        PreviousPage = ""Edellinen sivu"",
+        NextPage = ""Seuraava sivu"",
+        PageOf = ""/"",
+        ZoomIn = ""Lähennä"",
+        ZoomOut = ""Loitonna"",
+        RotateClockwise = ""Kierrä myötäpäivään"",
+        RotateCounterclockwise = ""Kierrä vastapäivään"",
+        SwitchOrientation = ""Vaihda suuntaa"",
+        FirstPage = ""Ensimmäinen sivu"",
+        LastPage = ""Viimeinen sivu"",
+        ResetZoom = ""Palauta zoomaus"",
+        PrintDocument = ""Tulosta asiakirja"",
+        DownloadDocument = ""Lataa asiakirja"",
+        Draw = ""Piirrä"",
+        DrawingTools = ""Piirtotyökalut"",
+        DrawingColor = ""Väri"",
+        DrawingThickness = ""Viivan paksuus"",
+        DrawingUndo = ""Kumoa"",
+        DrawingClear = ""Tyhjennä""
+    };
+}
+";
 
     public static string All =>
         @"public string ToggleThumbnails { get; set; } = ""Show Thumbnails"";

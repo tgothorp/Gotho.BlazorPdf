@@ -110,7 +110,6 @@ export class PdfDrawLayer {
         this.currentPage = pageNumber;
         this.strokes = this.drawingStore[pageNumber] ? [...this.drawingStore[pageNumber]] : [];
 
-        console.log(this.rotation);
         if (this.canvas) {
             this.canvas.width = width;
             this.canvas.height = height;
