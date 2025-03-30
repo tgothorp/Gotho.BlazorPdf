@@ -284,6 +284,16 @@ public partial class PdfViewer : ComponentBase
         await PdfInterop.UpdateAsync(ObjectReference!, PdfFile);
     }
 
+    protected async Task UndoLastStrokeAsync()
+    {
+        await PdfInterop.UndoLastStrokeAsync(ObjectReference!, PdfFile);
+    }
+    
+    protected async Task ClearAllPageStrokesAsync()
+    {
+        await PdfInterop.ClearStrokesForPageAsync(ObjectReference!, PdfFile);
+    }
+
     #endregion
     
     protected async Task DownloadDocumentAsync()

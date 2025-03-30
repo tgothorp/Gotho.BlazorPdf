@@ -7,8 +7,6 @@ interface Stroke {
 // TODO
 // - Clear all
 // - Undo button
-// - Done button
-// - Custom cursor
 // - Printing
 
 export class PdfDrawLayer {
@@ -53,39 +51,39 @@ export class PdfDrawLayer {
             this.canvas.style.display = "none";
         }
     }
-    
+
     public enable() {
         this.enabled = true;
         this.canvas.style.removeProperty("display");
-        
+
         // Disable text layer temporarily
         const textLayer = document.getElementById(`${this.id}_text`)
         if (textLayer) {
             textLayer.style.display = "none";
         }
-        
+
         this.canvas.addEventListener("mousedown", this.boundMouseDown);
         this.canvas.addEventListener("mousemove", this.boundMouseMove);
         this.canvas.addEventListener("mouseup", this.boundMouseUp);
         this.canvas.addEventListener("mouseleave", this.boundMouseLeave);
     }
-    
+
     public disable() {
         this.enabled = false;
         this.drawing = false;
-        
+
         // Reenable text layer
         const textLayer = document.getElementById(`${this.id}_text`)
         if (textLayer) {
             textLayer.style.removeProperty("display");
         }
-        
+
         this.canvas.removeEventListener("mousedown", this.boundMouseDown);
         this.canvas.removeEventListener("mousemove", this.boundMouseMove);
         this.canvas.removeEventListener("mouseup", this.boundMouseUp);
         this.canvas.removeEventListener("mouseleave", this.boundMouseLeave);
     }
-    
+
     public updatePenSettings(penColor: string, penThickness: number) {
         this.penColor = penColor;
         this.penThickness = penThickness;
@@ -104,7 +102,7 @@ export class PdfDrawLayer {
                         offsetLeft: number,
                         offsetTop: number,
                         rotation: number) {
-        
+
         // Clamp rotation to 0, 90, 180 or 270
         this.rotation = ((rotation % 360) + 360) % 360;
 
@@ -129,12 +127,25 @@ export class PdfDrawLayer {
         }
     }
 
+    public undoLastStroke() {
+        if (this.strokes.length > 0) {
+            this.strokes.pop();
+            this.redrawStrokes();
+        }
+    }
+
+    public clearPageStrokes() {
+        this.strokes = [];
+        this.drawingStore[this.currentPage] = [];
+        this.redrawStrokes();
+    }
+
     public getAllStrokes(): Record<number, Stroke[]> {
         if (this.currentStroke) {
             this.strokes.push(this.currentStroke);
             this.currentStroke = null;
         }
-        
+
         this.drawingStore[this.currentPage] = [...this.strokes];
         return this.drawingStore;
     }

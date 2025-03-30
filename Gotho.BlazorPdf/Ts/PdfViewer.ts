@@ -167,6 +167,16 @@ export function downloadDocument(dotnetReference: any, id: string) {
     }
 }
 
+export function undoLastStroke(dotnetReference: any, id: string) {
+    const pdf = Pdf.getPdf(id);
+    pdf.drawLayer.undoLastStroke();
+}
+
+export function clearStrokesForPage(dotnetReference: any, id: string) {
+    const pdf = Pdf.getPdf(id);
+    pdf.drawLayer.clearPageStrokes();
+}
+
 function scrollToPage(id: string, pageNumber: number) {
     const container = document.getElementById(id);
     const targetPage = document.getElementById(`${id}-page-${pageNumber}`);

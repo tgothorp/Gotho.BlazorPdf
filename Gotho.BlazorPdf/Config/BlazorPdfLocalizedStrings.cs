@@ -23,4 +23,6 @@ public class BlazorPdfLocalizedStrings
     public string DrawingTools { get; set; } = "Drawing Tools";
     public string DrawingColor { get; set; } = "Color";
     public string DrawingThickness { get; set; } = "Thickness";
+    public string DrawingUndo { get; set; } = "Undo";
+    public string DrawingClear { get; set; } = "Clear";
 }
