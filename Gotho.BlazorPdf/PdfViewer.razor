@@ -186,12 +186,12 @@
                 <div class="blazorpdf-pdf__error-content">
                     @if (Error.ErrorType == PdfErrorType.PasswordRequired)
                     {
-                        <h1>⚠ Password Required</h1>
+                        <h1>@LocalizedStrings.PasswordRequired</h1>
                         <div class="blazorpdf-pdf__input">
                             <input type="text" @bind="PdfPassword" id="pdfPassword" class="blazorpdf-pdf__input-field"
                                    placeholder="Password">
                             <span
-                                class="blazorpdf-pdf__input-help">Please enter the password for the PDF document</span>
+                                class="blazorpdf-pdf__input-help">@LocalizedStrings.PasswordHint</span>
                         </div>
                         <button class="blazorpdf-pdf__error-submit" type="button" @onclick="@(() => LoadPdfAsync())">
                             Submit
