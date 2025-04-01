@@ -17,17 +17,17 @@
     </url>
     <url>
         <loc>https://blazorpdf.info/docs/loading</loc>
-        <lastmod>2025-03-23</lastmod>
+        <lastmod>2025-04-03</lastmod>
         <priority>0.5</priority>
     </url>
     <url>
         <loc>https://blazorpdf.info/docs/configuration/labels</loc>
-        <lastmod>2025-03-23</lastmod>
+        <lastmod>2025-04-03</lastmod>
         <priority>0.5</priority>
     </url>
     <url>
         <loc>https://blazorpdf.info/docs/configuration/colours</loc>
-        <lastmod>2025-03-23</lastmod>
+        <lastmod>2025-04-03</lastmod>
         <priority>0.5</priority>
     </url>
     <url>
@@ -37,7 +37,7 @@
     </url>
     <url>
         <loc>https://blazorpdf.info/docs/scroll</loc>
-        <lastmod>2025-03-23</lastmod>
+        <lastmod>2025-04-03</lastmod>
         <priority>0.5</priority>
     </url>
     <url>
@@ -56,8 +56,13 @@
         <priority>0.5</priority>
     </url>
     <url>
-        <loc>https://blazorpdf.info/docs/mudblazor</loc>
-        <lastmod>2025-03-23</lastmod>
+        <loc>https://blazorpdf.info/docs/mudblazor/home</loc>
+        <lastmod>2025-04-03</lastmod>
+        <priority>0.5</priority>
+    </url>
+    <url>
+        <loc>https://blazorpdf.info/docs/mudblazor/quickstart</loc>
+        <lastmod>2025-04-03</lastmod>
         <priority>0.5</priority>
     </url>
     <url>
@@ -67,7 +72,7 @@
     </url>
     <url>
         <loc>https://blazorpdf.info/docs/changelog</loc>
-        <lastmod>2025-03-23</lastmod>
+        <lastmod>2025-04-03</lastmod>
         <priority>0.5</priority>
     </url>
 </urlset>
