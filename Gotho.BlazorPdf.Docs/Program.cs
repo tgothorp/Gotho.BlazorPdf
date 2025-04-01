@@ -1,4 +1,4 @@
-using MudBlazor.PdfViewer.Docs.Components;
+using Gotho.BlazorPdf.Docs.Components;
 using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);

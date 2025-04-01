@@ -69,11 +69,13 @@ Please see the [documentation site](https://blazorpdf.info/docs) for detailed ex
 
 ## MudBlazor Integration
 
+A dedicated [MudBlazor-specific package](https://www.nuget.org/packages/Gotho.BlazorPdf.MudBlazor/#readme-body-tab) is available for use.
+
 This project was previously known as MudPdf / MudBlazor.PdfViewer. This repo was updated and renamed to remove the MudBlazor dependency such that the library can be used by any Blazor project.
 
 However, in keeping with the original spirit of this project, a separate, dedicated package for MudBlazor is available.
 
-See the [documentation website](https://blazorpdf.info/docs/mudblazor) for installation & usage details.
+See the [documentation website](https://blazorpdf.info/docs/mudblazor/quickstart) for installation & usage details.
 
 ## Contributing
 
@@ -81,12 +83,14 @@ Feel free to make contributions, see the `CONTRIBUTING.md` file for more informa
 
 ## Icons
 
-This project uses the excellent [feather icons](https://github.com/feathericons/feather) icon library.
+This project uses the excellent [feather icons](https://github.com/feathericons/feather) library.
 
 ## License
 
 Licensed under Apache-2.0
 
-This library contains code from the `PdfViewer` Blazor component provided by the [Blazor Bootstrap](https://github.com/vikramlearning/blazorbootstrap/tree/main/blazorbootstrap) component library which is licensed under the Apache 2.0 license. 
+This library contains code from the `PdfViewer` Blazor component provided by the [Blazor Bootstrap](https://github.com/vikramlearning/blazorbootstrap/tree/main/blazorbootstrap) component library as well as code from Mozilla's [pdf.js](https://github.com/mozilla/pdf.js#online-demo) library. 
+
+Both are licensed under the Apache 2.0 license. 
 
 See `NOTICE.md` for more information.

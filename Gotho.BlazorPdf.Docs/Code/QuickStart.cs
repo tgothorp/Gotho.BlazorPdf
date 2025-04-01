@@ -1,4 +1,4 @@
-namespace MudBlazor.PdfViewer.Docs.Code;
+namespace Gotho.BlazorPdf.Docs.Code;
 
 public static class QuickStart
 {

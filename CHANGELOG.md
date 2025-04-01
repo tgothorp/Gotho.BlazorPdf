@@ -2,7 +2,19 @@
 
 All notable changes and releases will be documented here
 
-## [2025-03-29] - V1.0.3 (Latest Release)
+## [2025-04-05] - V1.1.0 (Latest Release)
+
+- Implemented ability to draw on PDF documents.
+- Printing documents will also include any drawings made.
+- Configuration of labels and colors can now be done at runtime in order to support dynamically switching languages / themes.
+- Added `BlazorPdfLocalizedStrings` and `BlazorPdfColors`.
+- Removed label and color configuration when configuring BlazorPdf with `AddBlazorPdfViewer()`.
+- Improved PdfViewer component to better stack the text layer on top of the document canvas.
+- Improved the look of the PdfViewer component on smaller screens.
+- Added additional comments to some of the PdfViewer component methods.
+- Fixed text layer behaving oddly when resizing the window.
+
+## [2025-03-29] - V1.0.3
 
 - Added `LoadPdfAsync` method as an alternative to specifying a URL parameter
 - Fixed downloading and printing not working for PDFs loaded as a base64 string
@@ -24,38 +36,3 @@ All notable changes and releases will be documented here
 - New package to provide dedicated MudBlazor integration
 - Rewrite of JavaScript interop code
 - Rewrite of PDF Viewer in vanilla HTML & CSS
-
-
-# Legacy Releases
-
-## [2025-02-29] - [LEGACY] V2.1.0
-
-- Added text selection for single page mode
-- Added ability to download PDF to device
-- Bumped pdfjs version
-- Removed a lot of generated files from repo
-- Minified generated javascript
-
-## [2025-02-22] - [LEGACY]  V2.0.0
-
-- Javascript interop code rewritten in Typescript
-- Added alternative scrolling mode
-- Added ability to print documents
-- Added support for password protected PDF documents
-- Better handling of malformed PDF files
-- Complete rewrite of documentation site
-
-## [2025-02-15] - [LEGACY]  V1.1.0
-
-- Added support for page thumbnails which can be toggled on/off
-- Add some basic code documentation to the PDF viewer parameters
-- Small improvements to the documentation website
-- Add ability to change color of icons and PDF background
-
-## [2025-02-08] - [LEGACY]  V1.0.1 
-
-- FIXED: Bug that was preventing JS code from being executed
-
-## [2025-02-07] - [LEGACY]  V1.0.0 (Initial Release)
-
-- Initial Release

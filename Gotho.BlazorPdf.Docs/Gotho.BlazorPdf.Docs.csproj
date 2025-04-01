@@ -5,7 +5,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-        <RootNamespace>MudBlazor.PdfViewer.Docs</RootNamespace>
+        <RootNamespace>Gotho.BlazorPdf.Docs</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -20,7 +20,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Gotho.BlazorPdf" Version="1.1.0-alpha.2" />
-<!--        <PackageReference Include="Gotho.BlazorPdf.MudBlazor" Version="1.0.1"/>-->
+        <PackageReference Include="Gotho.BlazorPdf" Version="1.1.0-alpha.3" />
+        <PackageReference Include="Gotho.BlazorPdf.MudBlazor" Version="1.1.0-alpha.1"/>
     </ItemGroup>
 </Project>
