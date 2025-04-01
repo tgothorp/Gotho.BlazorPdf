@@ -6,15 +6,15 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-        <Version>1.1.0-alpha.3</Version>
+        <Version>1.1.0-rc.1</Version>
         <Title>Gotho.BlazorPdf</Title>
         <Authors>tgothorp</Authors>
         <Company>tgothorp</Company>
         <Description>A simple, yet powerful Blazor PDF viewer</Description>
         <Copyright>tgothorp OpenSource Apache-2.0</Copyright>
         <PackageIcon>logo.png</PackageIcon>
-        <PackageProjectUrl>https://github.com/tgothorp/MudBlazor.PdfViewer</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/tgothorp/MudBlazor.PdfViewer</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/tgothorp/Gotho.BlazorPdf</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/tgothorp/Gotho.BlazorPdf</RepositoryUrl>
         <PackageTags>Blazor; MudBlazor; PDF</PackageTags>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <RootNamespace>Gotho.BlazorPdf</RootNamespace>
