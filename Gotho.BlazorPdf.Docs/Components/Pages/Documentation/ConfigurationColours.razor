@@ -1,5 +1,7 @@
 @page "/docs/configuration/colours"
-@using MudBlazor.PdfViewer.Docs.Code
+
+@using global::MudBlazor.Utilities
+@using Gotho.BlazorPdf.Config
 
 <PageTitle>Blazor PDF | Configuration</PageTitle>
 
@@ -14,17 +16,60 @@
         </MudItem>
         <MudItem sm="9" Style="overflow: auto">
             <MudText Typo="Typo.h2" Class="mb-5">Configuration | Colours</MudText>
-            <MudText>The colour of the PDF background, toolbar and icons can be overridden with your preferred values. You can see the default values <MudLink Color="Color.Primary" Target="_blank" Href="https://github.com/tgothorp/MudBlazor.PdfViewer/blob/6f89103c2fb754e4d35ef7fb7e910746b2431cc6/MudBlazor.PdfViewer/MudPdfViewerConfig.cs#L53">here.</MudLink></MudText>
+            <MudText>The colour of the PDF background, toolbar and icons can be overridden with your preferred values. You can do this by passing in an instance of BlazorPdfColors to your PDF Viewer</MudText>
             
-            <CodeSnippet Body="@Colours.Config" Lang="csharp"/>
+            <MudStack Row="true" Class="my-5">
+                <MudColorPicker ValueChanged="ToolBarChanged" Value="PdfColors.Toolbar" ShowAlpha="false" Label="Toolbar" ColorPickerView="ColorPickerView.Spectrum" />
+                
+                <MudColorPicker ValueChanged="BackgroundChanged" Value="PdfColors.Background" ShowAlpha="false" Label="Background" ColorPickerView="ColorPickerView.Spectrum"/>
+                
+                <MudColorPicker ValueChanged="IconChanged" Value="PdfColors.Icon" ShowAlpha="false" Label="Icon" ColorPickerView="ColorPickerView.Spectrum" />
+            </MudStack>
 
-            <MudText Class="my-3">The above code will produce the following output;</MudText>
-
-            <MudImage Class="d-block ma-auto" Fluid="true" Src="/img/blazorpdf_hotdogstand.jpg" Alt="An image of the PDF Viewer with a garish theme reminiscent of the Windows 3.1 Hotdog Stand theme."/>
+            <PdfViewer
+                Colors="PdfColors"
+                Url="https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf"/>
+            
+            <CodeSnippet Body="@Colours.Config"/>
         </MudItem>
     </MudGrid>
 </div>
 
 @code {
+
+    private BlazorPdfColors PdfColors { get; set; } = new();
+    
+    private void ToolBarChanged(MudColor obj)
+    {
+        PdfColors = new BlazorPdfColors
+        {
+            Toolbar = obj.Value,
+            Icon = PdfColors.Icon,
+            Background = PdfColors.Background
+        };
+        StateHasChanged();
+    }
+
+    private void BackgroundChanged(MudColor obj)
+    {
+        PdfColors = new BlazorPdfColors
+        {
+            Toolbar = PdfColors.Toolbar,
+            Icon = PdfColors.Icon,
+            Background = obj.Value
+        };
+        StateHasChanged();
+    }
+
+    private void IconChanged(MudColor obj)
+    {
+        PdfColors = new BlazorPdfColors
+        {
+            Toolbar = PdfColors.Toolbar,
+            Icon = obj.Value,
+            Background = PdfColors.Background
+        };
+        StateHasChanged();
+    }
 
 }

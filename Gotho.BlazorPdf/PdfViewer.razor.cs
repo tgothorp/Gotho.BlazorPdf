@@ -1,3 +1,4 @@
+using Gotho.BlazorPdf.Config;
 using Gotho.BlazorPdf.Extensions;
 using Gotho.BlazorPdf.Pdf;
 using Microsoft.AspNetCore.Components;
@@ -8,12 +9,11 @@ namespace Gotho.BlazorPdf;
 public partial class PdfViewer : ComponentBase
 {
     protected bool Loading = true;
-    protected ElementReference Element;
     protected DotNetObjectReference<PdfViewer>? ObjectReference;
     protected PdfError? Error;
     protected string? PdfPassword;
 
-    private Pdf.Pdf PdfFile { get; set; } = null!;
+    protected Pdf.Pdf PdfFile { get; set; } = null!;
 
     /// <summary>
     /// Sets the display orientation of the PDF document
@@ -71,8 +71,20 @@ public partial class PdfViewer : ComponentBase
     [Parameter]
     public EventCallback<PdfViewerEventArgs> OnPageChanged { get; set; }
 
+    /// <summary>
+    /// A class containing the localized strings for the viewer 
+    /// </summary>
+    [Parameter] 
+    public BlazorPdfLocalizedStrings LocalizedStrings { get; set; } = new();
+
+    /// <summary>
+    /// A class containing the colors for the PDF viewer
+    /// </summary>
+    [Parameter]
+    public BlazorPdfColors Colors { get; set; } = new();
+
     [Inject] private PdfInterop PdfInterop { get; set; } = default!;
-    [Inject] protected PdfViewerConfig Config { get; set; } = default!;
+    [Inject] protected BlazorPdfConfig Config { get; set; } = default!;
 
     protected override void OnParametersSet()
     {
@@ -97,6 +109,10 @@ public partial class PdfViewer : ComponentBase
         await base.OnAfterRenderAsync(firstRender);
     }
 
+    /// <summary>
+    /// Invoked by BlazorPdf's JS interop code when a PDF file has been fully loaded
+    /// </summary>
+    /// <remarks>Do not call this method from your code</remarks>
     [JSInvokable]
     public void DocumentLoaded(PdfViewerModel? pdfViewerModel)
     {
@@ -112,6 +128,10 @@ public partial class PdfViewer : ComponentBase
             OnDocumentLoaded.InvokeAsync(new PdfViewerEventArgs(pdfViewerModel.CurrentPage, pdfViewerModel.TotalPages));
     }
 
+    /// <summary>
+    /// Invoked by BlazorPdf's JS interop code when a PDF's state has changed, usually when a user has changed page 
+    /// </summary>
+    /// <remarks>Do not call this method from your code</remarks>
     [JSInvokable]
     public void SetPdfViewerMetaData(PdfViewerModel? pdfViewerModel)
     {
@@ -125,6 +145,10 @@ public partial class PdfViewer : ComponentBase
             OnPageChanged.InvokeAsync(new PdfViewerEventArgs(pdfViewerModel.CurrentPage, pdfViewerModel.TotalPages));
     }
 
+    /// <summary>
+    /// Invoked by BlazorPdf's JS interop code when a PDF file fails to load, usually due to requiring a password
+    /// </summary>
+    /// <remarks>Do not call this method from your code</remarks>
     [JSInvokable]
     public void PdfViewerError(PdfViewerError error)
     {
@@ -240,6 +264,38 @@ public partial class PdfViewer : ComponentBase
 
     #endregion
 
+    #region Drawing
+
+    protected async Task ToggleDrawingAsync()
+    {
+        PdfFile.DrawLayer.Toggle();
+        await PdfInterop.UpdateAsync(ObjectReference!, PdfFile);
+    }
+    
+    protected async Task UpdatePenColorAsync(string color)
+    {
+        PdfFile.DrawLayer.UpdateColor(color);
+        await PdfInterop.UpdateAsync(ObjectReference!, PdfFile);
+    }
+
+    protected async Task UpdatePenThickness(int thickness)
+    {
+        PdfFile.DrawLayer.UpdateThickness(thickness);
+        await PdfInterop.UpdateAsync(ObjectReference!, PdfFile);
+    }
+
+    protected async Task UndoLastStrokeAsync()
+    {
+        await PdfInterop.UndoLastStrokeAsync(ObjectReference!, PdfFile);
+    }
+    
+    protected async Task ClearAllPageStrokesAsync()
+    {
+        await PdfInterop.ClearStrokesForPageAsync(ObjectReference!, PdfFile);
+    }
+
+    #endregion
+    
     protected async Task DownloadDocumentAsync()
     {
         await PdfInterop.DownloadDocumentAsync(ObjectReference!, PdfFile);

@@ -1,3 +1,11 @@
+@media (max-width: 768px) {
+    .blazorpdf-toolbar {
+        padding: 0;
+        height: inherit;
+    }
+}
+
+
 .blazorpdf-toolbar {
     display: flex;
     position: relative;

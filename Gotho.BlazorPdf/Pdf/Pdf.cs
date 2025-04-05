@@ -2,7 +2,13 @@ using Gotho.BlazorPdf.Extensions;
 
 namespace Gotho.BlazorPdf.Pdf;
 
-internal class Pdf
+/// <summary>
+/// An internal representation of a PDF file used by BlazorPDF to manage PDF state
+/// </summary>
+/// <remarks>
+/// You should not need to create an instance of this class
+/// </remarks>
+public class Pdf
 {
     public Pdf(string id, string? url, PdfOrientation orientation)
     {
@@ -18,6 +24,7 @@ internal class Pdf
     public Orientation Orientation { get; init; }
     public Zoom Zooming { get; init; } = new();
     public Page Paging { get; init; } = new();
+    public DrawLayer DrawLayer { get; set; } = new();
 
     public string? Password { get; private set; } = null;
 
@@ -51,6 +58,9 @@ internal class Pdf
             Orientation = Orientation.GetOrientation(),
             Scale = Zooming.GetScale(),
             Password = Password,
+            DrawLayerEnabled = DrawLayer.Enabled,
+            PenColor = DrawLayer.PenColor,
+            PenThickness = DrawLayer.PenThickness,
         };
     }
 }

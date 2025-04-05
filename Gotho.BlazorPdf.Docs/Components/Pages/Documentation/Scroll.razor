@@ -1,5 +1,4 @@
 @page "/docs/scroll"
-@using MudBlazor.PdfViewer.Docs.Code
 
 <PageTitle>Blazor PDF | Scroll Mode</PageTitle>
 
@@ -14,6 +13,7 @@
         </MudItem>
         <MudItem sm="9" Style="overflow: auto">
             <MudText Typo="Typo.h2" Class="mb-5">Scroll Mode</MudText>
+            <MudAlert Class="mb-5" Severity="Severity.Info">Text selection and drawing are not available in scroll mode</MudAlert>
             <MudText>By default, the PDF viewer will display one page at a time. However, there may be times where it would be better to display a PDF as a traditional scrolling document</MudText>
             <MudText Class="mt-3">This can be achieved by setting <code>SinglePageMode</code> to false. Additionally, the PDF viewer also provides a <code>Height</code> parameter to control the height of the PDF viewer in single page mode (defaults to 65vh)</MudText>
 
