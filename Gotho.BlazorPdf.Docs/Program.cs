@@ -1,5 +1,6 @@
 using Gotho.BlazorPdf.Docs.Components;
 using MudBlazor.Services;
+using OpenTelemetry.Trace;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,8 +10,14 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddMudServices();
 builder.Services.AddBlazorPdfViewer();
-// builder.Services.AddMudBlazorPdfViewer();
 builder.Services.AddHealthChecks();
+
+builder.Services.AddOpenTelemetry().WithTracing(builder =>
+{
+    builder
+        .AddAspNetCoreInstrumentation()
+        .AddOtlpExporter();
+});
 
 var app = builder.Build();
 
