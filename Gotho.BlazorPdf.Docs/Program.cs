@@ -1,8 +1,34 @@
 using Gotho.BlazorPdf.Docs.Components;
 using MudBlazor.Services;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Logging.ClearProviders();
+builder.Logging.AddOpenTelemetry(opt =>
+{
+    opt.SetResourceBuilder(ResourceBuilder.CreateDefault());
+    opt.AddOtlpExporter();
+
+    if (builder.Environment.IsDevelopment())
+    {
+        opt.AddConsoleExporter();
+    }
+});
+
+builder.Services.AddOpenTelemetry().WithTracing(opt =>
+{
+    opt
+        .AddAspNetCoreInstrumentation()
+        .AddOtlpExporter();
+
+    if (builder.Environment.IsDevelopment())
+    {
+        opt.AddConsoleExporter();
+    }
+});
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -11,13 +37,6 @@ builder.Services.AddRazorComponents()
 builder.Services.AddMudServices();
 builder.Services.AddBlazorPdfViewer();
 builder.Services.AddHealthChecks();
-
-builder.Services.AddOpenTelemetry().WithTracing(builder =>
-{
-    builder
-        .AddAspNetCoreInstrumentation()
-        .AddOtlpExporter();
-});
 
 var app = builder.Build();
 
@@ -38,5 +57,8 @@ app.UseAntiforgery();
 app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
+
+var logger = builder.Logging.Services.BuildServiceProvider().GetRequiredService<ILogger<Program>>();
+logger.LogInformation("Blazor PDF docs site starting...");
 
 app.Run();
