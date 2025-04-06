@@ -8,5 +8,9 @@ services:
       - 8080:8080
       - 8081:8081
     environment:
+      - OTEL_SERVICE_NAME
+      - OTEL_EXPORTER_OTLP_PROTOCOL
+      - OTEL_EXPORTER_OTLP_ENDPOINT
+      - OTEL_EXPORTER_OTLP_HEADERS
       - ASPNETCORE_ENVIRONMENT=Production
     restart: unless-stopped
