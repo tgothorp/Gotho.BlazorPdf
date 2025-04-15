@@ -9,7 +9,7 @@ public static class MudBlazorExample
         @"dotnet add package Gotho.BlazorPdf.MudBlazor";
     
     public static string ProgramCs =>
-        @"builder.Services.AddMudBlazorPdfViewer();";
+        @"builder.Services.AddBlazorPdfViewer();";
     
     public static string AppRazor =>
         @"<link href=""_content/Gotho.BlazorPdf.MudBlazor/blazorpdf_mudblazor.min.css"" rel=""stylesheet""/>";
