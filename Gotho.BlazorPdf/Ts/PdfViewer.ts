@@ -56,7 +56,7 @@ export function updatePdf(dotnetReference: any, pdfDto: PdfState) {
     pdf.updatePdf(pdfDto)
     pdf.drawLayer.updatePenSettings(pdfDto.penColor, pdfDto.penThickness);
     
-    if (pdf.drawLayer.enabled !== pdfDto.drawLayerEnabled) {
+    if (pdf.drawLayer.enabled !== pdfDto.drawLayerEnabled && pdf.singlePageMode) {
         if (pdfDto.drawLayerEnabled) {
             pdf.drawLayer.enable();
         } else {
