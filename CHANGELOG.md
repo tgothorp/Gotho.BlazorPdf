@@ -2,7 +2,11 @@
 
 All notable changes and releases will be documented here
 
-## [2025-04-05] - V1.1.0 (Latest Release)
+## [2025-07-12] - V1.1.1 (Latest Release)
+
+- Fixed zooming breaking single page mode
+
+## [2025-04-05] - V1.1.0
 
 - Implemented ability to draw on PDF documents.
 - Printing documents will also include any drawings made.
