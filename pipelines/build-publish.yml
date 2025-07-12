@@ -22,6 +22,12 @@ steps:
     command: 'install'
     workingDir: 'Gotho.BlazorPdf.MudBlazor/'
 
+- task: UseDotNet@2
+  name: net9_install
+  inputs:
+    packageType: 'sdk'
+    version: '9.x'
+
 - task: DotNetCoreCLI@2
   name: restore
   inputs:
