@@ -6,6 +6,7 @@
 @import url("blazorpdf_loader.css");
 @import url("blazorpdf_drawing.css");
 @import url("blazorpdf_metadata.css");
+@import url("blazorpdf_upload.css");
 
 @media (max-width: 768px) {
     .blazorpdf__hide-on-mobile {

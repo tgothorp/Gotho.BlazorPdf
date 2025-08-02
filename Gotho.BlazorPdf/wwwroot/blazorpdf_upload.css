@@ -1,0 +1,29 @@
+.blazorpdf-pdf__upload-container {
+    position: relative;
+    width: 100%;
+    height: 400px;
+}
+
+.blazorpdf-pdf__upload {
+    max-width: 25%;
+    margin: auto;
+    background-color: #e8e7ea;
+    left: 0;
+    position: relative;
+    top: 10%;
+}
+
+.blazorpdf-pdf__upload > h1 {
+    text-align: center;
+    margin-top: 1rem;
+    margin-bottom: 0;
+}
+
+.blazorpdf-pdf__upload > p {
+    text-align: center;
+    margin-top: 0;
+}
+
+.blazorpdf-pdf__upload > input {
+    margin: 1rem;
+}
