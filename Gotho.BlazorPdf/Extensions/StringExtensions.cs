@@ -10,6 +10,9 @@ internal static class StringExtensions
         return new string(Enumerable.Repeat(chars, length)
             .Select(s => s[_random.Next(s.Length)]).ToArray());
     }
+    
+
+    public static bool IsNullOrEmpty(this string? _) => string.IsNullOrEmpty(_);
 
     public static bool IsProbablyUrl(this string? input)
     {

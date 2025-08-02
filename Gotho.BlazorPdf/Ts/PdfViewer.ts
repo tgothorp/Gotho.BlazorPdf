@@ -206,6 +206,13 @@ export function clearStrokesForPage(dotnetReference: any, id: string) {
     pdf.drawLayer.clearPageStrokes();
 }
 
+export async function viewMetadata(dotnetReference: any, id: string) {
+    const pdf = Pdf.getPdf(id);
+    
+    const data = await pdf.getMetadata();
+    dotnetReference.invokeMethodAsync('PdfMetadata', data);
+}
+
 function scrollToPage(id: string, pageNumber: number) {
     const container = document.getElementById(id);
     const targetPage = document.getElementById(`${id}-page-${pageNumber}`);
