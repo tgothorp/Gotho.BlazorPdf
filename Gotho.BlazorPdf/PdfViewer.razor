@@ -1,4 +1,6 @@
+@using System.Globalization
 @using Gotho.BlazorPdf.BlazorPdfIcons
+@using Gotho.BlazorPdf.Extensions
 
 @inherits ComponentBase
 
@@ -158,6 +160,14 @@
                             <span
                                 class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.DownloadDocument</span>
                         </button>
+                        <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
+                                @onclick="ViewMetadataAsync">
+                            <span class="blazorpdf-toolbar__menu-menu-item-icon">
+                                <MetadataIcon Color="@Colors.Icon"/>
+                            </span>
+                            <span
+                                class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.ViewMetadata</span>
+                        </button>
                         @if (SinglePageMode)
                         {
                             <hr class="blazorpdf-toolbar__menu-divider">
@@ -210,6 +220,80 @@
                             <p>@Error.Message</p>
                         </div>
                     }
+                </div>
+            </div>
+        }
+        
+        @if (Metadata is not null)
+        {
+            <div class="blazorpdf-pdf__overlay"></div>
+            <div class="blazorpdf-pdf__metadata">
+                <div class="blazorpdf-pdf__metadata-content">
+                    
+                    <h1 class="blazorpdf-pdf__metadata-title">@LocalizedStrings.MetadataHeader</h1>
+                    
+                    <div class="blazorpdf-pdf__metadata-item">
+                        <p class="blazorpdf-pdf__metadata-item-key">@LocalizedStrings.MetadataTitle</p>
+                        <p class="blazorpdf-pdf__metadata-item-value">@MetadataOrEmpty(Metadata.Title)</p>
+                    </div>
+
+                    <div class="blazorpdf-pdf__metadata-item">
+                        <p class="blazorpdf-pdf__metadata-item-key">@LocalizedStrings.MetadataSubject</p>
+                        <p class="blazorpdf-pdf__metadata-item-value">@MetadataOrEmpty(Metadata.Subject)</p>
+                    </div>
+
+                    <div class="blazorpdf-pdf__metadata-item">
+                        <p class="blazorpdf-pdf__metadata-item-key">@LocalizedStrings.MetadataAuthor</p>
+                        <p class="blazorpdf-pdf__metadata-item-value">@MetadataOrEmpty(Metadata.Author)</p>
+                    </div>
+
+                    <div class="blazorpdf-pdf__metadata-item">
+                        <p class="blazorpdf-pdf__metadata-item-key">@LocalizedStrings.MetadataCreator</p>
+                        <p class="blazorpdf-pdf__metadata-item-value">@MetadataOrEmpty(Metadata.Creator)</p>
+                    </div>
+
+                    <div class="blazorpdf-pdf__metadata-item">
+                        <p class="blazorpdf-pdf__metadata-item-key">@LocalizedStrings.MetadataProducer</p>
+                        <p class="blazorpdf-pdf__metadata-item-value">@MetadataOrEmpty(Metadata.Producer)</p>
+                    </div>
+
+                    <div class="blazorpdf-pdf__metadata-item">
+                        <p class="blazorpdf-pdf__metadata-item-key">@LocalizedStrings.MetadataPdfFormatVersion</p>
+                        <p class="blazorpdf-pdf__metadata-item-value">@MetadataOrEmpty(Metadata.FormatVersion)</p>
+                    </div>
+
+                    <div class="blazorpdf-pdf__metadata-item">
+                        <p class="blazorpdf-pdf__metadata-item-key">@LocalizedStrings.MetadataKeywords</p>
+                        <p class="blazorpdf-pdf__metadata-item-value">@MetadataOrEmpty(Metadata.Keywords)</p>
+                    </div>
+
+                    <div class="blazorpdf-pdf__metadata-item">
+                        <p class="blazorpdf-pdf__metadata-item-key">@LocalizedStrings.MetadataCreationDate</p>
+                        <p class="blazorpdf-pdf__metadata-item-value">@(Metadata.CreationDate is null ? "N/A" : Metadata.CreationDate.Value.ToString("g", CultureInfo.CurrentCulture))</p>
+                    </div>
+
+                    <div class="blazorpdf-pdf__metadata-item">
+                        <p class="blazorpdf-pdf__metadata-item-key">@LocalizedStrings.MetadataModifiedDate</p>
+                        <p class="blazorpdf-pdf__metadata-item-value">@(Metadata.ModifiedDate is null ? "N/A" : Metadata.ModifiedDate.Value.ToString("g", CultureInfo.CurrentCulture))</p>
+                    </div>
+                    
+                    @if (Metadata.CustomMetadata is not null && Metadata.CustomMetadata.Any())
+                    {
+                        <div class="blazorpdf-pdf__metadata-item">
+                            <p class="blazorpdf-pdf__metadata-item-key">@LocalizedStrings.MetadataCustomData</p>
+                            
+                            @foreach (var item in Metadata.CustomMetadata)
+                            {
+                                <p class="blazorpdf-pdf__metadata-item-value">@item.Key : @item.Value</p>
+                            }
+                        </div>
+                    }
+                    
+                    <div class="blazorpdf-pdf__close-container">
+                        <button class="blazorpdf-pdf__close-container-button" @onclick="@(ClearMetadata)">
+                            @LocalizedStrings.MetadataClose
+                        </button>
+                    </div>
                 </div>
             </div>
         }
@@ -291,6 +375,11 @@
     private void ToggleThumbnails()
     {
         _showThumbnails = !_showThumbnails;
+    }
+
+    private string MetadataOrEmpty(string? metadata)
+    {
+        return metadata.IsNullOrEmpty() ? "N/A" : metadata!;
     }
 
     private async Task PageChanged(ChangeEventArgs obj)
