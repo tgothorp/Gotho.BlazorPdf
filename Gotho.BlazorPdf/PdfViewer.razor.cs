@@ -2,6 +2,7 @@ using Gotho.BlazorPdf.Config;
 using Gotho.BlazorPdf.Extensions;
 using Gotho.BlazorPdf.Pdf;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
 
 namespace Gotho.BlazorPdf;
@@ -14,7 +15,7 @@ public partial class PdfViewer : ComponentBase
     protected string? PdfPassword;
     protected PdfMetadata? Metadata;
 
-    protected Pdf.Pdf PdfFile { get; set; } = null!;
+    protected Pdf.Pdf? PdfFile { get; set; }
 
     /// <summary>
     /// Sets the display orientation of the PDF document
@@ -58,7 +59,7 @@ public partial class PdfViewer : ComponentBase
     /// Defaults to <c>false</c>
     /// </remarks>
     [Parameter]
-    public bool HideThumbnails { get; set; } = false;
+    public bool HideThumbnails { get; set; }
 
     /// <summary>
     /// This event fires immediately after the PDF document is loaded.
@@ -72,6 +73,11 @@ public partial class PdfViewer : ComponentBase
     [Parameter]
     public EventCallback<PdfViewerEventArgs> OnPageChanged { get; set; }
 
+    /// <summary>
+    /// Invoked when a file is uploaded by a user
+    /// </summary>
+    public EventCallback<PdfViewerFileUploaded> OnFileUploaded { get; set; }
+    
     /// <summary>
     /// A class containing the localized strings for the viewer 
     /// </summary>
@@ -87,24 +93,21 @@ public partial class PdfViewer : ComponentBase
     [Inject] private PdfInterop PdfInterop { get; set; } = default!;
     [Inject] protected BlazorPdfConfig Config { get; set; } = default!;
 
-    protected override void OnParametersSet()
-    {
-        Url ??= string.Empty;
-
-        base.OnParametersSet();
-    }
-
     protected override async Task OnInitializedAsync()
     {
         ObjectReference ??= DotNetObjectReference.Create(this);
-        PdfFile = new Pdf.Pdf("".GenerateRandomString(), Url!, PdfOrientation);
+        
+        if (!Url.IsNullOrEmpty())
+            PdfFile = new Pdf.Pdf("".GenerateRandomString(), Url!, PdfOrientation);
+        else
+            Loading = false;
 
         await base.OnInitializedAsync();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+        if (firstRender && PdfFile is not null)
             await PdfInterop.InitializeAsync(ObjectReference!, PdfFile, SinglePageMode, Config.UseProjectWorker);
 
         await base.OnAfterRenderAsync(firstRender);
@@ -163,6 +166,10 @@ public partial class PdfViewer : ComponentBase
         StateHasChanged();
     }
 
+    /// <summary>
+    /// Invoked by BlazorPdf's JS interop code when viewing a PDF's metadata
+    /// </summary>
+    /// <param name="metadata"></param>
     [JSInvokable]
     public void PdfMetadata(PdfMetadata metadata)
     {
@@ -306,22 +313,55 @@ public partial class PdfViewer : ComponentBase
     
     protected async Task DownloadDocumentAsync()
     {
-        await PdfInterop.DownloadDocumentAsync(ObjectReference!, PdfFile);
+        await PdfInterop.DownloadDocumentAsync(ObjectReference!, PdfFile!);
     }
 
     protected async Task PrintDocumentAsync()
     {
-        await PdfInterop.PrintDocumentAsync(ObjectReference!, PdfFile);
+        await PdfInterop.PrintDocumentAsync(ObjectReference!, PdfFile!);
     }
 
     protected async Task ViewMetadataAsync()
     {
-        await PdfInterop.ViewMetadataAsync(ObjectReference!, PdfFile);
+        await PdfInterop.ViewMetadataAsync(ObjectReference!, PdfFile!);
     }
 
     protected void ClearMetadata()
     {
         Metadata = null;
         StateHasChanged();
+    }
+
+    protected async Task UploadFile(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file.Size > Config.MaxPdfFileUploadSize)
+        {
+            // TODO: Handle file too large
+            return;
+        }
+
+        if (file.ContentType != "application/pdf")
+        {
+            // TODO: Handle file too large
+            return;
+        }
+
+        await using var stream = file.OpenReadStream(Config.MaxPdfFileUploadSize);
+        using var ms = new MemoryStream();
+        await stream.CopyToAsync(ms);
+        
+        var base64 = Convert.ToBase64String(ms.ToArray());
+        Url = base64;
+        PdfFile = new Pdf.Pdf("".GenerateRandomString(), Url!, PdfOrientation);
+        StateHasChanged();
+
+        await PdfInterop.InitializeAsync(ObjectReference!, PdfFile, SinglePageMode, Config.UseProjectWorker);
+        await OnFileUploaded.InvokeAsync(new PdfViewerFileUploaded
+        {
+            FileName = file.Name,
+            Size = file.Size,
+            Contents = ms.ToArray()
+        });
     }
 }
