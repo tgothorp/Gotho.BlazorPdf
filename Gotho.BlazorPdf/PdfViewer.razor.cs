@@ -12,6 +12,7 @@ public partial class PdfViewer : ComponentBase
     protected DotNetObjectReference<PdfViewer>? ObjectReference;
     protected PdfError? Error;
     protected string? PdfPassword;
+    protected PdfMetadata? Metadata;
 
     protected Pdf.Pdf PdfFile { get; set; } = null!;
 
@@ -161,6 +162,13 @@ public partial class PdfViewer : ComponentBase
 
         StateHasChanged();
     }
+
+    [JSInvokable]
+    public void PdfMetadata(PdfMetadata metadata)
+    {
+        Metadata = metadata;
+        StateHasChanged();
+    }
     
     /// <summary>
     /// Loads a PDF from the given URL, can be used as an alternative to the <c>Url</c> parameter.
@@ -304,5 +312,16 @@ public partial class PdfViewer : ComponentBase
     protected async Task PrintDocumentAsync()
     {
         await PdfInterop.PrintDocumentAsync(ObjectReference!, PdfFile);
+    }
+
+    protected async Task ViewMetadataAsync()
+    {
+        await PdfInterop.ViewMetadataAsync(ObjectReference!, PdfFile);
+    }
+
+    protected void ClearMetadata()
+    {
+        Metadata = null;
+        StateHasChanged();
     }
 }
