@@ -52,9 +52,14 @@ export async function initPdfViewer(dotnetReference: DotNetObject, pdfDto: PdfSt
 
 export async function updatePdf(dotnetReference: DotNetObject, pdfDto: PdfState) {
     const pdf = Pdf.getPdf(pdfDto.id as string)
-
+    const previousPage = pdf.currentPage;
     pdf.updatePdf(pdfDto)
     pdf.drawLayer.updatePenSettings(pdfDto.penColor, pdfDto.penThickness);
+    
+    if (pdfDto.searchQuery) {
+        const results = pdf.search(pdfDto.searchQuery);
+        dotnetReference.invokeMethodAsync('SearchResults', results);
+    }
     
     if (pdf.drawLayer.enabled !== pdfDto.drawLayerEnabled && pdf.singlePageMode) {
         if (pdfDto.drawLayerEnabled) {
@@ -235,6 +240,9 @@ async function renderPdf(pdf: Pdf) {
     if (pdf.singlePageMode) {
         pdf.document!.getPage(pdf.currentPage).then(async (pdfPage) => {
             const viewport = pdfPage.getViewport({scale: pdf.scale, rotation: pdf.rotation});
+            pdfPage.getTextContent().then((text) => {
+                console.log(text);
+            })
             pdf.canvas.width = viewport.width;
             pdf.canvas.height = viewport.height;
 

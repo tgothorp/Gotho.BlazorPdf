@@ -98,6 +98,15 @@
                         <label for="menu-toggle" class="blazorpdf-toolbar__menu-overlay"></label>
                         <div class="blazorpdf-toolbar__menu-content">
                             <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
+                                    @onclick="@(() => Search("dynamic"))">
+                                <span class="blazorpdf-toolbar__menu-menu-item-icon">
+                                    <FindIcon Color="@Colors.Icon"/>
+                                </span>
+                                <span
+                                    class="blazorpdf-toolbar__menu-menu-item-text">Find</span>
+                            </button>
+                            <hr class="blazorpdf-toolbar__menu-divider">
+                            <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
                                     @onclick="RotateClockwiseAsync">
                                 <span class="blazorpdf-toolbar__menu-menu-item-icon">
                                     <RotateCWIcon Color="@Colors.Icon"/>

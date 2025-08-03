@@ -2,6 +2,7 @@ import {PDFDocumentProxy, getFilenameFromUrl} from "pdfjs-dist"
 import {PdfState} from "./PdfState";
 import {PdfDrawLayer} from "./PdfDrawLayer";
 import {PdfMetadata} from "./PdfMetadata";
+import {PdfSearchResult} from "./PdfSearchResult";
 
 const pdfInstances = {}
 
@@ -23,6 +24,20 @@ interface PdfJsMetadata {
     metadata: any;
 }
 
+interface PdfJsTextContent {
+    items?: Array<PdfJsTextContentItem>;
+}
+
+interface PdfJsTextContentItem {
+    dir?: string;
+    fontName?: string;
+    hasEOL?: boolean;
+    height?: number;
+    str?: string;
+    transform?: number[],
+    width?: number;
+}
+
 export class Pdf {
 
     public id: string;
@@ -33,6 +48,7 @@ export class Pdf {
     public filename: string;
     public document: PDFDocumentProxy | null;
     public metadata: PdfMetadata | null;
+    public textContent: Record<number, PdfJsTextContentItem[]>
 
     public renderInProgress: boolean;
     public singlePageMode: boolean;
@@ -63,6 +79,7 @@ export class Pdf {
         this.source = source.toLowerCase();
         this.password = password
         this.drawLayer = new PdfDrawLayer(id);
+        this.textContent = {};
 
         // @ts-ignore
         pdfInstances[this.id] = this;
@@ -81,9 +98,20 @@ export class Pdf {
         this.currentPage = dto.currentPage;
     }
 
-    public setDocument(doc: PDFDocumentProxy) {
+    // @ts-ignore
+    public async setDocument(doc: PDFDocumentProxy) {
         this.document = doc;
         this.pageCount = doc.numPages;
+
+        for (let i = 1; i < this.pageCount + 1; i++) {
+            const page = await doc.getPage(i);
+            const text = await page.getTextContent() as PdfJsTextContent;
+            
+            if (!this.textContent.hasOwnProperty(i))
+            {
+                this.textContent[i] = text.items;
+            }
+        }
     }
 
     public gotoPage(pageNumber: number): boolean {
@@ -135,6 +163,28 @@ export class Pdf {
         );
 
         return this.metadata;
+    }
+    
+    public search(query: string): Array<PdfSearchResult> {
+        query = query.toLowerCase();
+        
+        let result = new Array<PdfSearchResult>();
+        if (!query)
+            return result;
+        
+        for (let page = 1; page < Object.keys(this.textContent).length + 1; page++) {
+            const textOnPage = this.textContent[page];
+
+            for (let i = 0; i < textOnPage.length; i++) {
+                const text = textOnPage[i].str.toLowerCase();
+                if (text.indexOf(query) !== -1)
+                {
+                    result.push(new PdfSearchResult(page, i, text));
+                }
+            }
+        }
+        
+        return result;
     }
     
     public getCanvasContext(): any {

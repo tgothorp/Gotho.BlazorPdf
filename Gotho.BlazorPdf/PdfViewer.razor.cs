@@ -169,12 +169,22 @@ public partial class PdfViewer : ComponentBase
     /// <summary>
     /// Invoked by BlazorPdf's JS interop code when viewing a PDF's metadata
     /// </summary>
-    /// <param name="metadata"></param>
+    /// <remarks>Do not call this method from your code</remarks>
     [JSInvokable]
     public void PdfMetadata(PdfMetadata metadata)
     {
         Metadata = metadata;
         StateHasChanged();
+    }
+
+    /// <summary>
+    /// Invoked by BlazorPdf's JS interops code when text searching
+    /// </summary>
+    /// <remarks>Do not call this method from your code</remarks>
+    [JSInvokable]
+    public void SearchResults(List<PdfSearchResult> results)
+    {
+        PdfFile?.Search.UpdateResults(results);
     }
     
     /// <summary>
@@ -321,6 +331,12 @@ public partial class PdfViewer : ComponentBase
     protected async Task PrintDocumentAsync()
     {
         await PdfInterop.PrintDocumentAsync(ObjectReference!, PdfFile!);
+    }
+
+    protected async Task Search(string query)
+    {
+        PdfFile?.Search.UpdateSearchQuery(query);
+        await PdfInterop.UpdateAsync(ObjectReference!, PdfFile!);
     }
 
     protected async Task ViewMetadataAsync()
