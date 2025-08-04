@@ -6,7 +6,8 @@
     flex-direction: column;
     align-items: center;
     background-color: #161719;
-    padding: 20px 5px;
+    /*padding: 20px 5px;*/
+    position: relative;
 }
 
 .blazorpdf__scroll-page {

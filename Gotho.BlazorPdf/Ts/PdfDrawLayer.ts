@@ -1,3 +1,4 @@
+// @ts-nocheck
 interface Stroke {
     color: string;
     thickness: number;

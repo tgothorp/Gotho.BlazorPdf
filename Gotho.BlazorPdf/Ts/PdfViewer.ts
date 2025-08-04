@@ -1,17 +1,19 @@
+// @ts-nocheck
 import {Pdf} from "./Pdf";
 import {PdfState} from "./PdfState";
 import {saveAs} from "file-saver"
 import * as pdfjs from "pdfjs-dist"
 import {TextLayerBuilder} from 'pdfjs-dist/web/pdf_viewer.mjs';
 
-// @ts-ignore
 import printjs from "print-js"
+import DotNetObject = DotNet.DotNetObject;
 
 pdfjs.GlobalWorkerOptions.workerSrc = "./pdf.worker.min.mjs";
-
 let workerInitialised = false;
 
-// @ts-ignore
+/**
+ * 
+ */
 async function setupProjectWorker() {
     const response = await fetch('./pdf.worker.min.mjs');
     const workerCode = await response.text();
@@ -23,11 +25,19 @@ async function setupProjectWorker() {
     workerInitialised = true;
 }
 
-export function initPdfViewer(dotnetReference: any, pdfDto: PdfState, singlePageMode: boolean, useProjectWorker: boolean) {
+/**
+ * Called by Blazor iop code, inits the PDF canvases 
+ * 
+ * @param dotnetReference
+ * @param pdfDto
+ * @param singlePageMode
+ * @param useProjectWorker
+ */
+export async function initPdfViewer(dotnetReference: DotNetObject, pdfDto: PdfState, singlePageMode: boolean, useProjectWorker: boolean) : Promise<void> {
     console.log("Initializing PDF " + pdfDto.id);
 
     if (useProjectWorker && !workerInitialised) {
-        setupProjectWorker();
+        await setupProjectWorker();
     } else {
         workerInitialised = true;
     }
@@ -35,24 +45,26 @@ export function initPdfViewer(dotnetReference: any, pdfDto: PdfState, singlePage
     if (pdfDto.url) {
         const pdf = new Pdf(pdfDto.id, pdfDto.scale, pdfDto.orientation, pdfDto.url, singlePageMode, pdfDto.source, pdfDto.password)
 
-        pdfjs.getDocument(getDocumentInit(pdfDto)).promise.then(doc => {
-            pdf.setDocument(doc)
-            renderPdf(pdf)
-            renderThumbnails(dotnetReference, pdf)
-
-            dotnetReference.invokeMethodAsync('DocumentLoaded', {
-                currentPage: pdf.currentPage,
-                totalPages: pdf.pageCount
+        try {
+            pdfjs.getDocument(getDocumentInit(pdfDto)).promise.then(doc => {
+                pdf.setDocument(doc)
+                renderPdf(pdf)
+                renderThumbnails(dotnetReference, pdf)
+    
+                dotnetReference.invokeMethodAsync('DocumentLoaded', {
+                    currentPage: pdf.currentPage,
+                    totalPages: pdf.pageCount
+                });
             });
-        }).catch((err) => {
-            dotnetReference.invokeMethodAsync('PdfViewerError', {name: err.name, message: err.message});
-        })
+        } catch (err: any) {
+            await dotnetReference.invokeMethodAsync('PdfViewerError', {name: err.name, message: err.message});
+        }
     }
 }
 
 export function updatePdf(dotnetReference: any, pdfDto: PdfState) {
     const pdf = Pdf.getPdf(pdfDto.id)
-    const previousPage = pdf.currentPage;
+
     pdf.updatePdf(pdfDto)
     pdf.drawLayer.updatePenSettings(pdfDto.penColor, pdfDto.penThickness);
     
@@ -64,7 +76,7 @@ export function updatePdf(dotnetReference: any, pdfDto: PdfState) {
         }
     }
 
-    if (!pdf.singlePageMode && pdf.currentPage !== previousPage) {
+    if (!pdf.singlePageMode && pdf.currentPage !== pdf.previousPage) {
         scrollToPage(pdf.id, pdf.currentPage);
         updateMetadata(dotnetReference, pdf)
 
@@ -224,9 +236,9 @@ function scrollToPage(id: string, pageNumber: number) {
     }
 }
 
-function queuePdfRender(pdf: Pdf, pageNumber: number) {
+function queuePdfRender(pdf: Pdf, pageNumber: number | null) {
     if (pdf.renderInProgress) {
-        if (!pageNumber) {
+        if (pageNumber !== null) {
             pdf.queuedPage = pageNumber;
         }
         return;
@@ -235,11 +247,11 @@ function queuePdfRender(pdf: Pdf, pageNumber: number) {
     renderPdf(pdf);
 }
 
-function renderPdf(pdf: Pdf) {
+async function renderPdf(pdf: Pdf) {
     pdf.renderInProgress = true;
 
     if (pdf.singlePageMode) {
-        pdf.document.getPage(pdf.currentPage).then((pdfPage) => {
+        pdf.document.getPage(pdf.currentPage).then(async (pdfPage) => {
             const viewport = pdfPage.getViewport({scale: pdf.scale, rotation: pdf.rotation});
             pdf.canvas.width = viewport.width;
             pdf.canvas.height = viewport.height;
@@ -250,6 +262,7 @@ function renderPdf(pdf: Pdf) {
             }
 
             const renderTask = pdfPage.render(renderData);
+            await renderTask.promise;
 
             // Wait for rendering to finish
             renderTask.promise.then(() => {
@@ -280,16 +293,16 @@ function renderPdf(pdf: Pdf) {
         const container = document.getElementById(pdf.id);
         container.innerHTML = '';
 
-        // @ts-ignore
         pdfjs.getDocument(pdf.url).promise.then(async function (doc) {
             let fixedScale = pdf.scale;
             let fixedRotation = pdf.rotation;
 
-            // @ts-ignore
-            async function renderPage(pageNum: number) {
+
+            async function renderPage(pdf: Pdf, pageNum: number) {
                 const page = await doc.getPage(pageNum);
                 const viewport = page.getViewport({scale: fixedScale, rotation: fixedRotation});
-
+                console.log("Rendering page" + pageNum);
+                // Render the page
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
 
@@ -299,12 +312,61 @@ function renderPdf(pdf: Pdf) {
                 canvas.height = viewport.height;
                 container.appendChild(canvas);
 
-                await page.render({canvasContext: ctx, viewport}).promise;
+                const renderTask = await page.render({canvasContext: ctx, viewport});
+                await renderTask.promise.then(async () => {
+
+                    // Render the text
+                    const textDiv = document.createElement('div')
+                    textDiv.style.left = pdf.canvas.offsetLeft + 'px';
+                    textDiv.style.top = pdf.canvas.offsetTop + 'px';
+                    textDiv.style.height = pdf.canvas.offsetHeight + 'px';
+                    textDiv.style.width = pdf.canvas.offsetWidth + 'px';
+                    container.appendChild(textDiv);
+
+                    const textLayerBuilder = new TextLayerBuilder({page})
+                    textLayerBuilder.div = textDiv;
+                    await textLayerBuilder.render(viewport);
+                });
+            }
+            
+            async function renderPage2(page: PDFPageProxy): Promise<void>
+            {
+                const viewport = page.getViewport({scale: fixedScale, rotation: fixedRotation});
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+
+                canvas.id = `${pdf.id}-page-${page.pageNumber}`;
+                canvas.classList.add('blazorpdf__scroll-page');
+                canvas.width = viewport.width;
+                canvas.height = viewport.height;
+                container.appendChild(canvas);
+
+                const renderTask = await page.render({canvasContext: ctx, viewport});
+                await renderTask.promise.then(async () => {
+
+                    // Render the text
+                    const top = (viewport.height * (page.pageNumber - 1)) + (16 * (page.pageNumber - 1));
+                    const textDiv = document.createElement('div')
+                    textDiv.classList.add('textLayer')
+                    textDiv.style.left = '0px';
+                    textDiv.style.top = top + 'px';
+                    textDiv.style.height = pdf.canvas.offsetHeight + 'px';
+                    textDiv.style.width = pdf.canvas.offsetWidth + 'px';
+                    container.appendChild(textDiv);
+
+                    const textLayerBuilder = new TextLayerBuilder(page)
+                    textLayerBuilder.div = textDiv;
+                    textLayerBuilder.pdfPage = page;
+                    await textLayerBuilder.render(viewport);
+                });
             }
 
             // Render pages sequentially
             for (let pageNum = 1; pageNum <= pdf.pageCount; pageNum++) {
-                await renderPage(pageNum);
+                // await renderPage(pdf, pageNum);
+                
+                const page = await doc.getPage(pageNum);
+                await renderPage2(page);
             }
 
             pdf.renderInProgress = false;
@@ -338,11 +400,11 @@ async function renderThumbnails(dotnetReference: any, pdf: Pdf) {
     }
 }
 
-function updateMetadata(dotnetReference: any, pdf: Pdf) {
+async function updateMetadata(dotnetReference: DotNetObject, pdf: Pdf) {
     if (dotnetReference == null)
         return;
 
-    dotnetReference.invokeMethodAsync('SetPdfViewerMetaData', {
+    await dotnetReference.invokeMethodAsync('SetPdfViewerMetaData', {
         currentPage: pdf.currentPage,
         totalPages: pdf.pageCount
     });

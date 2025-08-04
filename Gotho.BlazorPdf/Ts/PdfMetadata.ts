@@ -1,3 +1,4 @@
+// @ts-nocheck
 export class PdfMetadata {
     public author: string;
     public creator: string;

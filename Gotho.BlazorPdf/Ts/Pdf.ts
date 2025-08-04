@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {PDFDocumentProxy, getFilenameFromUrl} from "pdfjs-dist"
 import {PdfState} from "./PdfState";
 import {PdfDrawLayer} from "./PdfDrawLayer";
@@ -38,6 +39,7 @@ export class Pdf {
     public singlePageMode: boolean;
     public pageCount: number;
     public currentPage: number;
+    public previousPage: number;
     public queuedPage: number;
     public password: string;
     public source: string;
@@ -57,6 +59,7 @@ export class Pdf {
         this.singlePageMode = singlePageMode;
         this.pageCount = 0;
         this.currentPage = 1;
+        this.previousPage = 1;
         this.queuedPage = null;
         this.source = source.toLowerCase();
         this.password = password
@@ -75,56 +78,13 @@ export class Pdf {
     {
         this.rotation = dto.orientation;
         this.scale = dto.scale;
+        this.previousPage = this.currentPage;
         this.currentPage = dto.currentPage;
     }
 
     public setDocument(doc: PDFDocumentProxy) {
         this.document = doc;
         this.pageCount = doc.numPages;
-    }
-
-    public firstPage(): boolean {
-        if (this.document == null || this.currentPage == 1) {
-            return false;
-        }
-
-        if (this.currentPage > 1)
-            this.currentPage = 1;
-
-        return true;
-    }
-
-    public lastPage(): boolean {
-        if (this.document == null || (this.currentPage == 1 && this.currentPage === this.pageCount)) {
-            return false;
-        }
-
-        if (this.currentPage < this.pageCount)
-            this.currentPage = this.pageCount;
-
-        return true;
-    }
-
-    public nextPage(): boolean {
-        if (this.document === null || this.currentPage === this.pageCount)
-            return false;
-
-        if (this.currentPage < this.pageCount)
-            this.currentPage += 1;
-
-        return true;
-    }
-
-    public previousPage(): boolean {
-        if (this.document == null || this.currentPage === 0 || this.currentPage === 1) {
-            return false;
-        }
-
-        if (this.currentPage > 0) {
-            this.currentPage -= 1;
-        }
-
-        return true;
     }
 
     public gotoPage(pageNumber: number): boolean {

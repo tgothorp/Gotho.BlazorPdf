@@ -1,3 +1,4 @@
+// @ts-nocheck
 export class PdfState {
     public id: string
     public url: string
