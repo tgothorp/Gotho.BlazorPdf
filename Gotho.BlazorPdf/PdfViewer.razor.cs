@@ -189,8 +189,10 @@ public partial class PdfViewer : ComponentBase
             StateHasChanged();
             return;
         }
-
-        if (url is not null)
+        
+        if (PdfFile is null)
+            PdfFile = new Pdf.Pdf("".GenerateRandomString(), url!, PdfOrientation);
+        else if (url is not null)
             PdfFile.UpdateUrl(url);
         
         PdfFile.UpdatePassword(PdfPassword);

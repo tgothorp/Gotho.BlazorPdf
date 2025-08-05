@@ -1,9 +1,9 @@
 import {Pdf} from "./Pdf";
 import {PdfState} from "./PdfState";
-import {saveAs} from "file-saver"
 import {TextLayerBuilder} from 'pdfjs-dist/web/pdf_viewer.mjs';
 import printjs from "print-js"
 import DotNetObject = DotNet.DotNetObject;
+import FileSaver from "file-saver";
 import {GlobalWorkerOptions, getDocument, PDFPageProxy, PDFDocumentProxy} from "pdfjs-dist";
 
 GlobalWorkerOptions.workerSrc = "./pdf.worker.min.mjs";
@@ -32,7 +32,7 @@ export async function initPdfViewer(dotnetReference: DotNetObject, pdfDto: PdfSt
     }
 
     if (pdfDto.url) {
-        const pdf = new Pdf(pdfDto.id, pdfDto.scale, pdfDto.orientation, pdfDto.url, singlePageMode, pdfDto.source, pdfDto.password)
+        const pdf = new Pdf(pdfDto.id as string, pdfDto.scale, pdfDto.orientation, pdfDto.url, singlePageMode, pdfDto.source, pdfDto.password)
 
         try {
             const loadedDocument = await getDocument(getDocumentInit(pdfDto)).promise;
@@ -51,7 +51,7 @@ export async function initPdfViewer(dotnetReference: DotNetObject, pdfDto: PdfSt
 }
 
 export async function updatePdf(dotnetReference: DotNetObject, pdfDto: PdfState) {
-    const pdf = Pdf.getPdf(pdfDto.id)
+    const pdf = Pdf.getPdf(pdfDto.id as string)
 
     pdf.updatePdf(pdfDto)
     pdf.drawLayer.updatePenSettings(pdfDto.penColor, pdfDto.penThickness);
@@ -173,7 +173,7 @@ export async function downloadDocument(dotnetReference: DotNetObject, id: string
                 const byteArray = new Uint8Array(byteNumbers);
                 const blob = new Blob([byteArray], {type: 'application/pdf'});
 
-                saveAs(blob, "document.pdf");
+                FileSaver.saveAs(blob, "document.pdf");
             } catch (e) {
                 console.error('Failed to decode base64 PDF:', e);
             }
@@ -182,7 +182,7 @@ export async function downloadDocument(dotnetReference: DotNetObject, id: string
             fetch(pdf.url).then(response => {
                 if (response.ok) {
                     response.blob().then(blob => {
-                        saveAs(blob, pdf.filename ?? 'document.pdf');
+                        FileSaver.saveAs(blob, pdf.filename ?? 'document.pdf');
                     });
                 }
             });
@@ -369,7 +369,7 @@ function getDocumentInit(pdfDto: PdfState) {
     let documentInit: any = {};
 
     if (pdfDto.source === "Base64") {
-        documentInit.data = base64ToUint8Array(pdfDto.url);
+        documentInit.data = base64ToUint8Array(pdfDto.url as string);
     } else {
         documentInit.url = pdfDto.url;
     }
