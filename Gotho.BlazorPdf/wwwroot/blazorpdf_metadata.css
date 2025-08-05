@@ -1,0 +1,50 @@
+@media (max-width: 768px) {
+    .blazorpdf-pdf__metadata    {
+        max-width: 50% !important;
+    }
+}
+
+.blazorpdf-pdf__metadata {
+    position: absolute;
+    z-index: 9999;
+    margin: auto;
+    left: 0;
+    top: 10%;
+    right: 0;
+    max-width: 25%;
+}
+
+.blazorpdf-pdf__metadata-title {
+    text-align: center;
+}
+
+.blazorpdf-pdf__metadata-content {
+    padding: 1rem;
+    background-color: rgba(232, 231, 234, 1);
+}
+
+.blazorpdf-pdf__metadata-item {
+    display: block;
+    width: 100%;
+    padding-top: 1rem;
+}
+
+.blazorpdf-pdf__metadata-item-key {
+    font-size: 0.75rem;
+    margin: 0;
+}
+
+.blazorpdf-pdf__metadata-item-value {
+    font-size: 1rem;
+    margin: 0;
+}
+
+.blazorpdf-pdf__close-container {
+    margin-top: 25px;
+}
+
+.blazorpdf-pdf__close-container-button {
+    margin: auto;
+    position: relative;
+    display: block;
+}

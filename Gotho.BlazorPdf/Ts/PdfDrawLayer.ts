@@ -7,14 +7,14 @@ interface Stroke {
 export class PdfDrawLayer {
     public drawingStore: Record<number, Stroke[]> = {};
     public canvas: HTMLCanvasElement;
-    public canvasContext: CanvasRenderingContext2D;
-    public enabled: boolean;
-    public drawing: boolean;
+    public canvasContext: CanvasRenderingContext2D | null = null;
+    public enabled: boolean = false;
+    public drawing: boolean = false;
 
     private id: string;
     private strokes: Stroke[] = [];
     private currentStroke: Stroke | null = null;
-    private rotation: number;
+    private rotation: number = 0;
     private penColor: string = "#000000";
     private penThickness: number = 2;
 
@@ -34,8 +34,8 @@ export class PdfDrawLayer {
 
         this.canvas = document.getElementById(`${id}_drawing`) as HTMLCanvasElement;
         if (this.canvas) {
-            this.canvasContext = this.canvas.getContext("2d");
-            this.canvasContext.strokeStyle = this.penColor;
+            this.canvasContext = this.canvas.getContext("2d") as CanvasRenderingContext2D;
+            this.canvasContext.strokeStyle = this.penColor; 
             this.canvasContext.lineWidth = this.penThickness;
 
             this.canvas.addEventListener("mousedown", this.boundMouseDown);
@@ -85,7 +85,7 @@ export class PdfDrawLayer {
 
         this.canvas = document.getElementById(`${this.id}_drawing`) as HTMLCanvasElement;
         if (this.canvas) {
-            this.canvasContext = this.canvas.getContext("2d");
+            this.canvasContext = this.canvas.getContext("2d") as CanvasRenderingContext2D;
             this.canvasContext.strokeStyle = penColor;
             this.canvasContext.lineWidth = penThickness;
         }
@@ -157,7 +157,7 @@ export class PdfDrawLayer {
 
         const w = this.canvas.width;
         const h = this.canvas.height;
-
+        
         for (const stroke of this.strokes) {
             this.canvasContext.beginPath();
             this.canvasContext.strokeStyle = stroke.color;
@@ -169,9 +169,9 @@ export class PdfDrawLayer {
                 const y = ry * h;
 
                 if (i === 0) {
-                    this.canvasContext.moveTo(x, y);
+                    this.canvasContext!.moveTo(x, y);
                 } else {
-                    this.canvasContext.lineTo(x, y);
+                    this.canvasContext!.lineTo(x, y);
                 }
             });
 
