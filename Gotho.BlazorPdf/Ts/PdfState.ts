@@ -1,13 +1,13 @@
 export class PdfState {
-    public id: string
-    public url: string
-    public orientation: number
-    public scale: number
-    public currentPage: number
-    public singlePageMode: boolean
-    public password: string
-    public source: string
-    public drawLayerEnabled: boolean
-    public penColor: string
-    public penThickness: number
+    public id: string | null = null;
+    public url: string | null = null;
+    public orientation: number = 0;
+    public scale: number = 1;
+    public currentPage: number = 1;
+    public singlePageMode: boolean = true;
+    public password: string | null = null;
+    public source: string = "Url";
+    public drawLayerEnabled: boolean = false;
+    public penColor: string = "#000000";
+    public penThickness: number = 1
 }

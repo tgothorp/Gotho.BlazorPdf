@@ -4,7 +4,8 @@
   "description": "A simple PDF viewer component for use with Blazor",
   "main": "index.js",
   "scripts": {
-    "ts": "npx esbuild Ts/PdfViewer.ts --bundle --format=esm --target=esnext --outfile=wwwroot/blazorpdf.js --keep-names",
+    "typecheck": "tsc --noEmit",
+    "ts": "npm run typecheck && npx esbuild Ts/PdfViewer.ts --bundle --format=esm --target=esnext --outfile=wwwroot/blazorpdf.js --keep-names",
     "css": "npx clean-css-cli -o wwwroot/blazorpdf.min.css wwwroot/blazorpdf.css",
     "ts-min": "npx uglifyjs wwwroot/blazorpdf.js -o wwwroot/blazorpdf.min.js "
   },
@@ -24,12 +25,14 @@
   },
   "homepage": "https://github.com/tgothorp/MudBlazor.PdfViewer#readme",
   "devDependencies": {
+    "@types/file-saver": "^2.0.7",
     "clean-css-cli": "^5.6.3",
     "esbuild": "^0.25.0",
     "typescript": "^5.7.3",
     "uglify-js": "^3.19.3"
   },
   "dependencies": {
+    "@types/blazor__javascript-interop": "^3.1.7",
     "file-saver": "^2.0.5",
     "pdfjs-dist": "^4.2.67",
     "print-js": "^1.6.0"
