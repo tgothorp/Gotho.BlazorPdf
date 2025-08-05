@@ -1,4 +1,3 @@
-// @ts-nocheck
 import {PDFDocumentProxy, getFilenameFromUrl} from "pdfjs-dist"
 import {PdfState} from "./PdfState";
 import {PdfDrawLayer} from "./PdfDrawLayer";
@@ -32,21 +31,21 @@ export class Pdf {
     public rotation: number;
     public url: string;
     public filename: string;
-    public document: PDFDocumentProxy;
-    public metadata: PdfMetadata;
+    public document: PDFDocumentProxy | null;
+    public metadata: PdfMetadata | null;
 
     public renderInProgress: boolean;
     public singlePageMode: boolean;
     public pageCount: number;
     public currentPage: number;
     public previousPage: number;
-    public queuedPage: number;
-    public password: string;
+    public queuedPage: number | null;
+    public password: string | null;
     public source: string;
     
     public drawLayer: PdfDrawLayer;
 
-    constructor(id: string, scale: number, rotation: number, url: string, singlePageMode: boolean, source: string, password: string = null) {
+    constructor(id: string, scale: number, rotation: number, url: string, singlePageMode: boolean, source: string, password: string | null = null) {
         this.id = id;
         this.canvas = Pdf.getCanvas(id);
         this.scale = scale;
@@ -65,13 +64,13 @@ export class Pdf {
         this.password = password
         this.drawLayer = new PdfDrawLayer(id);
 
+        // @ts-ignore
         pdfInstances[this.id] = this;
     }
 
     public static getPdf(id: string): Pdf {
         const canvas = this.getCanvas(id);
-        // @ts-ignore
-        return Object.values(pdfInstances).filter((c) => c.canvas === canvas).pop();
+        return Object.values(pdfInstances).filter((c: any) => c.canvas === canvas).pop() as Pdf;
     }
 
     public updatePdf(dto: PdfState)
@@ -104,13 +103,12 @@ export class Pdf {
     public zoom(scale: number) {
         this.scale = scale;
     }
-    
-    // @ts-ignore
+
     public async getMetadata() : Promise<PdfMetadata> {
         if (this.metadata !== null)
             return this.metadata;
         
-        const data = await this.document.getMetadata() as PdfJsMetadata;
+        const data = await this.document!.getMetadata() as PdfJsMetadata;
         const custom: Record<string, string> = {};
         
         if (data.info.Custom)
