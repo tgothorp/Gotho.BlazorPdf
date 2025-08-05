@@ -10,5 +10,5 @@ export class PdfState {
     public drawLayerEnabled: boolean = false;
     public penColor: string = "#000000";
     public penThickness: number = 1
-    public searchQuery: string
+    public searchQuery: string | null = null;
 }

@@ -36,7 +36,7 @@ export async function initPdfViewer(dotnetReference: DotNetObject, pdfDto: PdfSt
 
         try {
             const loadedDocument = await getDocument(getDocumentInit(pdfDto)).promise;
-            pdf.setDocument(loadedDocument)
+            await pdf.setDocument(loadedDocument)
             await renderPdf(pdf)
             await renderThumbnails(dotnetReference, pdf)
 

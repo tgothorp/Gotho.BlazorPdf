@@ -109,7 +109,7 @@ export class Pdf {
             
             if (!this.textContent.hasOwnProperty(i))
             {
-                this.textContent[i] = text.items;
+                this.textContent[i] = text.items!;
             }
         }
     }
@@ -176,7 +176,7 @@ export class Pdf {
             const textOnPage = this.textContent[page];
 
             for (let i = 0; i < textOnPage.length; i++) {
-                const text = textOnPage[i].str.toLowerCase();
+                const text = textOnPage[i].str!.toLowerCase();
                 if (text.indexOf(query) !== -1)
                 {
                     result.push(new PdfSearchResult(page, i, text));
