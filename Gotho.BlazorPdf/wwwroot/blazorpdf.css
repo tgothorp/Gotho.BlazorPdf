@@ -63,6 +63,7 @@
     padding-top: 1em;
     padding-bottom: 1em;
     height: 100%;
+    scrollbar-color: white transparent;
 }
 
 .blazorpdf-pdf__thumbnails-thumbnail {
