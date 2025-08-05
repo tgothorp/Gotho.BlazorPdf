@@ -40,6 +40,14 @@ export async function initPdfViewer(dotnetReference: DotNetObject, pdfDto: PdfSt
             await renderPdf(pdf)
             await renderThumbnails(dotnetReference, pdf)
 
+            // Hook into Ctrl+F
+            document.addEventListener('keydown', function (e) {
+                if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+                    e.preventDefault();
+                    dotnetReference.invokeMethodAsync('PdfFindText');
+                }
+            });
+            
             await dotnetReference.invokeMethodAsync('DocumentLoaded', {
                 currentPage: pdf.currentPage,
                 totalPages: pdf.pageCount
@@ -51,14 +59,15 @@ export async function initPdfViewer(dotnetReference: DotNetObject, pdfDto: PdfSt
 }
 
 export async function updatePdf(dotnetReference: DotNetObject, pdfDto: PdfState) {
+    closeMenu();
     const pdf = Pdf.getPdf(pdfDto.id as string)
     const previousPage = pdf.currentPage;
     pdf.updatePdf(pdfDto)
     pdf.drawLayer.updatePenSettings(pdfDto.penColor, pdfDto.penThickness);
     
-    if (pdfDto.searchQuery) {
+    if (pdfDto.searchQuery && pdfDto.searchQuery !== pdf.previousQuery) {
         const results = pdf.search(pdfDto.searchQuery);
-        dotnetReference.invokeMethodAsync('SearchResults', results);
+        await dotnetReference.invokeMethodAsync('SearchResults', results);
     }
     
     if (pdf.drawLayer.enabled !== pdfDto.drawLayerEnabled && pdf.singlePageMode) {
@@ -95,6 +104,7 @@ export async function goToPage(dotnetReference: DotNetObject, id: string, pageNu
 }
 
 export async function printDocument(dotnetReference: DotNetObject, id: string) {
+    closeMenu();
     const pdf = Pdf.getPdf(id);
     const imageDataArray: string[] = [];
 
@@ -152,11 +162,11 @@ export async function printDocument(dotnetReference: DotNetObject, id: string) {
         }
         imageDataArray.push(mergedCanvas.toDataURL('image/png'));
     }
-
     printjs({ printable: imageDataArray, type: 'image' });
 }
 
 export async function downloadDocument(dotnetReference: DotNetObject, id: string) {
+    closeMenu();
     const pdf = Pdf.getPdf(id);
     if (pdf.url) {
 
@@ -206,6 +216,7 @@ export function clearStrokesForPage(dotnetReference: DotNetObject, id: string) {
 }
 
 export async function viewMetadata(dotnetReference: DotNetObject, id: string) {
+    closeMenu();
     const pdf = Pdf.getPdf(id);
     
     const data = await pdf.getMetadata();
@@ -240,9 +251,6 @@ async function renderPdf(pdf: Pdf) {
     if (pdf.singlePageMode) {
         pdf.document!.getPage(pdf.currentPage).then(async (pdfPage) => {
             const viewport = pdfPage.getViewport({scale: pdf.scale, rotation: pdf.rotation});
-            pdfPage.getTextContent().then((text) => {
-                console.log(text);
-            })
             pdf.canvas.width = viewport.width;
             pdf.canvas.height = viewport.height;
 
@@ -270,6 +278,42 @@ async function renderPdf(pdf: Pdf) {
                 textLayerBuilder.div = textLayer;
                 textLayerBuilder.render(viewport);
 
+                // Highlight any text
+                for (let i = 0; i < pdf.searchResults.length; i++) {
+                    const result = pdf.searchResults[i];
+                    if (result.page !== pdf.currentPage) {
+                        continue;
+                    }
+                    
+                    const pdfTextItem = pdf.textContent[pdf.currentPage][result.index]
+                    
+                    const [a, b, c, d, e, f] = pdfTextItem.transform as number[];
+                    
+                    const fullStr = pdfTextItem.str!;
+                    const matchIndex = fullStr.toLowerCase().indexOf(pdf.previousQuery!.toLowerCase());
+                    
+                    const prefix = pdfTextItem.str!.substring(0, matchIndex);
+                    
+                    
+                    const width = pdfTextItem.width as number;
+                    const charWidth = width / fullStr.length;
+                    const xOffset = charWidth * prefix.length;
+                    const matchWidth = charWidth * fullStr.length;
+                    const height = pdfTextItem.height as number;
+                    const yOffset = 8;
+                    
+                    const rect = viewport.convertToViewportRectangle([
+                        e + xOffset, 
+                        f + yOffset,
+                        e + width,
+                        f + yOffset - height
+                    ]);
+
+                    const context = pdf.getCanvasContext();
+                    context.fillStyle = 'rgba(255, 255, 0, 0.4)';
+                    context.fillRect(rect[0], rect[1], rect[2] - rect[0], rect[3] - rect[1]);
+                }
+                
                 if (pdf.queuedPage !== null) {
                     renderPdf(pdf);
                     pdf.queuedPage = null;
@@ -386,4 +430,11 @@ function getDocumentInit(pdfDto: PdfState) {
         documentInit.password = pdfDto.password;
 
     return documentInit;
+}
+
+function closeMenu() {
+    const checkbox = document.getElementById('menu-toggle') as HTMLInputElement | null;
+    if (checkbox && checkbox.type === 'checkbox') {
+        checkbox.checked = false;
+    }
 }

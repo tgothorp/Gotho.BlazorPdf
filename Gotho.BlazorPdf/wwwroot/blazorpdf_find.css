@@ -1,0 +1,12 @@
+.blazorpdf-search__container {
+    position: absolute;
+    width: 100%;
+}
+
+.blazorpdf-search {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    width: 100%;
+}

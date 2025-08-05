@@ -125,7 +125,7 @@ public partial class PdfViewer : ComponentBase
         if (pdfViewerModel is null)
             return;
 
-        PdfFile.Paging.Update(pdfViewerModel.CurrentPage, pdfViewerModel.TotalPages);
+        PdfFile!.Paging.Update(pdfViewerModel.CurrentPage, pdfViewerModel.TotalPages);
         StateHasChanged();
 
         if (OnDocumentLoaded.HasDelegate)
@@ -142,7 +142,7 @@ public partial class PdfViewer : ComponentBase
         if (pdfViewerModel is null)
             return;
 
-        PdfFile.Paging.Update(pdfViewerModel.CurrentPage, pdfViewerModel.TotalPages);
+        PdfFile!.Paging.Update(pdfViewerModel.CurrentPage, pdfViewerModel.TotalPages);
         StateHasChanged();
 
         if (OnPageChanged.HasDelegate)
@@ -185,6 +185,13 @@ public partial class PdfViewer : ComponentBase
     public void SearchResults(List<PdfSearchResult> results)
     {
         PdfFile?.Search.UpdateResults(results);
+    }
+
+    [JSInvokable]
+    public void PdfFindText()
+    {
+        _showFind = true;
+        StateHasChanged();
     }
     
     /// <summary>
@@ -322,7 +329,19 @@ public partial class PdfViewer : ComponentBase
     }
 
     #endregion
+
+    #region Searching
+
+    protected async Task Search(string query)
+    {
+        PdfFile?.Search.UpdateSearchQuery(query);
+        await PdfInterop.UpdateAsync(ObjectReference!, PdfFile!);
+    }
+
+    #endregion
     
+    #region Other
+
     protected async Task DownloadDocumentAsync()
     {
         await PdfInterop.DownloadDocumentAsync(ObjectReference!, PdfFile!);
@@ -332,23 +351,21 @@ public partial class PdfViewer : ComponentBase
     {
         await PdfInterop.PrintDocumentAsync(ObjectReference!, PdfFile!);
     }
-
-    protected async Task Search(string query)
-    {
-        PdfFile?.Search.UpdateSearchQuery(query);
-        await PdfInterop.UpdateAsync(ObjectReference!, PdfFile!);
-    }
-
+    
     protected async Task ViewMetadataAsync()
     {
         await PdfInterop.ViewMetadataAsync(ObjectReference!, PdfFile!);
     }
-
+    
     protected void ClearMetadata()
     {
         Metadata = null;
         StateHasChanged();
     }
+
+    #endregion
+
+    
 
     protected async Task UploadFile(InputFileChangeEventArgs e)
     {

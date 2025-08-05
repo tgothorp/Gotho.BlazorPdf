@@ -59,6 +59,9 @@ export class Pdf {
     public password: string | null;
     public source: string;
     
+    public previousQuery: string | null;
+    public searchResults: PdfSearchResult[] = [];
+    
     public drawLayer: PdfDrawLayer;
 
     constructor(id: string, scale: number, rotation: number, url: string, singlePageMode: boolean, source: string, password: string | null = null) {
@@ -80,6 +83,7 @@ export class Pdf {
         this.password = password
         this.drawLayer = new PdfDrawLayer(id);
         this.textContent = {};
+        this.previousQuery = null;
 
         // @ts-ignore
         pdfInstances[this.id] = this;
@@ -167,6 +171,7 @@ export class Pdf {
     
     public search(query: string): Array<PdfSearchResult> {
         query = query.toLowerCase();
+        this.previousQuery = query;
         
         let result = new Array<PdfSearchResult>();
         if (!query)
@@ -183,8 +188,9 @@ export class Pdf {
                 }
             }
         }
-        
-        return result;
+
+        this.searchResults = result;
+        return this.searchResults;
     }
     
     public getCanvasContext(): any {
@@ -195,12 +201,10 @@ export class Pdf {
         if (this.isDomSupported() && typeof id === 'string') {
             id = document.getElementById(id);
         } else if (id && id.length) {
-            // support for array based queries
             id = id[0];
         }
 
         if (id && id.canvas !== undefined && id.canvas) {
-            // support for any object associated to a canvas (including a context2d)
             id = id.canvas;
         }
 

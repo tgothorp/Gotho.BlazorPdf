@@ -12,6 +12,8 @@ public class Search
 
     public void UpdateResults(List<PdfSearchResult> results)
     {
+        // Clear search query so we're not scanning text with every update
+        SearchQuery = null;
         SearchResults = results;
     }
 }

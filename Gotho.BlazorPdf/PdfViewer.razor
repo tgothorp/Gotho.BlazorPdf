@@ -84,6 +84,16 @@
             </div>
 
             <div class="blazorpdf-toolbar__spacer"></div>
+            
+            @*Find*@
+            <div class="blazorpdf-toolbar__item blazorpdf__hide-on-mobile">
+                <button class="blazorpdf-toolbar__item-button" @onclick="ToggleFind" disabled="@InputDisabled()"
+                        aria-label="@LocalizedStrings.Find">
+                    <span>
+                        <FindIcon Color="@Colors.Icon"/>
+                    </span>
+                </button>
+            </div>
 
             @*Menu*@
             <div class="blazorpdf-toolbar__item">
@@ -97,15 +107,6 @@
                     <div class="blazorpdf-toolbar__menu">
                         <label for="menu-toggle" class="blazorpdf-toolbar__menu-overlay"></label>
                         <div class="blazorpdf-toolbar__menu-content">
-                            <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
-                                    @onclick="@(() => Search("dynamic"))">
-                                <span class="blazorpdf-toolbar__menu-menu-item-icon">
-                                    <FindIcon Color="@Colors.Icon"/>
-                                </span>
-                                <span
-                                    class="blazorpdf-toolbar__menu-menu-item-text">Find</span>
-                            </button>
-                            <hr class="blazorpdf-toolbar__menu-divider">
                             <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
                                     @onclick="RotateClockwiseAsync">
                                 <span class="blazorpdf-toolbar__menu-menu-item-icon">
@@ -204,6 +205,21 @@
     }
 
     <div class="blazorpdf-pdf" style="background-color: @Colors.Background">
+        
+        @if (_showFind)
+        {
+            <div class="blazorpdf-search__container">
+                <div class="blazorpdf-search">
+                    <input type="text" 
+                           placeholder="Find in document..." 
+                           value="@_searchQuery"
+                           @oninput="e => _searchQuery = e.Value?.ToString()"
+                           @onkeydown="@(async (e) => await FindKeyPressed(e))"/>
+                    <button type="button">P</button>
+                    <button type="button">N</button>
+                </div>
+            </div>
+        }
         
         @if (PdfFile is null && Config.PermitPdfFileUpload)
         {
@@ -388,6 +404,8 @@
 @code {
 
     private bool _showThumbnails = true;
+    private bool _showFind = false;
+    private string? _searchQuery = null;
 
     private bool InputDisabled()
     {
@@ -397,6 +415,11 @@
     private void ToggleThumbnails()
     {
         _showThumbnails = !_showThumbnails;
+    }
+    
+    private void ToggleFind()
+    {
+        _showFind = !_showFind;
     }
 
     private string MetadataOrEmpty(string? metadata)
@@ -424,5 +447,13 @@
             thickness = parsedInt;
 
         await UpdatePenThickness(thickness);
+    }
+
+    private async Task FindKeyPressed(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !_searchQuery.IsNullOrEmpty())
+        {
+            await Search(_searchQuery!);
+        }
     }
 }
