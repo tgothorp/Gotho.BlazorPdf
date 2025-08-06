@@ -63,6 +63,8 @@ public class Pdf
             PenColor = DrawLayer.PenColor,
             PenThickness = DrawLayer.PenThickness,
             SearchQuery = Search.SearchQuery,
+            HighlightAllResults = Search.HighlightAll,
+            ActiveResult = Search.GetActiveResult()
         };
     }
 }

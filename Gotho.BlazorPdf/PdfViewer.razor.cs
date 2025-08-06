@@ -187,13 +187,6 @@ public partial class PdfViewer : ComponentBase
         PdfFile?.Search.UpdateResults(results);
     }
 
-    [JSInvokable]
-    public void PdfFindText()
-    {
-        _showFind = true;
-        StateHasChanged();
-    }
-    
     /// <summary>
     /// Loads a PDF from the given URL, can be used as an alternative to the <c>Url</c> parameter.
     /// </summary>

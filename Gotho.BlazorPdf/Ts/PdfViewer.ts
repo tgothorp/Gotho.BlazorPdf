@@ -40,14 +40,6 @@ export async function initPdfViewer(dotnetReference: DotNetObject, pdfDto: PdfSt
             await renderPdf(pdf)
             await renderThumbnails(dotnetReference, pdf)
 
-            // Hook into Ctrl+F
-            document.addEventListener('keydown', function (e) {
-                if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
-                    e.preventDefault();
-                    dotnetReference.invokeMethodAsync('PdfFindText');
-                }
-            });
-            
             await dotnetReference.invokeMethodAsync('DocumentLoaded', {
                 currentPage: pdf.currentPage,
                 totalPages: pdf.pageCount
@@ -341,7 +333,24 @@ async function renderPdf(pdf: Pdf) {
                 const textLayerBuilder = new TextLayerBuilder({pdfPage: page})
                 textLayerBuilder.div = textDiv;
                 textLayerBuilder.pdfPage = page;
-                await textLayerBuilder.render(viewport);
+                
+                // Wait for text layer to render before applying highlights
+                textLayerBuilder.render(viewport).then(() => {
+                    const spans = textDiv.querySelectorAll('span');
+                    const query = pdf.previousQuery!.toLowerCase();
+
+                    Array.from(spans).forEach(span => {
+                        const text = span.textContent || "";
+                        const matchIndex = text.toLowerCase().indexOf(query);
+                        if (matchIndex === -1) return;
+
+                        const before = text.slice(0, matchIndex);
+                        const match = text.slice(matchIndex, matchIndex + query.length);
+                        const after = text.slice(matchIndex + query.length);
+
+                        span.innerHTML = `${before}<mark>${match}</mark>${after}`;
+                    });
+                });
             });
         }
 
