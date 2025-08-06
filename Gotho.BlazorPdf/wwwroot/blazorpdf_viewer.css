@@ -17,3 +17,9 @@
     box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
     flex-shrink: 0;
 }
+
+mark {
+    background: #ffff0075;
+    color: transparent;
+    padding: 0;
+}

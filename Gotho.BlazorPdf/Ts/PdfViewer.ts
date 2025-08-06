@@ -276,44 +276,26 @@ async function renderPdf(pdf: Pdf) {
 
                 const textLayerBuilder = new TextLayerBuilder({pdfPage})
                 textLayerBuilder.div = textLayer;
-                textLayerBuilder.render(viewport);
-
-                // Highlight any text
-                for (let i = 0; i < pdf.searchResults.length; i++) {
-                    const result = pdf.searchResults[i];
-                    if (result.page !== pdf.currentPage) {
-                        continue;
-                    }
-                    
-                    const pdfTextItem = pdf.textContent[pdf.currentPage][result.index]
-                    
-                    const [a, b, c, d, e, f] = pdfTextItem.transform as number[];
-                    
-                    const fullStr = pdfTextItem.str!;
-                    const matchIndex = fullStr.toLowerCase().indexOf(pdf.previousQuery!.toLowerCase());
-                    
-                    const prefix = pdfTextItem.str!.substring(0, matchIndex);
-                    
-                    
-                    const width = pdfTextItem.width as number;
-                    const charWidth = width / fullStr.length;
-                    const xOffset = charWidth * prefix.length;
-                    const matchWidth = charWidth * fullStr.length;
-                    const height = pdfTextItem.height as number;
-                    const yOffset = 8;
-                    
-                    const rect = viewport.convertToViewportRectangle([
-                        e + xOffset, 
-                        f + yOffset,
-                        e + width,
-                        f + yOffset - height
-                    ]);
-
-                    const context = pdf.getCanvasContext();
-                    context.fillStyle = 'rgba(255, 255, 0, 0.4)';
-                    context.fillRect(rect[0], rect[1], rect[2] - rect[0], rect[3] - rect[1]);
-                }
                 
+                // Wait for text layer to render before applying highlights
+                textLayerBuilder.render(viewport).then(() => {
+                    const spans = textLayer.querySelectorAll('span');
+                    const query = pdf.previousQuery!.toLowerCase();
+
+                    Array.from(spans).forEach(span => {
+                        const text = span.textContent || "";
+                        const matchIndex = text.toLowerCase().indexOf(query);
+                        if (matchIndex === -1) return;
+
+                        const before = text.slice(0, matchIndex);
+                        const match = text.slice(matchIndex, matchIndex + query.length);
+                        const after = text.slice(matchIndex + query.length);
+
+                        span.innerHTML = `${before}<mark>${match}</mark>${after}`;
+                    });
+                });
+
+
                 if (pdf.queuedPage !== null) {
                     renderPdf(pdf);
                     pdf.queuedPage = null;
