@@ -12,6 +12,7 @@ public class BlazorPdfLocalizedStrings
     public string ZoomIn { get; set; } = "Zoom In";
     public string ZoomOut { get; set; } = "Zoom Out";
     public string Find { get; set; } = "Find";
+    public string HighlightAll { get; set; } = "Highlight All";
     public string RotateClockwise { get; set; } = "Rotate Clockwise";
     public string RotateCounterclockwise { get; set; } = "Rotate Counterclockwise";
     public string SwitchOrientation { get; set; } = "Switch Orientation";

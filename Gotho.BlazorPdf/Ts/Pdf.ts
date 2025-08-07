@@ -61,6 +61,7 @@ export class Pdf {
     
     public previousQuery: string | null;
     public searchResults: PdfSearchResult[] = [];
+    public activeSearchIndex: number | null = null;
     
     public drawLayer: PdfDrawLayer;
 
@@ -100,6 +101,7 @@ export class Pdf {
         this.scale = dto.scale;
         this.previousPage = this.currentPage;
         this.currentPage = dto.currentPage;
+        this.activeSearchIndex = dto.activeResultIndex;
     }
 
     // @ts-ignore

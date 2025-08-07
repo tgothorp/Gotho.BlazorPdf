@@ -182,9 +182,14 @@ public partial class PdfViewer : ComponentBase
     /// </summary>
     /// <remarks>Do not call this method from your code</remarks>
     [JSInvokable]
-    public void SearchResults(List<PdfSearchResult> results)
+    public async Task SearchResults(List<PdfSearchResult> results)
     {
         PdfFile?.Search.UpdateResults(results);
+        
+        if (PdfFile?.Search.CurrentSearchResult?.Page != PdfFile?.Paging.CurrentPage)
+            PdfFile?.Paging.GotoPage(PdfFile.Search.CurrentSearchResult!.Page);
+
+        await PdfInterop.UpdateAsync(ObjectReference!, PdfFile!);
     }
 
     /// <summary>
@@ -331,8 +336,28 @@ public partial class PdfViewer : ComponentBase
         await PdfInterop.UpdateAsync(ObjectReference!, PdfFile!);
     }
 
-    #endregion
+    protected async Task NextResult()
+    {
+        PdfFile?.Search.NextResult();
+
+        if (PdfFile?.Search.CurrentSearchResult?.Page != PdfFile?.Paging.CurrentPage)
+            PdfFile?.Paging.GotoPage(PdfFile.Search.CurrentSearchResult!.Page);
+
+        await PdfInterop.UpdateAsync(ObjectReference!, PdfFile!);
+    }
     
+    protected async Task PreviousResult()
+    {
+        PdfFile?.Search.PreviousResult();
+
+        if (PdfFile?.Search.CurrentSearchResult?.Page != PdfFile?.Paging.CurrentPage)
+            PdfFile?.Paging.GotoPage(PdfFile.Search.CurrentSearchResult!.Page);
+
+        await PdfInterop.UpdateAsync(ObjectReference!, PdfFile!);
+    }
+
+    #endregion
+
     #region Other
 
     protected async Task DownloadDocumentAsync()
@@ -358,7 +383,6 @@ public partial class PdfViewer : ComponentBase
 
     #endregion
 
-    
 
     protected async Task UploadFile(InputFileChangeEventArgs e)
     {

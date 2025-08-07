@@ -11,4 +11,5 @@ export class PdfState {
     public penColor: string = "#000000";
     public penThickness: number = 1
     public searchQuery: string | null = null;
+    public activeResultIndex: number | null = null;
 }

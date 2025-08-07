@@ -17,6 +17,5 @@ internal class PdfState
     public required int PenThickness { get; set; }
 
     public required string? SearchQuery { get; set; }
-    public required bool HighlightAllResults { get; set; }
-    public required string? ActiveResult { get; set; }
+    public required int? ActiveResultIndex { get; set; }
 }

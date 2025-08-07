@@ -18,8 +18,37 @@
     flex-shrink: 0;
 }
 
+.blazorpdf__button {
+    -webkit-appearance: none;
+    border-radius: 0;
+    text-align: inherit;
+    background: none;
+    box-shadow: none;
+    padding: 0.4rem;
+    cursor: pointer;
+    border: none;
+    color: #161719;
+    font: inherit;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+}
+
+.blazorpdf__button > svg {
+    width: 100%;
+    height: 100%;
+    max-width: 1.5rem;
+    max-height: 1.5rem;
+}
+
+
 mark {
-    background: #ffff0075;
+    background: rgba(255, 255, 0, 0.46);
     color: transparent;
     padding: 0;
+}
+
+mark.active {
+    background: rgba(0, 217, 255, 0.46);
 }

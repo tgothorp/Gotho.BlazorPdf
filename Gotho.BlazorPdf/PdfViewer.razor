@@ -206,17 +206,41 @@
 
     <div class="blazorpdf-pdf" style="background-color: @Colors.Background">
         
-        @if (_showFind)
+        @if (_showFind && PdfFile is not null)
         {
             <div class="blazorpdf-search__container">
                 <div class="blazorpdf-search">
-                    <input type="text" 
-                           placeholder="Find in document..." 
-                           value="@_searchQuery"
-                           @oninput="e => _searchQuery = e.Value?.ToString()"
-                           @onkeydown="@(async (e) => await FindKeyPressed(e))"/>
-                    <button type="button">P</button>
-                    <button type="button">N</button>
+                    <div class="blazorpdf-search-row">
+                        <div>
+                            <div class="blazorpdf-search-row-top">
+                                <input type="text"
+                                       placeholder="Find in document..."
+                                       value="@_searchQuery"
+                                       @oninput="e => _searchQuery = e.Value?.ToString()"
+                                       @onkeydown="@(async (e) => await FindKeyPressed(e))"/>
+                                <button class="blazorpdf__button" type="button" @onclick="PreviousResult">
+                                    <ChevronLeft/>
+                                </button>
+                                <button class="blazorpdf__button" type="button" @onclick="NextResult">
+                                    <ChevronLeft/>
+                                </button>
+                            </div>
+                            <div>
+                                @if (PdfFile.Search.SearchResults is null)
+                                {
+
+                                }
+                                else if (PdfFile.Search.SearchResults.Count == 0)
+                                {
+
+                                }
+                                else
+                                {
+                                    <p class="blazorpdf-search__result"># of @PdfFile.Search.SearchResults.Count Matches</p>
+                                }      
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         }

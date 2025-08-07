@@ -273,11 +273,17 @@ async function renderPdf(pdf: Pdf) {
                 textLayerBuilder.render(viewport).then(() => {
                     const spans = textLayer.querySelectorAll('span');
                     const query = pdf.previousQuery!.toLowerCase();
+                    let resultIndex = -1;
 
-                    Array.from(spans).forEach(span => {
+                    Array.from(spans).forEach((span, index) => {
                         const text = span.textContent || "";
                         const matchIndex = text.toLowerCase().indexOf(query);
                         if (matchIndex === -1) return;
+
+                        resultIndex += 1;
+                        if (pdf.activeSearchIndex !== resultIndex) {
+                            return;
+                        }
 
                         const before = text.slice(0, matchIndex);
                         const match = text.slice(matchIndex, matchIndex + query.length);
