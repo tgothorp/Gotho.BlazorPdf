@@ -171,6 +171,10 @@ export class Pdf {
         return this.metadata;
     }
     
+    public clearSearchResults(): void {
+        this.previousQuery = null;
+    }
+    
     public search(query: string): Array<PdfSearchResult> {
         query = query.toLowerCase();
         this.previousQuery = query;
@@ -186,7 +190,7 @@ export class Pdf {
                 const text = textOnPage[i].str!.toLowerCase();
                 if (text.indexOf(query) !== -1)
                 {
-                    result.push(new PdfSearchResult(page, i, text));
+                    result.push(new PdfSearchResult(page, i));
                 }
             }
         }

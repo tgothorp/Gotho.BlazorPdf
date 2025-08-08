@@ -6,9 +6,11 @@ public class Search
     public PdfSearchResult? CurrentSearchResult { get; private set; }
     public List<PdfSearchResult>? SearchResults { get; set; }
 
-    public void UpdateSearchQuery(string searchQuery)
+    public void UpdateSearchQuery(string? searchQuery)
     {
         SearchQuery = searchQuery;
+        SearchResults = null;
+        CurrentSearchResult = null;
     }
 
     public void UpdateResults(List<PdfSearchResult> results)
@@ -19,46 +21,57 @@ public class Search
         CurrentSearchResult = SearchResults.FirstOrDefault();
     }
 
-    public void NextResult()
+    public bool NextResult()
     {
         if (SearchResults is null)
-            return;
+            return false;
 
         if (CurrentSearchResult == null)
         {
             CurrentSearchResult = SearchResults.FirstOrDefault();
-            return;
+            return true;
         }
 
         if (SearchResults.Last().Equals(CurrentSearchResult!))
         {
             CurrentSearchResult = SearchResults.First();
-            return;
+            return true;
         }
 
         var index = SearchResults.IndexOf(CurrentSearchResult!);
         CurrentSearchResult = SearchResults[index + 1];
+        return true;
     }
 
-    public void PreviousResult()
+    public bool PreviousResult()
     {
         if (SearchResults is null)
-            return;
+            return false;
 
         if (CurrentSearchResult == null)
         {
             CurrentSearchResult = SearchResults.FirstOrDefault();
-            return;
+            return true;
         }
 
         if (SearchResults.First().Equals(CurrentSearchResult!))
         {
             CurrentSearchResult = SearchResults.Last();
-            return;
+            return true;
         }
 
         var index = SearchResults.IndexOf(CurrentSearchResult!);
         CurrentSearchResult = SearchResults[index - 1];
+        return true;
+    }
+
+    public int GetDisplayIndex()
+    {
+        if (SearchResults is null || SearchResults.Count == 0 || CurrentSearchResult is null)
+            return 0; 
+        
+        var index = SearchResults.IndexOf(CurrentSearchResult!);
+        return index + 1;
     }
 
     public int? GetSearchIndex(int currentPage)

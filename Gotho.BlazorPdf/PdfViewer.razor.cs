@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Gotho.BlazorPdf.Config;
 using Gotho.BlazorPdf.Extensions;
 using Gotho.BlazorPdf.Pdf;
@@ -77,11 +78,11 @@ public partial class PdfViewer : ComponentBase
     /// Invoked when a file is uploaded by a user
     /// </summary>
     public EventCallback<PdfViewerFileUploaded> OnFileUploaded { get; set; }
-    
+
     /// <summary>
     /// A class containing the localized strings for the viewer 
     /// </summary>
-    [Parameter] 
+    [Parameter]
     public BlazorPdfLocalizedStrings LocalizedStrings { get; set; } = new();
 
     /// <summary>
@@ -96,7 +97,7 @@ public partial class PdfViewer : ComponentBase
     protected override async Task OnInitializedAsync()
     {
         ObjectReference ??= DotNetObjectReference.Create(this);
-        
+
         if (!Url.IsNullOrEmpty())
             PdfFile = new Pdf.Pdf("".GenerateRandomString(), Url!, PdfOrientation);
         else
@@ -182,11 +183,16 @@ public partial class PdfViewer : ComponentBase
     /// </summary>
     /// <remarks>Do not call this method from your code</remarks>
     [JSInvokable]
-    public async Task SearchResults(List<PdfSearchResult> results)
+    public async Task SearchResultsFromStream(IJSStreamReference stream)
     {
-        PdfFile?.Search.UpdateResults(results);
+        await using var s = await stream.OpenReadStreamAsync(maxAllowedSize: 50 * 1024 * 1024);
+        using var reader = new StreamReader(s);
+        var json = await reader.ReadToEndAsync();
+        var results = JsonSerializer.Deserialize<List<PdfSearchResult>>(json);
         
-        if (PdfFile?.Search.CurrentSearchResult?.Page != PdfFile?.Paging.CurrentPage)
+        PdfFile?.Search.UpdateResults(results ?? []);
+
+        if (PdfFile?.Search.CurrentSearchResult is not null && PdfFile?.Search.CurrentSearchResult?.Page != PdfFile?.Paging.CurrentPage)
             PdfFile?.Paging.GotoPage(PdfFile.Search.CurrentSearchResult!.Page);
 
         await PdfInterop.UpdateAsync(ObjectReference!, PdfFile!);
@@ -204,12 +210,12 @@ public partial class PdfViewer : ComponentBase
             StateHasChanged();
             return;
         }
-        
+
         if (PdfFile is null)
             PdfFile = new Pdf.Pdf("".GenerateRandomString(), url!, PdfOrientation);
         else if (url is not null)
             PdfFile.UpdateUrl(url);
-        
+
         PdfFile.UpdatePassword(PdfPassword);
         Loading = true;
         Error = null;
@@ -303,7 +309,7 @@ public partial class PdfViewer : ComponentBase
         PdfFile.DrawLayer.Toggle();
         await PdfInterop.UpdateAsync(ObjectReference!, PdfFile);
     }
-    
+
     protected async Task UpdatePenColorAsync(string color)
     {
         PdfFile.DrawLayer.UpdateColor(color);
@@ -320,7 +326,7 @@ public partial class PdfViewer : ComponentBase
     {
         await PdfInterop.UndoLastStrokeAsync(ObjectReference!, PdfFile);
     }
-    
+
     protected async Task ClearAllPageStrokesAsync()
     {
         await PdfInterop.ClearStrokesForPageAsync(ObjectReference!, PdfFile);
@@ -336,19 +342,31 @@ public partial class PdfViewer : ComponentBase
         await PdfInterop.UpdateAsync(ObjectReference!, PdfFile!);
     }
 
+    protected async Task ClearSearchResults()
+    {
+        PdfFile?.Search.UpdateSearchQuery(null);
+        await PdfInterop.ClearSearchResults(ObjectReference!, PdfFile!);
+    }
+
     protected async Task NextResult()
     {
-        PdfFile?.Search.NextResult();
+        if (!PdfFile!.Search.NextResult())
+        {
+            return;
+        }
 
         if (PdfFile?.Search.CurrentSearchResult?.Page != PdfFile?.Paging.CurrentPage)
             PdfFile?.Paging.GotoPage(PdfFile.Search.CurrentSearchResult!.Page);
 
         await PdfInterop.UpdateAsync(ObjectReference!, PdfFile!);
     }
-    
+
     protected async Task PreviousResult()
     {
-        PdfFile?.Search.PreviousResult();
+        if (!PdfFile!.Search.PreviousResult())
+        {
+            return;
+        }
 
         if (PdfFile?.Search.CurrentSearchResult?.Page != PdfFile?.Paging.CurrentPage)
             PdfFile?.Paging.GotoPage(PdfFile.Search.CurrentSearchResult!.Page);
@@ -369,12 +387,12 @@ public partial class PdfViewer : ComponentBase
     {
         await PdfInterop.PrintDocumentAsync(ObjectReference!, PdfFile!);
     }
-    
+
     protected async Task ViewMetadataAsync()
     {
         await PdfInterop.ViewMetadataAsync(ObjectReference!, PdfFile!);
     }
-    
+
     protected void ClearMetadata()
     {
         Metadata = null;
@@ -402,7 +420,7 @@ public partial class PdfViewer : ComponentBase
         await using var stream = file.OpenReadStream(Config.MaxPdfFileUploadSize);
         using var ms = new MemoryStream();
         await stream.CopyToAsync(ms);
-        
+
         var base64 = Convert.ToBase64String(ms.ToArray());
         Url = base64;
         PdfFile = new Pdf.Pdf("".GenerateRandomString(), Url!, PdfOrientation);

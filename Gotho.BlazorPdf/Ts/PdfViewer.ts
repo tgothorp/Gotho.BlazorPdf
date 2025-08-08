@@ -59,9 +59,11 @@ export async function updatePdf(dotnetReference: DotNetObject, pdfDto: PdfState)
     
     if (pdfDto.searchQuery && pdfDto.searchQuery !== pdf.previousQuery) {
         const results = pdf.search(pdfDto.searchQuery);
-        await dotnetReference.invokeMethodAsync('SearchResults', results);
+        const blob = new Blob([JSON.stringify(results)], { type: 'application/json' });
+        const streamRef = DotNet.createJSStreamReference(blob);
+        await dotnetReference.invokeMethodAsync('SearchResultsFromStream', streamRef);
     }
-    
+
     if (pdf.drawLayer.enabled !== pdfDto.drawLayerEnabled && pdf.singlePageMode) {
         if (pdfDto.drawLayerEnabled) {
             pdf.drawLayer.enable();
@@ -80,6 +82,13 @@ export async function updatePdf(dotnetReference: DotNetObject, pdfDto: PdfState)
     document.body.style.setProperty('--scale-factor', `${pdf.scale}`);
     await queuePdfRender(pdf, null);
     await updateMetadata(dotnetReference, pdf)
+}
+
+export async function clearSearchResults(dotnetReference: DotNetObject, id: string) {
+    const pdf = Pdf.getPdf(id);
+    pdf.clearSearchResults();
+
+    await renderPdf(pdf);
 }
 
 export async function goToPage(dotnetReference: DotNetObject, id: string, pageNumber: number) {
@@ -271,6 +280,9 @@ async function renderPdf(pdf: Pdf) {
                 
                 // Wait for text layer to render before applying highlights
                 textLayerBuilder.render(viewport).then(() => {
+                    if (pdf.previousQuery === null)
+                        return;
+
                     const spans = textLayer.querySelectorAll('span');
                     const query = pdf.previousQuery!.toLowerCase();
                     let resultIndex = -1;
@@ -281,15 +293,15 @@ async function renderPdf(pdf: Pdf) {
                         if (matchIndex === -1) return;
 
                         resultIndex += 1;
-                        if (pdf.activeSearchIndex !== resultIndex) {
-                            return;
-                        }
-
                         const before = text.slice(0, matchIndex);
                         const match = text.slice(matchIndex, matchIndex + query.length);
                         const after = text.slice(matchIndex + query.length);
-
-                        span.innerHTML = `${before}<mark>${match}</mark>${after}`;
+                        
+                        if (pdf.activeSearchIndex === resultIndex) {
+                            span.innerHTML = `${before}<mark class="active">${match}</mark>${after}`;
+                        } else {
+                            span.innerHTML = `${before}<mark>${match}</mark>${after}`;
+                        }
                     });
                 });
 
@@ -342,6 +354,9 @@ async function renderPdf(pdf: Pdf) {
                 
                 // Wait for text layer to render before applying highlights
                 textLayerBuilder.render(viewport).then(() => {
+                    if (pdf.previousQuery === null)
+                        return;
+
                     const spans = textDiv.querySelectorAll('span');
                     const query = pdf.previousQuery!.toLowerCase();
 

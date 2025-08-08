@@ -1,10 +1,14 @@
+using System.Text.Json.Serialization;
+
 namespace Gotho.BlazorPdf.Pdf;
 
 public class PdfSearchResult : IEqualityComparer<PdfSearchResult>
 {
+    [JsonPropertyName("page")]
     public int Page { get; set; }
+    
+    [JsonPropertyName("index")]
     public int Index { get; set; }
-    public string? Content { get; set; }
 
     public bool Equals(PdfSearchResult? left, PdfSearchResult? right)
     {

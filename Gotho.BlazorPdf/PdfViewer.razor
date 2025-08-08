@@ -232,12 +232,12 @@
                                 }
                                 else if (PdfFile.Search.SearchResults.Count == 0)
                                 {
-
+                                    <p class="blazorpdf-search__result">No Results.</p>
                                 }
                                 else
                                 {
-                                    <p class="blazorpdf-search__result"># of @PdfFile.Search.SearchResults.Count Matches</p>
-                                }      
+                                    <p class="blazorpdf-search__result">@PdfFile.Search.GetDisplayIndex() of @PdfFile.Search.SearchResults.Count Matches.</p>
+                                }
                             </div>
                         </div>
                     </div>
@@ -441,9 +441,14 @@
         _showThumbnails = !_showThumbnails;
     }
     
-    private void ToggleFind()
+    private async Task ToggleFind()
     {
         _showFind = !_showFind;
+        if (!_showFind)
+        {
+            _searchQuery = null;
+            await ClearSearchResults();
+        }
     }
 
     private string MetadataOrEmpty(string? metadata)
