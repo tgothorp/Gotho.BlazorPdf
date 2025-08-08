@@ -1,0 +1,38 @@
+.blazorpdf-search__container {
+    position: absolute;
+    width: 100%;
+}
+
+.blazorpdf-search {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 10px;
+    right: 10px;
+}
+
+.blazorpdf-search-row {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.blazorpdf-search-row-top {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    flex-wrap: nowrap;
+    gap: 1rem;
+}
+
+.blazorpdf-search-row > div {
+    background-color: rgba(232, 231, 234, 1);
+    padding: 10px;
+}
+
+.blazorpdf-search__result {
+    margin: 10px 0 0 0;
+}

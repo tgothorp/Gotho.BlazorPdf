@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Gotho.BlazorPdf.Config;
 using Gotho.BlazorPdf.Extensions;
 using Gotho.BlazorPdf.Pdf;
@@ -77,11 +78,11 @@ public partial class PdfViewer : ComponentBase
     /// Invoked when a file is uploaded by a user
     /// </summary>
     public EventCallback<PdfViewerFileUploaded> OnFileUploaded { get; set; }
-    
+
     /// <summary>
     /// A class containing the localized strings for the viewer 
     /// </summary>
-    [Parameter] 
+    [Parameter]
     public BlazorPdfLocalizedStrings LocalizedStrings { get; set; } = new();
 
     /// <summary>
@@ -96,7 +97,7 @@ public partial class PdfViewer : ComponentBase
     protected override async Task OnInitializedAsync()
     {
         ObjectReference ??= DotNetObjectReference.Create(this);
-        
+
         if (!Url.IsNullOrEmpty())
             PdfFile = new Pdf.Pdf("".GenerateRandomString(), Url!, PdfOrientation);
         else
@@ -125,7 +126,7 @@ public partial class PdfViewer : ComponentBase
         if (pdfViewerModel is null)
             return;
 
-        PdfFile.Paging.Update(pdfViewerModel.CurrentPage, pdfViewerModel.TotalPages);
+        PdfFile!.Paging.Update(pdfViewerModel.CurrentPage, pdfViewerModel.TotalPages);
         StateHasChanged();
 
         if (OnDocumentLoaded.HasDelegate)
@@ -142,7 +143,7 @@ public partial class PdfViewer : ComponentBase
         if (pdfViewerModel is null)
             return;
 
-        PdfFile.Paging.Update(pdfViewerModel.CurrentPage, pdfViewerModel.TotalPages);
+        PdfFile!.Paging.Update(pdfViewerModel.CurrentPage, pdfViewerModel.TotalPages);
         StateHasChanged();
 
         if (OnPageChanged.HasDelegate)
@@ -169,14 +170,34 @@ public partial class PdfViewer : ComponentBase
     /// <summary>
     /// Invoked by BlazorPdf's JS interop code when viewing a PDF's metadata
     /// </summary>
-    /// <param name="metadata"></param>
+    /// <remarks>Do not call this method from your code</remarks>
     [JSInvokable]
     public void PdfMetadata(PdfMetadata metadata)
     {
         Metadata = metadata;
         StateHasChanged();
     }
-    
+
+    /// <summary>
+    /// Invoked by BlazorPdf's JS interops code when text searching
+    /// </summary>
+    /// <remarks>Do not call this method from your code</remarks>
+    [JSInvokable]
+    public async Task SearchResultsFromStream(IJSStreamReference stream)
+    {
+        await using var s = await stream.OpenReadStreamAsync(maxAllowedSize: 50 * 1024 * 1024);
+        using var reader = new StreamReader(s);
+        var json = await reader.ReadToEndAsync();
+        var results = JsonSerializer.Deserialize<List<PdfSearchResult>>(json);
+        
+        PdfFile?.Search.UpdateResults(results ?? []);
+
+        if (PdfFile?.Search.CurrentSearchResult is not null && PdfFile?.Search.CurrentSearchResult?.Page != PdfFile?.Paging.CurrentPage)
+            PdfFile?.Paging.GotoPage(PdfFile.Search.CurrentSearchResult!.Page);
+
+        await PdfInterop.UpdateAsync(ObjectReference!, PdfFile!);
+    }
+
     /// <summary>
     /// Loads a PDF from the given URL, can be used as an alternative to the <c>Url</c> parameter.
     /// </summary>
@@ -189,12 +210,12 @@ public partial class PdfViewer : ComponentBase
             StateHasChanged();
             return;
         }
-        
+
         if (PdfFile is null)
             PdfFile = new Pdf.Pdf("".GenerateRandomString(), url!, PdfOrientation);
         else if (url is not null)
             PdfFile.UpdateUrl(url);
-        
+
         PdfFile.UpdatePassword(PdfPassword);
         Loading = true;
         Error = null;
@@ -288,7 +309,7 @@ public partial class PdfViewer : ComponentBase
         PdfFile.DrawLayer.Toggle();
         await PdfInterop.UpdateAsync(ObjectReference!, PdfFile);
     }
-    
+
     protected async Task UpdatePenColorAsync(string color)
     {
         PdfFile.DrawLayer.UpdateColor(color);
@@ -305,14 +326,58 @@ public partial class PdfViewer : ComponentBase
     {
         await PdfInterop.UndoLastStrokeAsync(ObjectReference!, PdfFile);
     }
-    
+
     protected async Task ClearAllPageStrokesAsync()
     {
         await PdfInterop.ClearStrokesForPageAsync(ObjectReference!, PdfFile);
     }
 
     #endregion
-    
+
+    #region Searching
+
+    protected async Task Search(string query)
+    {
+        PdfFile?.Search.UpdateSearchQuery(query);
+        await PdfInterop.UpdateAsync(ObjectReference!, PdfFile!);
+    }
+
+    protected async Task ClearSearchResults()
+    {
+        PdfFile?.Search.UpdateSearchQuery(null);
+        await PdfInterop.ClearSearchResults(ObjectReference!, PdfFile!);
+    }
+
+    protected async Task NextResult()
+    {
+        if (!PdfFile!.Search.NextResult())
+        {
+            return;
+        }
+
+        if (PdfFile?.Search.CurrentSearchResult?.Page != PdfFile?.Paging.CurrentPage)
+            PdfFile?.Paging.GotoPage(PdfFile.Search.CurrentSearchResult!.Page);
+
+        await PdfInterop.UpdateAsync(ObjectReference!, PdfFile!);
+    }
+
+    protected async Task PreviousResult()
+    {
+        if (!PdfFile!.Search.PreviousResult())
+        {
+            return;
+        }
+
+        if (PdfFile?.Search.CurrentSearchResult?.Page != PdfFile?.Paging.CurrentPage)
+            PdfFile?.Paging.GotoPage(PdfFile.Search.CurrentSearchResult!.Page);
+
+        await PdfInterop.UpdateAsync(ObjectReference!, PdfFile!);
+    }
+
+    #endregion
+
+    #region Other
+
     protected async Task DownloadDocumentAsync()
     {
         await PdfInterop.DownloadDocumentAsync(ObjectReference!, PdfFile!);
@@ -334,6 +399,9 @@ public partial class PdfViewer : ComponentBase
         StateHasChanged();
     }
 
+    #endregion
+
+
     protected async Task UploadFile(InputFileChangeEventArgs e)
     {
         var file = e.File;
@@ -352,7 +420,7 @@ public partial class PdfViewer : ComponentBase
         await using var stream = file.OpenReadStream(Config.MaxPdfFileUploadSize);
         using var ms = new MemoryStream();
         await stream.CopyToAsync(ms);
-        
+
         var base64 = Convert.ToBase64String(ms.ToArray());
         Url = base64;
         PdfFile = new Pdf.Pdf("".GenerateRandomString(), Url!, PdfOrientation);

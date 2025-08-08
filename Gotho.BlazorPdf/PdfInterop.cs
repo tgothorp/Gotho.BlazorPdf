@@ -47,6 +47,12 @@ internal class PdfInterop(IJSRuntime jsRuntime) : IAsyncDisposable
         var module = await js.Value;
         await module.InvokeVoidAsync("clearStrokesForPage", objRef, pdf.Id);
     }
+    
+    public async Task ClearSearchResults(object objRef, Pdf pdf)
+    {
+        var module = await js.Value;
+        await module.InvokeVoidAsync("clearSearchResults", objRef, pdf.Id);
+    }
 
     public async ValueTask DisposeAsync()
     {

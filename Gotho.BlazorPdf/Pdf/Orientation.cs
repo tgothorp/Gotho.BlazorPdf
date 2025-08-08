@@ -3,9 +3,7 @@ namespace Gotho.BlazorPdf.Pdf;
 public record Orientation(PdfOrientation PdfOrientation)
 {
     public PdfOrientation PdfOrientation { get; private set; } = PdfOrientation;
-
     private int _orientation = PdfOrientation == PdfOrientation.Portrait ? 0 : -90;
-    private PdfOrientation _oldOrientation = PdfOrientation;
 
     public int GetOrientation()
     {
@@ -16,30 +14,34 @@ public record Orientation(PdfOrientation PdfOrientation)
     {
         _orientation += 90;
         _orientation = _orientation.Equals(360) ? 0 : _orientation;
-        UpdateOldOrientation();
+        
+        if (_orientation.Equals(90) || _orientation.Equals(270))
+            PdfOrientation = PdfOrientation.Landscape;
+        else
+            PdfOrientation = PdfOrientation.Portrait;
     }
 
     public void RotateCounterClockwise()
     {
         _orientation -= 90;
-        _orientation = _orientation.Equals(360) ? 0 : _orientation;
-        UpdateOldOrientation();
+        _orientation = _orientation.Equals(-90) ? 270 : _orientation;
+
+        if (_orientation.Equals(90) || _orientation.Equals(270))
+            PdfOrientation = PdfOrientation.Landscape;
+        else
+            PdfOrientation = PdfOrientation.Portrait;
     }
 
     public void Flip()
     {
-        _oldOrientation = PdfOrientation;
         PdfOrientation = PdfOrientation == PdfOrientation.Portrait ? PdfOrientation.Landscape : PdfOrientation.Portrait;
-        _orientation = PdfOrientation == PdfOrientation.Portrait ? 0 : -90;
-    }
-
-    private void UpdateOldOrientation()
-    {
-        _oldOrientation = _orientation switch
+        _orientation = _orientation switch
         {
-            0 => PdfOrientation = PdfOrientation.Portrait,
-            -90 => PdfOrientation = PdfOrientation.Landscape,
-            _ => _oldOrientation
+            0 => 90,
+            90 => 0,
+            180 => 270,
+            270 => 180,
+            _ => 0
         };
     }
 }
