@@ -192,7 +192,8 @@ public partial class PdfViewer : ComponentBase
         
         PdfFile?.Search.UpdateResults(results ?? []);
 
-        if (PdfFile?.Search.CurrentSearchResult is not null && PdfFile?.Search.CurrentSearchResult?.Page != PdfFile?.Paging.CurrentPage)
+        if (PdfFile?.Search.CurrentSearchResult is not null 
+            && PdfFile?.Search.CurrentSearchResult?.Page != PdfFile?.Paging.CurrentPage)
             PdfFile?.Paging.GotoPage(PdfFile.Search.CurrentSearchResult!.Page);
 
         await PdfInterop.UpdateAsync(ObjectReference!, PdfFile!);

@@ -85,15 +85,18 @@
 
             <div class="blazorpdf-toolbar__spacer"></div>
             
-            @*Find*@
-            <div class="blazorpdf-toolbar__item blazorpdf__hide-on-mobile">
-                <button class="blazorpdf-toolbar__item-button" @onclick="ToggleFind" disabled="@InputDisabled()"
-                        aria-label="@LocalizedStrings.Find">
-                    <span>
-                        <FindIcon Color="@Colors.Icon"/>
-                    </span>
-                </button>
-            </div>
+            @if (SinglePageMode)
+            {
+                @*Find*@
+                <div class="blazorpdf-toolbar__item blazorpdf__hide-on-mobile">
+                    <button class="blazorpdf-toolbar__item-button" @onclick="ToggleFind" disabled="@InputDisabled()"
+                            aria-label="@LocalizedStrings.Find">
+                        <span>
+                            <FindIcon Color="@Colors.Icon"/>
+                        </span>
+                    </button>
+                </div>
+            }
 
             @*Menu*@
             <div class="blazorpdf-toolbar__item">
@@ -222,7 +225,7 @@
                                     <ChevronLeft/>
                                 </button>
                                 <button class="blazorpdf__button" type="button" @onclick="NextResult">
-                                    <ChevronLeft/>
+                                    <ChevronRight/>
                                 </button>
                             </div>
                             <div>
