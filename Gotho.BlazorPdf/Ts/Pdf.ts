@@ -2,6 +2,7 @@ import {PDFDocumentProxy, getFilenameFromUrl} from "pdfjs-dist"
 import {PdfState} from "./PdfState";
 import {PdfDrawLayer} from "./PdfDrawLayer";
 import {PdfMetadata} from "./PdfMetadata";
+import {PdfSearchResult} from "./PdfSearchResult";
 
 const pdfInstances = {}
 
@@ -23,6 +24,20 @@ interface PdfJsMetadata {
     metadata: any;
 }
 
+interface PdfJsTextContent {
+    items?: Array<PdfJsTextContentItem>;
+}
+
+interface PdfJsTextContentItem {
+    dir?: string;
+    fontName?: string;
+    hasEOL?: boolean;
+    height?: number;
+    str?: string;
+    transform?: number[],
+    width?: number;
+}
+
 export class Pdf {
 
     public id: string;
@@ -33,9 +48,10 @@ export class Pdf {
     public filename: string;
     public document: PDFDocumentProxy | null;
     public metadata: PdfMetadata | null;
+    public textContent: Record<number, PdfJsTextContentItem[]>
 
     public renderInProgress: boolean;
-    public singlePageMode: boolean;
+    public scrollMode: boolean;
     public pageCount: number;
     public currentPage: number;
     public previousPage: number;
@@ -43,9 +59,13 @@ export class Pdf {
     public password: string | null;
     public source: string;
     
+    public previousQuery: string | null;
+    public searchResults: PdfSearchResult[] = [];
+    public activeSearchIndex: number | null = null;
+    
     public drawLayer: PdfDrawLayer;
 
-    constructor(id: string, scale: number, rotation: number, url: string, singlePageMode: boolean, source: string, password: string | null = null) {
+    constructor(id: string, scale: number, rotation: number, url: string, scrollMode: boolean, source: string, password: string | null = null) {
         this.id = id;
         this.canvas = Pdf.getCanvas(id);
         this.scale = scale;
@@ -55,7 +75,7 @@ export class Pdf {
         this.document = null;
         this.metadata = null;
         this.renderInProgress = false;
-        this.singlePageMode = singlePageMode;
+        this.scrollMode = scrollMode;
         this.pageCount = 0;
         this.currentPage = 1;
         this.previousPage = 1;
@@ -63,6 +83,8 @@ export class Pdf {
         this.source = source.toLowerCase();
         this.password = password
         this.drawLayer = new PdfDrawLayer(id);
+        this.textContent = {};
+        this.previousQuery = null;
 
         // @ts-ignore
         pdfInstances[this.id] = this;
@@ -79,11 +101,23 @@ export class Pdf {
         this.scale = dto.scale;
         this.previousPage = this.currentPage;
         this.currentPage = dto.currentPage;
+        this.activeSearchIndex = dto.activeResultIndex;
     }
 
-    public setDocument(doc: PDFDocumentProxy) {
+    // @ts-ignore
+    public async setDocument(doc: PDFDocumentProxy) {
         this.document = doc;
         this.pageCount = doc.numPages;
+
+        for (let i = 1; i < this.pageCount + 1; i++) {
+            const page = await doc.getPage(i);
+            const text = await page.getTextContent() as PdfJsTextContent;
+            
+            if (!this.textContent.hasOwnProperty(i))
+            {
+                this.textContent[i] = text.items!;
+            }
+        }
     }
 
     public gotoPage(pageNumber: number): boolean {
@@ -137,6 +171,34 @@ export class Pdf {
         return this.metadata;
     }
     
+    public clearSearchResults(): void {
+        this.previousQuery = null;
+    }
+    
+    public search(query: string): Array<PdfSearchResult> {
+        query = query.toLowerCase();
+        this.previousQuery = query;
+        
+        let result = new Array<PdfSearchResult>();
+        if (!query)
+            return result;
+        
+        for (let page = 1; page < Object.keys(this.textContent).length + 1; page++) {
+            const textOnPage = this.textContent[page];
+
+            for (let i = 0; i < textOnPage.length; i++) {
+                const text = textOnPage[i].str!.toLowerCase();
+                if (text.indexOf(query) !== -1)
+                {
+                    result.push(new PdfSearchResult(page, i));
+                }
+            }
+        }
+
+        this.searchResults = result;
+        return this.searchResults;
+    }
+    
     public getCanvasContext(): any {
         return this.canvas.getContext("2d");
     }
@@ -145,12 +207,10 @@ export class Pdf {
         if (this.isDomSupported() && typeof id === 'string') {
             id = document.getElementById(id);
         } else if (id && id.length) {
-            // support for array based queries
             id = id[0];
         }
 
         if (id && id.canvas !== undefined && id.canvas) {
-            // support for any object associated to a canvas (including a context2d)
             id = id.canvas;
         }
 
