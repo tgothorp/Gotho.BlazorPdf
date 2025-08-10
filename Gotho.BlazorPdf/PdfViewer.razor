@@ -5,14 +5,18 @@
 <div class="blazorpdf-container">
     <div role="toolbar" class="blazorpdf-toolbar" style="background-color: @Colors.Toolbar">
         @*Toggle Thumbnail*@
-        <div class="blazorpdf-toolbar__item blazorpdf__hide-on-mobile">
-            <button class="blazorpdf-toolbar__item-button" disabled="@InputDisabled()" @onclick="ToggleThumbnails"
-                    aria-label="@LocalizedStrings.ToggleThumbnails">
-                <span>
-                    <ThumbnailsIcon Color="@Colors.Icon"/>
-                </span>
-            </button>
-        </div>
+        
+        @if (!HideThumbnails)
+        {
+            <div class="blazorpdf-toolbar__item blazorpdf__hide-on-mobile">
+                <button class="blazorpdf-toolbar__item-button" disabled="@InputDisabled()" @onclick="ToggleThumbnails"
+                        aria-label="@LocalizedStrings.ToggleThumbnails">
+                    <span>
+                        <ThumbnailsIcon Color="@Colors.Icon"/>
+                    </span>
+                </button>
+            </div>
+        }
 
         @*Previous Page*@
         <div class="blazorpdf-toolbar__item">
@@ -212,7 +216,7 @@
 
         <div class="@(Error is not null ? "blazorpdf-d-none" : "")">
             <div id="@($"{PdfFile.Id}_thumbs")"
-                 class="@(_showThumbnails ? "blazorpdf-pdf__thumbnails" : "blazorpdf-pdf__thumbnails blazorpdf-d-none")"
+                 class="@((!HideThumbnails && _showThumbnails) ? "blazorpdf-pdf__thumbnails" : "blazorpdf-pdf__thumbnails blazorpdf-d-none")"
                  style="background-color: @Colors.Background"></div>
         </div>
 
