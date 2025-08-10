@@ -2,9 +2,13 @@
 
 All notable changes and releases will be documented here
 
-## [2025-07-12] - V1.1.1 (Latest Release)
+## [2025-08-10] - V1.1.2 (Latest Release)
 
-- Fixed zooming breaking single page mode
+- Fixed `HideThumbnails` option not behaving as expected.
+
+## [2025-07-12] - V1.1.1
+
+- Fixed zooming breaking single page mode.
 
 ## [2025-04-05] - V1.1.0
 
