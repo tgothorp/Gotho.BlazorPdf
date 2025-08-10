@@ -141,7 +141,7 @@
 
             <div class="@(Error is not null ? "blazorpdf-d-none" : "")">
                 <div id="@($"{PdfFile.Id}_thumbs")"
-                     class="@(_showThumbnails ? "blazorpdf-pdf__thumbnails" : "blazorpdf-pdf__thumbnails blazorpdf-d-none")"
+                     class="@((!HideThumbnails && _showThumbnails) ? "blazorpdf-pdf__thumbnails" : "blazorpdf-pdf__thumbnails blazorpdf-d-none")"
                      style="background-color: @Colors.Background"></div>
             </div>
 
