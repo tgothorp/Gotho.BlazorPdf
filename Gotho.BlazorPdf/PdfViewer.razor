@@ -88,6 +88,19 @@
             </div>
 
             <div class="blazorpdf-toolbar__spacer"></div>
+            
+            @if (!ScrollMode)
+            {
+                @*Find*@
+                <div class="blazorpdf-toolbar__item blazorpdf__hide-on-mobile">
+                    <button class="blazorpdf-toolbar__item-button" @onclick="ToggleFind" disabled="@InputDisabled()"
+                            aria-label="@LocalizedStrings.Find">
+                        <span>
+                            <FindIcon Color="@Colors.Icon"/>
+                        </span>
+                    </button>
+                </div>
+            }
 
             @*Menu*@
             <div class="blazorpdf-toolbar__item">
@@ -172,7 +185,7 @@
                                 <span
                                     class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.ViewMetadata</span>
                             </button>
-                            @if (SinglePageMode)
+                            @if (!ScrollMode)
                             {
                                 <hr class="blazorpdf-toolbar__menu-divider">
                                 <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
@@ -199,6 +212,45 @@
     }
 
     <div class="blazorpdf-pdf" style="background-color: @Colors.Background">
+        
+        @if (_showFind && PdfFile is not null)
+        {
+            <div class="blazorpdf-search__container">
+                <div class="blazorpdf-search">
+                    <div class="blazorpdf-search-row">
+                        <div>
+                            <div class="blazorpdf-search-row-top">
+                                <input type="text"
+                                       placeholder="Find in document..."
+                                       value="@_searchQuery"
+                                       @oninput="e => _searchQuery = e.Value?.ToString()"
+                                       @onkeydown="@(async (e) => await FindKeyPressed(e))"/>
+                                <button class="blazorpdf__button" type="button" @onclick="PreviousResult">
+                                    <ChevronLeft/>
+                                </button>
+                                <button class="blazorpdf__button" type="button" @onclick="NextResult">
+                                    <ChevronRight/>
+                                </button>
+                            </div>
+                            <div>
+                                @if (PdfFile.Search.SearchResults is null)
+                                {
+
+                                }
+                                else if (PdfFile.Search.SearchResults.Count == 0)
+                                {
+                                    <p class="blazorpdf-search__result">No Results.</p>
+                                }
+                                else
+                                {
+                                    <p class="blazorpdf-search__result">@PdfFile.Search.GetDisplayIndex() of @PdfFile.Search.SearchResults.Count Matches.</p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
         
         @if (PdfFile is null && Config.PermitPdfFileUpload)
         {
@@ -353,17 +405,17 @@
                 <div style="position: relative; background-color: @Colors.Background; margin: 25px">
                     <div>
                         @* PDF Canvas *@
-                        @if (SinglePageMode)
-                        {
-                            <canvas id="@PdfFile.Id"></canvas>
-                        }
-                        else
+                        @if (ScrollMode)
                         {
                             <div id="@PdfFile.Id" class="blazorpdf__scroll" style="height: @Height"></div>
                         }
+                        else
+                        {
+                            <canvas id="@PdfFile.Id"></canvas>
+                        }
                     </div>
 
-                    @if (SinglePageMode)
+                    @if (!ScrollMode)
                     {
                         <div>
                             @* Drawing Layer *@
@@ -383,6 +435,8 @@
 @code {
 
     private bool _showThumbnails = true;
+    private bool _showFind = false;
+    private string? _searchQuery = null;
 
     private bool InputDisabled()
     {
@@ -392,6 +446,16 @@
     private void ToggleThumbnails()
     {
         _showThumbnails = !_showThumbnails;
+    }
+    
+    private async Task ToggleFind()
+    {
+        _showFind = !_showFind;
+        if (!_showFind)
+        {
+            _searchQuery = null;
+            await ClearSearchResults();
+        }
     }
 
     private string MetadataOrEmpty(string? metadata)
@@ -419,5 +483,13 @@
             thickness = parsedInt;
 
         await UpdatePenThickness(thickness);
+    }
+
+    private async Task FindKeyPressed(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !_searchQuery.IsNullOrEmpty())
+        {
+            await Search(_searchQuery!);
+        }
     }
 }
