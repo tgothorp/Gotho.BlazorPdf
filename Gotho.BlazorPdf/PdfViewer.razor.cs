@@ -45,7 +45,7 @@ public partial class PdfViewer : ComponentBase
     /// Defaults to <c>true</c>
     /// </remarks>
     [Parameter]
-    public bool SinglePageMode { get; set; } = true;
+    public bool ScrollMode { get; set; } = false;
 
     /// <summary>
     /// URL of the PDF to be displayed, this can also be a base64 string 
@@ -109,7 +109,7 @@ public partial class PdfViewer : ComponentBase
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender && PdfFile is not null)
-            await PdfInterop.InitializeAsync(ObjectReference!, PdfFile, SinglePageMode, Config.UseProjectWorker);
+            await PdfInterop.InitializeAsync(ObjectReference!, PdfFile, ScrollMode, Config.UseProjectWorker);
 
         await base.OnAfterRenderAsync(firstRender);
     }
@@ -222,7 +222,7 @@ public partial class PdfViewer : ComponentBase
         Error = null;
         StateHasChanged();
 
-        await PdfInterop.InitializeAsync(ObjectReference!, PdfFile, SinglePageMode, Config.UseProjectWorker);
+        await PdfInterop.InitializeAsync(ObjectReference!, PdfFile, ScrollMode, Config.UseProjectWorker);
     }
 
     #region Paging
@@ -427,7 +427,7 @@ public partial class PdfViewer : ComponentBase
         PdfFile = new Pdf.Pdf("".GenerateRandomString(), Url!, PdfOrientation);
         StateHasChanged();
 
-        await PdfInterop.InitializeAsync(ObjectReference!, PdfFile, SinglePageMode, Config.UseProjectWorker);
+        await PdfInterop.InitializeAsync(ObjectReference!, PdfFile, ScrollMode, Config.UseProjectWorker);
         await OnFileUploaded.InvokeAsync(new PdfViewerFileUploaded
         {
             FileName = file.Name,

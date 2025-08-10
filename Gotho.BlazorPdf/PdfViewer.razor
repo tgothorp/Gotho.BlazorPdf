@@ -85,7 +85,7 @@
 
             <div class="blazorpdf-toolbar__spacer"></div>
             
-            @if (SinglePageMode)
+            @if (!ScrollMode)
             {
                 @*Find*@
                 <div class="blazorpdf-toolbar__item blazorpdf__hide-on-mobile">
@@ -181,7 +181,7 @@
                                 <span
                                     class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.ViewMetadata</span>
                             </button>
-                            @if (SinglePageMode)
+                            @if (!ScrollMode)
                             {
                                 <hr class="blazorpdf-toolbar__menu-divider">
                                 <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
@@ -401,17 +401,17 @@
                 <div style="position: relative; background-color: @Colors.Background; margin: 25px">
                     <div>
                         @* PDF Canvas *@
-                        @if (SinglePageMode)
-                        {
-                            <canvas id="@PdfFile.Id"></canvas>
-                        }
-                        else
+                        @if (ScrollMode)
                         {
                             <div id="@PdfFile.Id" class="blazorpdf__scroll" style="height: @Height"></div>
                         }
+                        else
+                        {
+                            <canvas id="@PdfFile.Id"></canvas>
+                        }
                     </div>
 
-                    @if (SinglePageMode)
+                    @if (!ScrollMode)
                     {
                         <div>
                             @* Drawing Layer *@

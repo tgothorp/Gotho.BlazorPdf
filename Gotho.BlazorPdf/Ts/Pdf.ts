@@ -51,7 +51,7 @@ export class Pdf {
     public textContent: Record<number, PdfJsTextContentItem[]>
 
     public renderInProgress: boolean;
-    public singlePageMode: boolean;
+    public scrollMode: boolean;
     public pageCount: number;
     public currentPage: number;
     public previousPage: number;
@@ -65,7 +65,7 @@ export class Pdf {
     
     public drawLayer: PdfDrawLayer;
 
-    constructor(id: string, scale: number, rotation: number, url: string, singlePageMode: boolean, source: string, password: string | null = null) {
+    constructor(id: string, scale: number, rotation: number, url: string, scrollMode: boolean, source: string, password: string | null = null) {
         this.id = id;
         this.canvas = Pdf.getCanvas(id);
         this.scale = scale;
@@ -75,7 +75,7 @@ export class Pdf {
         this.document = null;
         this.metadata = null;
         this.renderInProgress = false;
-        this.singlePageMode = singlePageMode;
+        this.scrollMode = scrollMode;
         this.pageCount = 0;
         this.currentPage = 1;
         this.previousPage = 1;

@@ -22,7 +22,7 @@ async function setupProjectWorker() {
     workerInitialised = true;
 }
 
-export async function initPdfViewer(dotnetReference: DotNetObject, pdfDto: PdfState, singlePageMode: boolean, useProjectWorker: boolean) : Promise<void> {
+export async function initPdfViewer(dotnetReference: DotNetObject, pdfDto: PdfState, scrollMode: boolean, useProjectWorker: boolean) : Promise<void> {
     console.log("Initializing PDF " + pdfDto.id);
 
     if (useProjectWorker && !workerInitialised) {
@@ -32,7 +32,7 @@ export async function initPdfViewer(dotnetReference: DotNetObject, pdfDto: PdfSt
     }
 
     if (pdfDto.url) {
-        const pdf = new Pdf(pdfDto.id as string, pdfDto.scale, pdfDto.orientation, pdfDto.url, singlePageMode, pdfDto.source, pdfDto.password)
+        const pdf = new Pdf(pdfDto.id as string, pdfDto.scale, pdfDto.orientation, pdfDto.url, scrollMode, pdfDto.source, pdfDto.password)
 
         try {
             const loadedDocument = await getDocument(getDocumentInit(pdfDto)).promise;
@@ -64,7 +64,7 @@ export async function updatePdf(dotnetReference: DotNetObject, pdfDto: PdfState)
         await dotnetReference.invokeMethodAsync('SearchResultsFromStream', streamRef);
     }
 
-    if (pdf.drawLayer.enabled !== pdfDto.drawLayerEnabled && pdf.singlePageMode) {
+    if (pdf.drawLayer.enabled !== pdfDto.drawLayerEnabled && !pdf.scrollMode) {
         if (pdfDto.drawLayerEnabled) {
             pdf.drawLayer.enable();
         } else {
@@ -72,7 +72,7 @@ export async function updatePdf(dotnetReference: DotNetObject, pdfDto: PdfState)
         }
     }
 
-    if (!pdf.singlePageMode && pdf.currentPage !== pdf.previousPage) {
+    if (pdf.scrollMode && pdf.currentPage !== pdf.previousPage) {
         scrollToPage(pdf.id, pdf.currentPage);
         await updateMetadata(dotnetReference, pdf)
 
@@ -94,7 +94,7 @@ export async function clearSearchResults(dotnetReference: DotNetObject, id: stri
 export async function goToPage(dotnetReference: DotNetObject, id: string, pageNumber: number) {
     const pdf = Pdf.getPdf(id);
     if (pdf.gotoPage(pageNumber)) {
-        if (pdf.singlePageMode) {
+        if (!pdf.scrollMode) {
             await queuePdfRender(pdf, null);
             await updateMetadata(dotnetReference, pdf);
         } else {
@@ -249,7 +249,7 @@ async function queuePdfRender(pdf: Pdf, pageNumber: number | null) {
 async function renderPdf(pdf: Pdf) {
     pdf.renderInProgress = true;
 
-    if (pdf.singlePageMode) {
+    if (!pdf.scrollMode) {
         pdf.document!.getPage(pdf.currentPage).then(async (pdfPage) => {
             const viewport = pdfPage.getViewport({scale: pdf.scale, rotation: pdf.rotation});
             pdf.canvas.width = viewport.width;
