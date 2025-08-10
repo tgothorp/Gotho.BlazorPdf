@@ -1,8 +1,42 @@
 import {PDFDocumentProxy, getFilenameFromUrl} from "pdfjs-dist"
 import {PdfState} from "./PdfState";
 import {PdfDrawLayer} from "./PdfDrawLayer";
+import {PdfMetadata} from "./PdfMetadata";
+import {PdfSearchResult} from "./PdfSearchResult";
 
 const pdfInstances = {}
+
+interface PdfJsMetadataInfo {
+    Author?: string;
+    Creator?: string;
+    Keywords?: string;
+    Producer?: string;
+    Subject?: string;
+    Title?: string;
+    PDFFormatVersion?: string;
+    CreationDate?: string;
+    ModDate?: string;
+    Custom?: any
+}
+
+interface PdfJsMetadata {
+    info: PdfJsMetadataInfo;
+    metadata: any;
+}
+
+interface PdfJsTextContent {
+    items?: Array<PdfJsTextContentItem>;
+}
+
+interface PdfJsTextContentItem {
+    dir?: string;
+    fontName?: string;
+    hasEOL?: boolean;
+    height?: number;
+    str?: string;
+    transform?: number[],
+    width?: number;
+}
 
 export class Pdf {
 
@@ -12,19 +46,26 @@ export class Pdf {
     public rotation: number;
     public url: string;
     public filename: string;
-    public document: PDFDocumentProxy;
+    public document: PDFDocumentProxy | null;
+    public metadata: PdfMetadata | null;
+    public textContent: Record<number, PdfJsTextContentItem[]>
 
     public renderInProgress: boolean;
-    public singlePageMode: boolean;
+    public scrollMode: boolean;
     public pageCount: number;
     public currentPage: number;
-    public queuedPage: number;
-    public password: string;
+    public previousPage: number;
+    public queuedPage: number | null;
+    public password: string | null;
     public source: string;
+    
+    public previousQuery: string | null;
+    public searchResults: PdfSearchResult[] = [];
+    public activeSearchIndex: number | null = null;
     
     public drawLayer: PdfDrawLayer;
 
-    constructor(id: string, scale: number, rotation: number, url: string, singlePageMode: boolean, source: string, password: string = null) {
+    constructor(id: string, scale: number, rotation: number, url: string, scrollMode: boolean, source: string, password: string | null = null) {
         this.id = id;
         this.canvas = Pdf.getCanvas(id);
         this.scale = scale;
@@ -32,78 +73,51 @@ export class Pdf {
         this.url = url;
         this.filename = getFilenameFromUrl(url)
         this.document = null;
+        this.metadata = null;
         this.renderInProgress = false;
-        this.singlePageMode = singlePageMode;
+        this.scrollMode = scrollMode;
         this.pageCount = 0;
         this.currentPage = 1;
+        this.previousPage = 1;
         this.queuedPage = null;
         this.source = source.toLowerCase();
         this.password = password
         this.drawLayer = new PdfDrawLayer(id);
+        this.textContent = {};
+        this.previousQuery = null;
 
+        // @ts-ignore
         pdfInstances[this.id] = this;
     }
 
     public static getPdf(id: string): Pdf {
         const canvas = this.getCanvas(id);
-        // @ts-ignore
-        return Object.values(pdfInstances).filter((c) => c.canvas === canvas).pop();
+        return Object.values(pdfInstances).filter((c: any) => c.canvas === canvas).pop() as Pdf;
     }
 
     public updatePdf(dto: PdfState)
     {
         this.rotation = dto.orientation;
         this.scale = dto.scale;
+        this.previousPage = this.currentPage;
         this.currentPage = dto.currentPage;
+        this.activeSearchIndex = dto.activeResultIndex;
     }
 
-    public setDocument(doc: PDFDocumentProxy) {
+    // @ts-ignore
+    public async setDocument(doc: PDFDocumentProxy) {
         this.document = doc;
         this.pageCount = doc.numPages;
-    }
 
-    public firstPage(): boolean {
-        if (this.document == null || this.currentPage == 1) {
-            return false;
+        for (let i = 1; i < this.pageCount + 1; i++) {
+            const page = await doc.getPage(i);
+            const text = await page.getTextContent() as PdfJsTextContent;
+            
+            if (!this.textContent.hasOwnProperty(i))
+            {
+                this.textContent[i] = text.items!;
+            }
         }
-
-        if (this.currentPage > 1)
-            this.currentPage = 1;
-
-        return true;
-    }
-
-    public lastPage(): boolean {
-        if (this.document == null || (this.currentPage == 1 && this.currentPage === this.pageCount)) {
-            return false;
-        }
-
-        if (this.currentPage < this.pageCount)
-            this.currentPage = this.pageCount;
-
-        return true;
-    }
-
-    public nextPage(): boolean {
-        if (this.document === null || this.currentPage === this.pageCount)
-            return false;
-
-        if (this.currentPage < this.pageCount)
-            this.currentPage += 1;
-
-        return true;
-    }
-
-    public previousPage(): boolean {
-        if (this.document == null || this.currentPage === 0 || this.currentPage === 1) {
-            return false;
-        }
-
-        if (this.currentPage > 0) {
-            this.currentPage -= 1;
-        }
-
-        return true;
     }
 
     public gotoPage(pageNumber: number): boolean {
@@ -123,6 +137,67 @@ export class Pdf {
     public zoom(scale: number) {
         this.scale = scale;
     }
+
+    public async getMetadata() : Promise<PdfMetadata> {
+        if (this.metadata !== null)
+            return this.metadata;
+        
+        const data = await this.document!.getMetadata() as PdfJsMetadata;
+        const custom: Record<string, string> = {};
+        
+        if (data.info.Custom)
+        {
+            // @ts-ignore
+            for (const [key, value] of Object.entries(data.info.Custom)) {
+                if (value != null) {
+                    custom[key] = String(value);
+                }
+            }
+        }
+
+        this.metadata = new PdfMetadata(
+            data.info.Author,
+            data.info.Creator,
+            data.info.Keywords,
+            data.info.Producer,
+            data.info.Subject,
+            data.info.Title,
+            data.info.PDFFormatVersion,
+            this.parsePdfDate(data.info.CreationDate),
+            this.parsePdfDate(data.info.ModDate),
+            custom,
+        );
+
+        return this.metadata;
+    }
+    
+    public clearSearchResults(): void {
+        this.previousQuery = null;
+    }
+    
+    public search(query: string): Array<PdfSearchResult> {
+        query = query.toLowerCase();
+        this.previousQuery = query;
+        
+        let result = new Array<PdfSearchResult>();
+        if (!query)
+            return result;
+        
+        for (let page = 1; page < Object.keys(this.textContent).length + 1; page++) {
+            const textOnPage = this.textContent[page];
+
+            for (let i = 0; i < textOnPage.length; i++) {
+                const text = textOnPage[i].str!.toLowerCase();
+                if (text.indexOf(query) !== -1)
+                {
+                    result.push(new PdfSearchResult(page, i));
+                }
+            }
+        }
+
+        this.searchResults = result;
+        return this.searchResults;
+    }
     
     public getCanvasContext(): any {
         return this.canvas.getContext("2d");
@@ -132,12 +207,10 @@ export class Pdf {
         if (this.isDomSupported() && typeof id === 'string') {
             id = document.getElementById(id);
         } else if (id && id.length) {
-            // support for array based queries
             id = id[0];
         }
 
         if (id && id.canvas !== undefined && id.canvas) {
-            // support for any object associated to a canvas (including a context2d)
             id = id.canvas;
         }
 
@@ -146,5 +219,36 @@ export class Pdf {
 
     private static isDomSupported(): boolean {
         return true;
+    }
+
+    private parsePdfDate(pdfDateStr?: string): Date | null {
+        // @ts-ignore
+        if (!pdfDateStr || !pdfDateStr.startsWith('D:')) return null;
+
+        const regex = /^D:(\d{4})(\d{2})?(\d{2})?(\d{2})?(\d{2})?(\d{2})?([Z\+\-])?(\d{2})'?(\d{2})'?/;
+        const match = regex.exec(pdfDateStr);
+
+        if (!match) return null;
+
+        const [
+            ,
+            year,
+            month = '01',
+            day = '01',
+            hour = '00',
+            minute = '00',
+            second = '00',
+            tzSign,
+            tzHour,
+            tzMin
+        ] = match;
+
+        const dateStr = `${year}-${month}-${day}T${hour}:${minute}:${second}`;
+
+        if (tzSign && tzSign !== 'Z' && tzHour && tzMin) {
+            return new Date(`${dateStr}${tzSign}${tzHour}:${tzMin}`);
+        }
+
+        return new Date(dateStr);
     }
 }

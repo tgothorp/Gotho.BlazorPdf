@@ -15,4 +15,7 @@ internal class PdfState
     public required bool DrawLayerEnabled { get; set; }
     public required string PenColor { get; set; }
     public required int PenThickness { get; set; }
+
+    public required string? SearchQuery { get; set; }
+    public required int? ActiveResultIndex { get; set; }
 }

@@ -1,180 +1,207 @@
+@using System.Globalization
 @using Gotho.BlazorPdf.BlazorPdfIcons
+@using Gotho.BlazorPdf.Extensions
+@using Microsoft.AspNetCore.Components.Forms
 
 @inherits ComponentBase
 
 <div class="blazorpdf-container">
     <div role="toolbar" class="blazorpdf-toolbar" style="background-color: @Colors.Toolbar">
-        @*Toggle Thumbnail*@
         
-        @if (!HideThumbnails)
+        @if (PdfFile is not null)
         {
-            <div class="blazorpdf-toolbar__item blazorpdf__hide-on-mobile">
-                <button class="blazorpdf-toolbar__item-button" disabled="@InputDisabled()" @onclick="ToggleThumbnails"
-                        aria-label="@LocalizedStrings.ToggleThumbnails">
+            @*Toggle Thumbnail*@
+        
+            @if (!HideThumbnails)
+            {
+                <div class="blazorpdf-toolbar__item blazorpdf__hide-on-mobile">
+                    <button class="blazorpdf-toolbar__item-button" disabled="@InputDisabled()" @onclick="ToggleThumbnails"
+                            aria-label="@LocalizedStrings.ToggleThumbnails">
+                        <span>
+                            <ThumbnailsIcon Color="@Colors.Icon"/>
+                        </span>
+                    </button>
+                </div>
+            }
+
+            @*Previous Page*@
+            <div class="blazorpdf-toolbar__item">
+                <button class="blazorpdf-toolbar__item-button" disabled="@InputDisabled()" @onclick="PreviousPageAsync"
+                        aria-label="@LocalizedStrings.PreviousPage">
                     <span>
-                        <ThumbnailsIcon Color="@Colors.Icon"/>
+                        <PreviousPageIcon Color="@Colors.Icon"/>
                     </span>
                 </button>
             </div>
-        }
 
-        @*Previous Page*@
-        <div class="blazorpdf-toolbar__item">
-            <button class="blazorpdf-toolbar__item-button" disabled="@InputDisabled()" @onclick="PreviousPageAsync"
-                    aria-label="@LocalizedStrings.PreviousPage">
-                <span>
-                    <PreviousPageIcon Color="@Colors.Icon"/>
-                </span>
-            </button>
-        </div>
-
-        @*Next Page*@
-        <div class="blazorpdf-toolbar__item">
-            <button class="blazorpdf-toolbar__item-button" disabled="@InputDisabled()" @onclick="NextPageAsync"
-                    aria-label="@LocalizedStrings.NextPage">
-                <span>
-                    <NextPageIcon Color="@Colors.Icon"/>
-                </span>
-            </button>
-        </div>
-
-        @*Current Page*@
-        <div class="blazorpdf-toolbar__item blazorpdf__hide-on-mobile">
-            <input type="number" value="@PdfFile.Paging.CurrentPage" disabled="@InputDisabled()"
-                   @onchange="PageChanged"/>
-        </div>
-
-        @* of *@
-        <div class="blazorpdf-toolbar__item blazorpdf__hide-on-mobile">
-            <p>@LocalizedStrings.PageOf</p>
-        </div>
-
-        @*Page Total*@
-        <div class="blazorpdf-toolbar__item blazorpdf__hide-on-mobile">
-            <p>@PdfFile.Paging.TotalPages</p>
-        </div>
-
-        <div class="blazorpdf-toolbar__spacer blazorpdf__hide-on-mobile"></div>
-
-        @*Zoom Out*@
-        <div class="blazorpdf-toolbar__item">
-            <button class="blazorpdf-toolbar__item-button" @onclick="ZoomOutAsync" disabled="@InputDisabled()"
-                    aria-label="@LocalizedStrings.ZoomOut">
-                <span>
-                    <ZoomOutIcon Color="@Colors.Icon"/>
-                </span>
-            </button>
-        </div>
-
-        @*Current Zoom*@
-        <div class="blazorpdf-toolbar__item blazorpdf__hide-on-mobile">
-            <span class="blazorpdf-toolbar__item-chip">@PdfFile.Zooming.GetZoomPercentageString()</span>
-        </div>
-
-        @*Zoom In*@
-        <div class="blazorpdf-toolbar__item">
-            <button class="blazorpdf-toolbar__item-button" @onclick="ZoomInAsync" disabled="@InputDisabled()"
-                    aria-label="@LocalizedStrings.ZoomIn">
-                <span>
-                    <ZoomInIcon Color="@Colors.Icon"/>
-                </span>
-            </button>
-        </div>
-
-        <div class="blazorpdf-toolbar__spacer"></div>
-
-        @*Menu*@
-        <div class="blazorpdf-toolbar__item">
-            <div class="blazorpdf-toolbar__menu-wrapper">
-                <input type="checkbox" id="menu-toggle" hidden>
-                <label for="menu-toggle" class="blazorpdf-toolbar__menu-trigger-button">
+            @*Next Page*@
+            <div class="blazorpdf-toolbar__item">
+                <button class="blazorpdf-toolbar__item-button" disabled="@InputDisabled()" @onclick="NextPageAsync"
+                        aria-label="@LocalizedStrings.NextPage">
                     <span>
-                        <MenuIcon Color="@Colors.Icon"/>
+                        <NextPageIcon Color="@Colors.Icon"/>
                     </span>
-                </label>
-                <div class="blazorpdf-toolbar__menu">
-                    <label for="menu-toggle" class="blazorpdf-toolbar__menu-overlay"></label>
-                    <div class="blazorpdf-toolbar__menu-content">
-                        <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
-                                @onclick="RotateClockwiseAsync">
-                            <span class="blazorpdf-toolbar__menu-menu-item-icon">
-                                <RotateCWIcon Color="@Colors.Icon"/>
-                            </span>
-                            <span
-                                class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.RotateClockwise</span>
-                        </button>
-                        <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
-                                @onclick="RotateCounterclockwiseAsync">
-                            <span class="blazorpdf-toolbar__menu-menu-item-icon">
-                                <RotateCCWIcon Color="@Colors.Icon"/>
-                            </span>
-                            <span
-                                class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.RotateCounterclockwise</span>
-                        </button>
-                        <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
-                                @onclick="SwitchOrientationAsync">
-                            <span class="blazorpdf-toolbar__menu-menu-item-icon">
-                                <SwitchOrientationIcon Color="@Colors.Icon"/>
-                            </span>
-                            <span
-                                class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.SwitchOrientation</span>
-                        </button>
-                        <hr class="blazorpdf-toolbar__menu-divider">
-                        <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
-                                @onclick="FirstPageAsync">
-                            <span class="blazorpdf-toolbar__menu-menu-item-icon">
-                                <FirstPageIcon Color="@Colors.Icon"/>
-                            </span>
-                            <span class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.FirstPage</span>
-                        </button>
-                        <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
-                                @onclick="LastPageAsync">
-                            <span class="blazorpdf-toolbar__menu-menu-item-icon">
-                                <LastPageIcon Color="@Colors.Icon"/>
-                            </span>
-                            <span class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.LastPage</span>
-                        </button>
-                        <hr class="blazorpdf-toolbar__menu-divider">
-                        <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
-                                @onclick="ResetZoomAsync">
-                            <span class="blazorpdf-toolbar__menu-menu-item-icon">
-                                <ZoomResetIcon Color="@Colors.Icon"/>
-                            </span>
-                            <span class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.ResetZoom</span>
-                        </button>
-                        <hr class="blazorpdf-toolbar__menu-divider">
-                        <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
-                                @onclick="PrintDocumentAsync">
-                            <span class="blazorpdf-toolbar__menu-menu-item-icon">
-                                <PrintIcon Color="@Colors.Icon"/>
-                            </span>
-                            <span class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.PrintDocument</span>
-                        </button>
-                        <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
-                                @onclick="DownloadDocumentAsync">
-                            <span class="blazorpdf-toolbar__menu-menu-item-icon">
-                                <DownloadIcon Color="@Colors.Icon"/>
-                            </span>
-                            <span
-                                class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.DownloadDocument</span>
-                        </button>
-                        @if (SinglePageMode)
-                        {
-                            <hr class="blazorpdf-toolbar__menu-divider">
+                </button>
+            </div>
+
+            @*Current Page*@
+            <div class="blazorpdf-toolbar__item blazorpdf__hide-on-mobile">
+                <input type="number" value="@PdfFile.Paging.CurrentPage" disabled="@InputDisabled()"
+                       @onchange="PageChanged"/>
+            </div>
+
+            @* of *@
+            <div class="blazorpdf-toolbar__item blazorpdf__hide-on-mobile">
+                <p>@LocalizedStrings.PageOf</p>
+            </div>
+
+            @*Page Total*@
+            <div class="blazorpdf-toolbar__item blazorpdf__hide-on-mobile">
+                <p>@PdfFile.Paging.TotalPages</p>
+            </div>
+
+            <div class="blazorpdf-toolbar__spacer blazorpdf__hide-on-mobile"></div>
+
+            @*Zoom Out*@
+            <div class="blazorpdf-toolbar__item">
+                <button class="blazorpdf-toolbar__item-button" @onclick="ZoomOutAsync" disabled="@InputDisabled()"
+                        aria-label="@LocalizedStrings.ZoomOut">
+                    <span>
+                        <ZoomOutIcon Color="@Colors.Icon"/>
+                    </span>
+                </button>
+            </div>
+
+            @*Current Zoom*@
+            <div class="blazorpdf-toolbar__item blazorpdf__hide-on-mobile">
+                <span class="blazorpdf-toolbar__item-chip">@PdfFile.Zooming.GetZoomPercentageString()</span>
+            </div>
+
+            @*Zoom In*@
+            <div class="blazorpdf-toolbar__item">
+                <button class="blazorpdf-toolbar__item-button" @onclick="ZoomInAsync" disabled="@InputDisabled()"
+                        aria-label="@LocalizedStrings.ZoomIn">
+                    <span>
+                        <ZoomInIcon Color="@Colors.Icon"/>
+                    </span>
+                </button>
+            </div>
+
+            <div class="blazorpdf-toolbar__spacer"></div>
+            
+            @if (!ScrollMode)
+            {
+                @*Find*@
+                <div class="blazorpdf-toolbar__item blazorpdf__hide-on-mobile">
+                    <button class="blazorpdf-toolbar__item-button" @onclick="ToggleFind" disabled="@InputDisabled()"
+                            aria-label="@LocalizedStrings.Find">
+                        <span>
+                            <FindIcon Color="@Colors.Icon"/>
+                        </span>
+                    </button>
+                </div>
+            }
+
+            @*Menu*@
+            <div class="blazorpdf-toolbar__item">
+                <div class="blazorpdf-toolbar__menu-wrapper">
+                    <input type="checkbox" id="menu-toggle" hidden>
+                    <label for="menu-toggle" class="blazorpdf-toolbar__menu-trigger-button">
+                        <span>
+                            <MenuIcon Color="@Colors.Icon"/>
+                        </span>
+                    </label>
+                    <div class="blazorpdf-toolbar__menu">
+                        <label for="menu-toggle" class="blazorpdf-toolbar__menu-overlay"></label>
+                        <div class="blazorpdf-toolbar__menu-content">
                             <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
-                                    @onclick="ToggleDrawingAsync">
+                                    @onclick="RotateClockwiseAsync">
                                 <span class="blazorpdf-toolbar__menu-menu-item-icon">
-                                    <DrawIcon Color="@Colors.Icon"/>
+                                    <RotateCWIcon Color="@Colors.Icon"/>
                                 </span>
                                 <span
-                                    class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.Draw</span>
+                                    class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.RotateClockwise</span>
                             </button>
-                        }
+                            <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
+                                    @onclick="RotateCounterclockwiseAsync">
+                                <span class="blazorpdf-toolbar__menu-menu-item-icon">
+                                    <RotateCCWIcon Color="@Colors.Icon"/>
+                                </span>
+                                <span
+                                    class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.RotateCounterclockwise</span>
+                            </button>
+                            <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
+                                    @onclick="SwitchOrientationAsync">
+                                <span class="blazorpdf-toolbar__menu-menu-item-icon">
+                                    <SwitchOrientationIcon Color="@Colors.Icon"/>
+                                </span>
+                                <span
+                                    class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.SwitchOrientation</span>
+                            </button>
+                            <hr class="blazorpdf-toolbar__menu-divider">
+                            <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
+                                    @onclick="FirstPageAsync">
+                                <span class="blazorpdf-toolbar__menu-menu-item-icon">
+                                    <FirstPageIcon Color="@Colors.Icon"/>
+                                </span>
+                                <span class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.FirstPage</span>
+                            </button>
+                            <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
+                                    @onclick="LastPageAsync">
+                                <span class="blazorpdf-toolbar__menu-menu-item-icon">
+                                    <LastPageIcon Color="@Colors.Icon"/>
+                                </span>
+                                <span class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.LastPage</span>
+                            </button>
+                            <hr class="blazorpdf-toolbar__menu-divider">
+                            <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
+                                    @onclick="ResetZoomAsync">
+                                <span class="blazorpdf-toolbar__menu-menu-item-icon">
+                                    <ZoomResetIcon Color="@Colors.Icon"/>
+                                </span>
+                                <span class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.ResetZoom</span>
+                            </button>
+                            <hr class="blazorpdf-toolbar__menu-divider">
+                            <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
+                                    @onclick="PrintDocumentAsync">
+                                <span class="blazorpdf-toolbar__menu-menu-item-icon">
+                                    <PrintIcon Color="@Colors.Icon"/>
+                                </span>
+                                <span class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.PrintDocument</span>
+                            </button>
+                            <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
+                                    @onclick="DownloadDocumentAsync">
+                                <span class="blazorpdf-toolbar__menu-menu-item-icon">
+                                    <DownloadIcon Color="@Colors.Icon"/>
+                                </span>
+                                <span
+                                    class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.DownloadDocument</span>
+                            </button>
+                            <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
+                                    @onclick="ViewMetadataAsync">
+                                <span class="blazorpdf-toolbar__menu-menu-item-icon">
+                                    <MetadataIcon Color="@Colors.Icon"/>
+                                </span>
+                                <span
+                                    class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.ViewMetadata</span>
+                            </button>
+                            @if (!ScrollMode)
+                            {
+                                <hr class="blazorpdf-toolbar__menu-divider">
+                                <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
+                                        @onclick="ToggleDrawingAsync">
+                                    <span class="blazorpdf-toolbar__menu-menu-item-icon">
+                                        <DrawIcon Color="@Colors.Icon"/>
+                                    </span>
+                                    <span
+                                        class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.Draw</span>
+                                </button>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-
+        }
     </div>
 
     @if (Loading)
@@ -185,6 +212,56 @@
     }
 
     <div class="blazorpdf-pdf" style="background-color: @Colors.Background">
+        
+        @if (_showFind && PdfFile is not null)
+        {
+            <div class="blazorpdf-search__container">
+                <div class="blazorpdf-search">
+                    <div class="blazorpdf-search-row">
+                        <div>
+                            <div class="blazorpdf-search-row-top">
+                                <input type="text"
+                                       placeholder="Find in document..."
+                                       value="@_searchQuery"
+                                       @oninput="e => _searchQuery = e.Value?.ToString()"
+                                       @onkeydown="@(async (e) => await FindKeyPressed(e))"/>
+                                <button class="blazorpdf__button" type="button" @onclick="PreviousResult">
+                                    <ChevronLeft/>
+                                </button>
+                                <button class="blazorpdf__button" type="button" @onclick="NextResult">
+                                    <ChevronRight/>
+                                </button>
+                            </div>
+                            <div>
+                                @if (PdfFile.Search.SearchResults is null)
+                                {
+
+                                }
+                                else if (PdfFile.Search.SearchResults.Count == 0)
+                                {
+                                    <p class="blazorpdf-search__result">No Results.</p>
+                                }
+                                else
+                                {
+                                    <p class="blazorpdf-search__result">@PdfFile.Search.GetDisplayIndex() of @PdfFile.Search.SearchResults.Count Matches.</p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        
+        @if (PdfFile is null && Config.PermitPdfFileUpload)
+        {
+            <div class="blazorpdf-pdf__upload-container">
+                <div class="blazorpdf-pdf__upload">
+                    <h1>Upload File</h1>
+                    <p>Max file size: @Config.MaxPdfFileUploadSize.GetReadableFileSize()</p>
+                    <InputFile OnChange="UploadFile" accept="application/pdf" />
+                </div>
+            </div>
+        }
 
         @if (Error is not null)
         {
@@ -214,14 +291,88 @@
             </div>
         }
 
+        @if (Metadata is not null)
+        {
+            <div class="blazorpdf-pdf__overlay"></div>
+            <div class="blazorpdf-pdf__metadata">
+                <div class="blazorpdf-pdf__metadata-content">
+
+                    <h1 class="blazorpdf-pdf__metadata-title">@LocalizedStrings.MetadataHeader</h1>
+
+                    <div class="blazorpdf-pdf__metadata-item">
+                        <p class="blazorpdf-pdf__metadata-item-key">@LocalizedStrings.MetadataTitle</p>
+                        <p class="blazorpdf-pdf__metadata-item-value">@MetadataOrEmpty(Metadata.Title)</p>
+                    </div>
+
+                    <div class="blazorpdf-pdf__metadata-item">
+                        <p class="blazorpdf-pdf__metadata-item-key">@LocalizedStrings.MetadataSubject</p>
+                        <p class="blazorpdf-pdf__metadata-item-value">@MetadataOrEmpty(Metadata.Subject)</p>
+                    </div>
+
+                    <div class="blazorpdf-pdf__metadata-item">
+                        <p class="blazorpdf-pdf__metadata-item-key">@LocalizedStrings.MetadataAuthor</p>
+                        <p class="blazorpdf-pdf__metadata-item-value">@MetadataOrEmpty(Metadata.Author)</p>
+                    </div>
+
+                    <div class="blazorpdf-pdf__metadata-item">
+                        <p class="blazorpdf-pdf__metadata-item-key">@LocalizedStrings.MetadataCreator</p>
+                        <p class="blazorpdf-pdf__metadata-item-value">@MetadataOrEmpty(Metadata.Creator)</p>
+                    </div>
+
+                    <div class="blazorpdf-pdf__metadata-item">
+                        <p class="blazorpdf-pdf__metadata-item-key">@LocalizedStrings.MetadataProducer</p>
+                        <p class="blazorpdf-pdf__metadata-item-value">@MetadataOrEmpty(Metadata.Producer)</p>
+                    </div>
+
+                    <div class="blazorpdf-pdf__metadata-item">
+                        <p class="blazorpdf-pdf__metadata-item-key">@LocalizedStrings.MetadataPdfFormatVersion</p>
+                        <p class="blazorpdf-pdf__metadata-item-value">@MetadataOrEmpty(Metadata.FormatVersion)</p>
+                    </div>
+
+                    <div class="blazorpdf-pdf__metadata-item">
+                        <p class="blazorpdf-pdf__metadata-item-key">@LocalizedStrings.MetadataKeywords</p>
+                        <p class="blazorpdf-pdf__metadata-item-value">@MetadataOrEmpty(Metadata.Keywords)</p>
+                    </div>
+
+                    <div class="blazorpdf-pdf__metadata-item">
+                        <p class="blazorpdf-pdf__metadata-item-key">@LocalizedStrings.MetadataCreationDate</p>
+                        <p class="blazorpdf-pdf__metadata-item-value">@(Metadata.CreationDate is null ? "N/A" : Metadata.CreationDate.Value.ToString("g", CultureInfo.CurrentCulture))</p>
+                    </div>
+
+                    <div class="blazorpdf-pdf__metadata-item">
+                        <p class="blazorpdf-pdf__metadata-item-key">@LocalizedStrings.MetadataModifiedDate</p>
+                        <p class="blazorpdf-pdf__metadata-item-value">@(Metadata.ModifiedDate is null ? "N/A" : Metadata.ModifiedDate.Value.ToString("g", CultureInfo.CurrentCulture))</p>
+                    </div>
+
+                    @if (Metadata.CustomMetadata is not null && Metadata.CustomMetadata.Any())
+                    {
+                        <div class="blazorpdf-pdf__metadata-item">
+                            <p class="blazorpdf-pdf__metadata-item-key">@LocalizedStrings.MetadataCustomData</p>
+
+                            @foreach (var item in Metadata.CustomMetadata)
+                            {
+                                <p class="blazorpdf-pdf__metadata-item-value">@item.Key : @item.Value</p>
+                            }
+                        </div>
+                    }
+
+                    <div class="blazorpdf-pdf__close-container">
+                        <button class="blazorpdf-pdf__close-container-button" @onclick="@(ClearMetadata)">
+                            @LocalizedStrings.MetadataClose
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+
         <div class="@(Error is not null ? "blazorpdf-d-none" : "")">
-            <div id="@($"{PdfFile.Id}_thumbs")"
+            <div id="@($"{PdfFile?.Id}_thumbs")"
                  class="@((!HideThumbnails && _showThumbnails) ? "blazorpdf-pdf__thumbnails" : "blazorpdf-pdf__thumbnails blazorpdf-d-none")"
                  style="background-color: @Colors.Background"></div>
         </div>
 
         <div>
-            @if (PdfFile.DrawLayer.Enabled)
+            @if (PdfFile is not null && PdfFile.DrawLayer.Enabled)
             {
                 <div class="blazorpdf-drawing__container">
                     <div class="blazorpdf-drawing__close">
@@ -248,49 +399,68 @@
             }
         </div>
 
+        @if (PdfFile is not null)
+        {
+            <div class="@(Error is not null ? "blazorpdf-d-none" : "")" style="margin: auto">
+                <div style="position: relative; background-color: @Colors.Background; margin: 25px">
+                    <div>
+                        @* PDF Canvas *@
+                        @if (ScrollMode)
+                        {
+                            <div id="@PdfFile.Id" class="blazorpdf__scroll" style="height: @Height"></div>
+                        }
+                        else
+                        {
+                            <canvas id="@PdfFile.Id"></canvas>
+                        }
+                    </div>
 
-        <div class="@(Error is not null ? "blazorpdf-d-none" : "")" style="margin: auto">
-            <div style="position: relative; background-color: @Colors.Background; margin: 25px">
-                <div>
-                    @* PDF Canvas *@
-                    @if (SinglePageMode)
+                    @if (!ScrollMode)
                     {
-                        <canvas id="@PdfFile.Id"></canvas>
-                    }
-                    else
-                    {
-                        <div id="@PdfFile.Id" class="blazorpdf__scroll" style="height: @Height"></div>
+                        <div>
+                            @* Drawing Layer *@
+                            <canvas id="@($"{PdfFile.Id}_drawing")" class="blazorpdf-drawing__canvas"></canvas>
+                        </div>
+                        <div>
+                            @* Text Layer *@
+                            <div id="@($"{PdfFile.Id}_text")" class="textLayer"></div>
+                        </div>
                     }
                 </div>
-
-                @if (SinglePageMode)
-                {
-                    <div>
-                        @* Drawing Layer *@
-                        <canvas id="@($"{PdfFile.Id}_drawing")" class="blazorpdf-drawing__canvas"></canvas>
-                    </div>
-                    <div>
-                        @* Text Layer *@
-                        <div id="@($"{PdfFile.Id}_text")" class="textLayer"></div>
-                    </div>
-                }
             </div>
-        </div>
+        }
     </div>
 </div>
 
 @code {
 
     private bool _showThumbnails = true;
+    private bool _showFind = false;
+    private string? _searchQuery = null;
 
     private bool InputDisabled()
     {
-        return Loading || Error is not null;
+        return Loading || Error is not null || PdfFile is null;
     }
 
     private void ToggleThumbnails()
     {
         _showThumbnails = !_showThumbnails;
+    }
+    
+    private async Task ToggleFind()
+    {
+        _showFind = !_showFind;
+        if (!_showFind)
+        {
+            _searchQuery = null;
+            await ClearSearchResults();
+        }
+    }
+
+    private string MetadataOrEmpty(string? metadata)
+    {
+        return metadata.IsNullOrEmpty() ? "N/A" : metadata!;
     }
 
     private async Task PageChanged(ChangeEventArgs obj)
@@ -313,5 +483,13 @@
             thickness = parsedInt;
 
         await UpdatePenThickness(thickness);
+    }
+
+    private async Task FindKeyPressed(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !_searchQuery.IsNullOrEmpty())
+        {
+            await Search(_searchQuery!);
+        }
     }
 }

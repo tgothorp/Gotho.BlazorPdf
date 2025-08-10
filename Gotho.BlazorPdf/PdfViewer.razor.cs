@@ -1,7 +1,9 @@
+using System.Text.Json;
 using Gotho.BlazorPdf.Config;
 using Gotho.BlazorPdf.Extensions;
 using Gotho.BlazorPdf.Pdf;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
 
 namespace Gotho.BlazorPdf;
@@ -12,8 +14,9 @@ public partial class PdfViewer : ComponentBase
     protected DotNetObjectReference<PdfViewer>? ObjectReference;
     protected PdfError? Error;
     protected string? PdfPassword;
+    protected PdfMetadata? Metadata;
 
-    protected Pdf.Pdf PdfFile { get; set; } = null!;
+    protected Pdf.Pdf? PdfFile { get; set; }
 
     /// <summary>
     /// Sets the display orientation of the PDF document
@@ -42,7 +45,7 @@ public partial class PdfViewer : ComponentBase
     /// Defaults to <c>true</c>
     /// </remarks>
     [Parameter]
-    public bool SinglePageMode { get; set; } = true;
+    public bool ScrollMode { get; set; } = false;
 
     /// <summary>
     /// URL of the PDF to be displayed, this can also be a base64 string 
@@ -57,7 +60,7 @@ public partial class PdfViewer : ComponentBase
     /// Defaults to <c>false</c>
     /// </remarks>
     [Parameter]
-    public bool HideThumbnails { get; set; } = false;
+    public bool HideThumbnails { get; set; }
 
     /// <summary>
     /// This event fires immediately after the PDF document is loaded.
@@ -72,9 +75,14 @@ public partial class PdfViewer : ComponentBase
     public EventCallback<PdfViewerEventArgs> OnPageChanged { get; set; }
 
     /// <summary>
+    /// Invoked when a file is uploaded by a user
+    /// </summary>
+    public EventCallback<PdfViewerFileUploaded> OnFileUploaded { get; set; }
+
+    /// <summary>
     /// A class containing the localized strings for the viewer 
     /// </summary>
-    [Parameter] 
+    [Parameter]
     public BlazorPdfLocalizedStrings LocalizedStrings { get; set; } = new();
 
     /// <summary>
@@ -86,25 +94,22 @@ public partial class PdfViewer : ComponentBase
     [Inject] private PdfInterop PdfInterop { get; set; } = default!;
     [Inject] protected BlazorPdfConfig Config { get; set; } = default!;
 
-    protected override void OnParametersSet()
-    {
-        Url ??= string.Empty;
-
-        base.OnParametersSet();
-    }
-
     protected override async Task OnInitializedAsync()
     {
         ObjectReference ??= DotNetObjectReference.Create(this);
-        PdfFile = new Pdf.Pdf("".GenerateRandomString(), Url!, PdfOrientation);
+
+        if (!Url.IsNullOrEmpty())
+            PdfFile = new Pdf.Pdf("".GenerateRandomString(), Url!, PdfOrientation);
+        else
+            Loading = false;
 
         await base.OnInitializedAsync();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
-            await PdfInterop.InitializeAsync(ObjectReference!, PdfFile, SinglePageMode, Config.UseProjectWorker);
+        if (firstRender && PdfFile is not null)
+            await PdfInterop.InitializeAsync(ObjectReference!, PdfFile, ScrollMode, Config.UseProjectWorker);
 
         await base.OnAfterRenderAsync(firstRender);
     }
@@ -121,7 +126,7 @@ public partial class PdfViewer : ComponentBase
         if (pdfViewerModel is null)
             return;
 
-        PdfFile.Paging.Update(pdfViewerModel.CurrentPage, pdfViewerModel.TotalPages);
+        PdfFile!.Paging.Update(pdfViewerModel.CurrentPage, pdfViewerModel.TotalPages);
         StateHasChanged();
 
         if (OnDocumentLoaded.HasDelegate)
@@ -138,7 +143,7 @@ public partial class PdfViewer : ComponentBase
         if (pdfViewerModel is null)
             return;
 
-        PdfFile.Paging.Update(pdfViewerModel.CurrentPage, pdfViewerModel.TotalPages);
+        PdfFile!.Paging.Update(pdfViewerModel.CurrentPage, pdfViewerModel.TotalPages);
         StateHasChanged();
 
         if (OnPageChanged.HasDelegate)
@@ -161,7 +166,39 @@ public partial class PdfViewer : ComponentBase
 
         StateHasChanged();
     }
-    
+
+    /// <summary>
+    /// Invoked by BlazorPdf's JS interop code when viewing a PDF's metadata
+    /// </summary>
+    /// <remarks>Do not call this method from your code</remarks>
+    [JSInvokable]
+    public void PdfMetadata(PdfMetadata metadata)
+    {
+        Metadata = metadata;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Invoked by BlazorPdf's JS interops code when text searching
+    /// </summary>
+    /// <remarks>Do not call this method from your code</remarks>
+    [JSInvokable]
+    public async Task SearchResultsFromStream(IJSStreamReference stream)
+    {
+        await using var s = await stream.OpenReadStreamAsync(maxAllowedSize: 50 * 1024 * 1024);
+        using var reader = new StreamReader(s);
+        var json = await reader.ReadToEndAsync();
+        var results = JsonSerializer.Deserialize<List<PdfSearchResult>>(json);
+        
+        PdfFile?.Search.UpdateResults(results ?? []);
+
+        if (PdfFile?.Search.CurrentSearchResult is not null 
+            && PdfFile?.Search.CurrentSearchResult?.Page != PdfFile?.Paging.CurrentPage)
+            PdfFile?.Paging.GotoPage(PdfFile.Search.CurrentSearchResult!.Page);
+
+        await PdfInterop.UpdateAsync(ObjectReference!, PdfFile!);
+    }
+
     /// <summary>
     /// Loads a PDF from the given URL, can be used as an alternative to the <c>Url</c> parameter.
     /// </summary>
@@ -175,15 +212,17 @@ public partial class PdfViewer : ComponentBase
             return;
         }
 
-        if (url is not null)
+        if (PdfFile is null)
+            PdfFile = new Pdf.Pdf("".GenerateRandomString(), url!, PdfOrientation);
+        else if (url is not null)
             PdfFile.UpdateUrl(url);
-        
+
         PdfFile.UpdatePassword(PdfPassword);
         Loading = true;
         Error = null;
         StateHasChanged();
 
-        await PdfInterop.InitializeAsync(ObjectReference!, PdfFile, SinglePageMode, Config.UseProjectWorker);
+        await PdfInterop.InitializeAsync(ObjectReference!, PdfFile, ScrollMode, Config.UseProjectWorker);
     }
 
     #region Paging
@@ -271,7 +310,7 @@ public partial class PdfViewer : ComponentBase
         PdfFile.DrawLayer.Toggle();
         await PdfInterop.UpdateAsync(ObjectReference!, PdfFile);
     }
-    
+
     protected async Task UpdatePenColorAsync(string color)
     {
         PdfFile.DrawLayer.UpdateColor(color);
@@ -288,21 +327,112 @@ public partial class PdfViewer : ComponentBase
     {
         await PdfInterop.UndoLastStrokeAsync(ObjectReference!, PdfFile);
     }
-    
+
     protected async Task ClearAllPageStrokesAsync()
     {
         await PdfInterop.ClearStrokesForPageAsync(ObjectReference!, PdfFile);
     }
 
     #endregion
-    
+
+    #region Searching
+
+    protected async Task Search(string query)
+    {
+        PdfFile?.Search.UpdateSearchQuery(query);
+        await PdfInterop.UpdateAsync(ObjectReference!, PdfFile!);
+    }
+
+    protected async Task ClearSearchResults()
+    {
+        PdfFile?.Search.UpdateSearchQuery(null);
+        await PdfInterop.ClearSearchResults(ObjectReference!, PdfFile!);
+    }
+
+    protected async Task NextResult()
+    {
+        if (!PdfFile!.Search.NextResult())
+        {
+            return;
+        }
+
+        if (PdfFile?.Search.CurrentSearchResult?.Page != PdfFile?.Paging.CurrentPage)
+            PdfFile?.Paging.GotoPage(PdfFile.Search.CurrentSearchResult!.Page);
+
+        await PdfInterop.UpdateAsync(ObjectReference!, PdfFile!);
+    }
+
+    protected async Task PreviousResult()
+    {
+        if (!PdfFile!.Search.PreviousResult())
+        {
+            return;
+        }
+
+        if (PdfFile?.Search.CurrentSearchResult?.Page != PdfFile?.Paging.CurrentPage)
+            PdfFile?.Paging.GotoPage(PdfFile.Search.CurrentSearchResult!.Page);
+
+        await PdfInterop.UpdateAsync(ObjectReference!, PdfFile!);
+    }
+
+    #endregion
+
+    #region Other
+
     protected async Task DownloadDocumentAsync()
     {
-        await PdfInterop.DownloadDocumentAsync(ObjectReference!, PdfFile);
+        await PdfInterop.DownloadDocumentAsync(ObjectReference!, PdfFile!);
     }
 
     protected async Task PrintDocumentAsync()
     {
-        await PdfInterop.PrintDocumentAsync(ObjectReference!, PdfFile);
+        await PdfInterop.PrintDocumentAsync(ObjectReference!, PdfFile!);
+    }
+
+    protected async Task ViewMetadataAsync()
+    {
+        await PdfInterop.ViewMetadataAsync(ObjectReference!, PdfFile!);
+    }
+
+    protected void ClearMetadata()
+    {
+        Metadata = null;
+        StateHasChanged();
+    }
+
+    #endregion
+
+
+    protected async Task UploadFile(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file.Size > Config.MaxPdfFileUploadSize)
+        {
+            // TODO: Handle file too large
+            return;
+        }
+
+        if (file.ContentType != "application/pdf")
+        {
+            // TODO: Handle file too large
+            return;
+        }
+
+        await using var stream = file.OpenReadStream(Config.MaxPdfFileUploadSize);
+        using var ms = new MemoryStream();
+        await stream.CopyToAsync(ms);
+
+        var base64 = Convert.ToBase64String(ms.ToArray());
+        Url = base64;
+        PdfFile = new Pdf.Pdf("".GenerateRandomString(), Url!, PdfOrientation);
+        StateHasChanged();
+
+        await PdfInterop.InitializeAsync(ObjectReference!, PdfFile, ScrollMode, Config.UseProjectWorker);
+        await OnFileUploaded.InvokeAsync(new PdfViewerFileUploaded
+        {
+            FileName = file.Name,
+            Size = file.Size,
+            Contents = ms.ToArray()
+        });
     }
 }
