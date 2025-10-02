@@ -65,30 +65,39 @@
                                aria-label="@LocalizedStrings.ZoomIn"/>
             </MudTooltip>
             <MudSpacer/>
-            <MudMenu Icon="@Icons.Menu" Color="MudColors.IconColor">
-                <MudMenuItem IconColor="MudColors.IconColor" Icon="@Icons.RotateClockwise"
-                             Label="@LocalizedStrings.RotateClockwise" OnClick="RotateClockwiseAsync"/>
-                <MudMenuItem IconColor="MudColors.IconColor" Icon="@Icons.RotateCounterclockwise"
-                             Label="@LocalizedStrings.RotateCounterclockwise" OnClick="RotateCounterclockwiseAsync"/>
-                <MudMenuItem IconColor="MudColors.IconColor" Icon="@Icons.SwitchOrientation"
-                             Label="@LocalizedStrings.SwitchOrientation" OnClick="SwitchOrientationAsync"/>
-                <MudDivider/>
-                <MudMenuItem IconColor="MudColors.IconColor" Icon="@Icons.FirstPage" Label="@LocalizedStrings.FirstPage"
-                             OnClick="FirstPageAsync"/>
-                <MudMenuItem IconColor="MudColors.IconColor" Icon="@Icons.LastPage" Label="@LocalizedStrings.LastPage"
-                             OnClick="LastPageAsync"/>
-                <MudDivider/>
-                <MudMenuItem IconColor="MudColors.IconColor" Icon="@Icons.ResetZoom" Label="@LocalizedStrings.ResetZoom"
-                             OnClick="ResetZoomAsync"/>
-                <MudDivider/>
-                <MudMenuItem IconColor="MudColors.IconColor" Icon="@Icons.PrintDocument"
-                             Label="@LocalizedStrings.PrintDocument" OnClick="PrintDocumentAsync"/>
-                <MudMenuItem IconColor="MudColors.IconColor" Icon="@Icons.DownloadDocument"
-                             Label="@LocalizedStrings.DownloadDocument" OnClick="DownloadDocumentAsync"/>
-                <MudDivider/>
-                <MudMenuItem IconColor="MudColors.IconColor" Icon="@Icons.Draw" Label="@LocalizedStrings.Draw"
-                             OnClick="ToggleDrawingAsync"/>
-            </MudMenu>
+            @if (!HideMenu)
+            {
+                <MudMenu Icon="@Icons.Menu" Color="MudColors.IconColor">
+                    <MudMenuItem IconColor="MudColors.IconColor" Icon="@Icons.RotateClockwise"
+                                 Label="@LocalizedStrings.RotateClockwise" OnClick="RotateClockwiseAsync" />
+                    <MudMenuItem IconColor="MudColors.IconColor" Icon="@Icons.RotateCounterclockwise"
+                                 Label="@LocalizedStrings.RotateCounterclockwise" OnClick="RotateCounterclockwiseAsync" />
+                    <MudMenuItem IconColor="MudColors.IconColor" Icon="@Icons.SwitchOrientation"
+                                 Label="@LocalizedStrings.SwitchOrientation" OnClick="SwitchOrientationAsync" />
+                    <MudDivider />
+                    <MudMenuItem IconColor="MudColors.IconColor" Icon="@Icons.FirstPage" Label="@LocalizedStrings.FirstPage"
+                                 OnClick="FirstPageAsync" />
+                    <MudMenuItem IconColor="MudColors.IconColor" Icon="@Icons.LastPage" Label="@LocalizedStrings.LastPage"
+                                 OnClick="LastPageAsync" />
+                    <MudDivider />
+                    <MudMenuItem IconColor="MudColors.IconColor" Icon="@Icons.ResetZoom" Label="@LocalizedStrings.ResetZoom"
+                                 OnClick="ResetZoomAsync" />
+                    <MudDivider />
+                    @if (!HidePrintButton)
+                    {
+                        <MudMenuItem IconColor="MudColors.IconColor" Icon="@Icons.PrintDocument"
+                                     Label="@LocalizedStrings.PrintDocument" OnClick="PrintDocumentAsync" />
+                    }
+                    @if (!HideDownloadButton)
+                    {
+                        <MudMenuItem IconColor="MudColors.IconColor" Icon="@Icons.DownloadDocument"
+                                     Label="@LocalizedStrings.DownloadDocument" OnClick="DownloadDocumentAsync" />
+                    }
+                    <MudDivider />
+                    <MudMenuItem IconColor="MudColors.IconColor" Icon="@Icons.Draw" Label="@LocalizedStrings.Draw"
+                                 OnClick="ToggleDrawingAsync" />
+                </MudMenu>
+            }
         </MudToolBar>
         @if (Loading)
         {

@@ -1,0 +1,37 @@
+@page "/docs/configuration/hidingelements"
+@using Gotho.BlazorPdf.Config
+
+<PageTitle>Blazor PDF | Hiding elements</PageTitle>
+
+<PageMetadata Title="Blazor PDF | Hiding elements"
+			  Description="The visibility of the print and download buttons, as well as the menu itself, can be adjusted."
+			  Url="https://blazorpdf.info/docs/configuration/labels" />
+
+<div style="max-width: 1440px; margin: 3em auto auto;">
+
+	<MudGrid>
+		<MudItem sm="3">
+			<DocsMenu />
+		</MudItem>
+		<MudItem sm="9" Style="overflow: auto" Class="mb-5">
+			<MudText Typo="Typo.h2" Class="mb-5">Configuration | Hiding elements</MudText>
+			<MudText Class="mb-5">
+				The visibility of the print and download buttons, as well as the menu itself, can be adjusted.
+				This can be done by passing the right parameter to your PDF viewer
+			</MudText>
+
+			<CodeSnippet Body="@HidingElements.Config" Lang="csharp" />
+
+			<PdfViewer Url="https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf" />
+
+			@* <PdfViewer LocalizedStrings="FinnishStrings"
+					   Url="https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf"
+					   HideMenu ="true"/> *@
+
+		</MudItem>
+	</MudGrid>
+</div>
+
+@code {
+
+}

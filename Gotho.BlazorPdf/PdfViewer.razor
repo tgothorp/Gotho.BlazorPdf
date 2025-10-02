@@ -84,96 +84,104 @@
         <div class="blazorpdf-toolbar__spacer"></div>
 
         @*Menu*@
-        <div class="blazorpdf-toolbar__item">
-            <div class="blazorpdf-toolbar__menu-wrapper">
-                <input type="checkbox" id="menu-toggle" hidden>
-                <label for="menu-toggle" class="blazorpdf-toolbar__menu-trigger-button">
-                    <span>
-                        <MenuIcon Color="@Colors.Icon"/>
-                    </span>
-                </label>
-                <div class="blazorpdf-toolbar__menu">
-                    <label for="menu-toggle" class="blazorpdf-toolbar__menu-overlay"></label>
-                    <div class="blazorpdf-toolbar__menu-content">
-                        <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
-                                @onclick="RotateClockwiseAsync">
-                            <span class="blazorpdf-toolbar__menu-menu-item-icon">
-                                <RotateCWIcon Color="@Colors.Icon"/>
-                            </span>
-                            <span
-                                class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.RotateClockwise</span>
-                        </button>
-                        <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
-                                @onclick="RotateCounterclockwiseAsync">
-                            <span class="blazorpdf-toolbar__menu-menu-item-icon">
-                                <RotateCCWIcon Color="@Colors.Icon"/>
-                            </span>
-                            <span
-                                class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.RotateCounterclockwise</span>
-                        </button>
-                        <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
-                                @onclick="SwitchOrientationAsync">
-                            <span class="blazorpdf-toolbar__menu-menu-item-icon">
-                                <SwitchOrientationIcon Color="@Colors.Icon"/>
-                            </span>
-                            <span
-                                class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.SwitchOrientation</span>
-                        </button>
-                        <hr class="blazorpdf-toolbar__menu-divider">
-                        <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
-                                @onclick="FirstPageAsync">
-                            <span class="blazorpdf-toolbar__menu-menu-item-icon">
-                                <FirstPageIcon Color="@Colors.Icon"/>
-                            </span>
-                            <span class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.FirstPage</span>
-                        </button>
-                        <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
-                                @onclick="LastPageAsync">
-                            <span class="blazorpdf-toolbar__menu-menu-item-icon">
-                                <LastPageIcon Color="@Colors.Icon"/>
-                            </span>
-                            <span class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.LastPage</span>
-                        </button>
-                        <hr class="blazorpdf-toolbar__menu-divider">
-                        <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
-                                @onclick="ResetZoomAsync">
-                            <span class="blazorpdf-toolbar__menu-menu-item-icon">
-                                <ZoomResetIcon Color="@Colors.Icon"/>
-                            </span>
-                            <span class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.ResetZoom</span>
-                        </button>
-                        <hr class="blazorpdf-toolbar__menu-divider">
-                        <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
-                                @onclick="PrintDocumentAsync">
-                            <span class="blazorpdf-toolbar__menu-menu-item-icon">
-                                <PrintIcon Color="@Colors.Icon"/>
-                            </span>
-                            <span class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.PrintDocument</span>
-                        </button>
-                        <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
-                                @onclick="DownloadDocumentAsync">
-                            <span class="blazorpdf-toolbar__menu-menu-item-icon">
-                                <DownloadIcon Color="@Colors.Icon"/>
-                            </span>
-                            <span
-                                class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.DownloadDocument</span>
-                        </button>
-                        @if (SinglePageMode)
-                        {
+        @if (!HideMenu)
+        {
+            <div class="blazorpdf-toolbar__item">
+                <div class="blazorpdf-toolbar__menu-wrapper">
+                    <input type="checkbox" id="menu-toggle" hidden>
+                    <label for="menu-toggle" class="blazorpdf-toolbar__menu-trigger-button">
+                        <span>
+                            <MenuIcon Color="@Colors.Icon" />
+                        </span>
+                    </label>
+                    <div class="blazorpdf-toolbar__menu">
+                        <label for="menu-toggle" class="blazorpdf-toolbar__menu-overlay"></label>
+                        <div class="blazorpdf-toolbar__menu-content">
+                            <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
+                                    @onclick="RotateClockwiseAsync">
+                                <span class="blazorpdf-toolbar__menu-menu-item-icon">
+                                    <RotateCWIcon Color="@Colors.Icon" />
+                                </span>
+                                <span class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.RotateClockwise</span>
+                            </button>
+                            <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
+                                    @onclick="RotateCounterclockwiseAsync">
+                                <span class="blazorpdf-toolbar__menu-menu-item-icon">
+                                    <RotateCCWIcon Color="@Colors.Icon" />
+                                </span>
+                                <span class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.RotateCounterclockwise</span>
+                            </button>
+                            <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
+                                    @onclick="SwitchOrientationAsync">
+                                <span class="blazorpdf-toolbar__menu-menu-item-icon">
+                                    <SwitchOrientationIcon Color="@Colors.Icon" />
+                                </span>
+                                <span class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.SwitchOrientation</span>
+                            </button>
                             <hr class="blazorpdf-toolbar__menu-divider">
                             <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
-                                    @onclick="ToggleDrawingAsync">
+                                    @onclick="FirstPageAsync">
                                 <span class="blazorpdf-toolbar__menu-menu-item-icon">
-                                    <DrawIcon Color="@Colors.Icon"/>
+                                    <FirstPageIcon Color="@Colors.Icon" />
                                 </span>
-                                <span
-                                    class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.Draw</span>
+                                <span class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.FirstPage</span>
                             </button>
-                        }
+                            <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
+                                    @onclick="LastPageAsync">
+                                <span class="blazorpdf-toolbar__menu-menu-item-icon">
+                                    <LastPageIcon Color="@Colors.Icon" />
+                                </span>
+                                <span class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.LastPage</span>
+                            </button>
+                            <hr class="blazorpdf-toolbar__menu-divider">
+                            <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
+                                    @onclick="ResetZoomAsync">
+                                <span class="blazorpdf-toolbar__menu-menu-item-icon">
+                                    <ZoomResetIcon Color="@Colors.Icon" />
+                                </span>
+                                <span class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.ResetZoom</span>
+                            </button>
+                            <hr class="blazorpdf-toolbar__menu-divider">
+                            @if (!HidePrintButton)
+                            {
+                                <button type="button"
+                                        class="blazorpdf-toolbar__menu-menu-item"
+                                        disabled="@InputDisabled()"
+                                        @onclick="PrintDocumentAsync">
+                                    <span class="blazorpdf-toolbar__menu-menu-item-icon">
+                                        <PrintIcon Color="@Colors.Icon" />
+                                    </span>
+                                    <span class="blazorpdf-toolbar__menu-menu-item-text">
+                                        @LocalizedStrings.PrintDocument
+                                    </span>
+                                </button>
+                            }
+                            @if (!HideDownloadButton)
+                            {
+                                <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
+                                        @onclick="DownloadDocumentAsync">
+                                    <span class="blazorpdf-toolbar__menu-menu-item-icon">
+                                        <DownloadIcon Color="@Colors.Icon" />
+                                    </span>
+                                    <span class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.DownloadDocument</span>
+                                </button>
+                            }
+                            @if (SinglePageMode)
+                            {
+                                <hr class="blazorpdf-toolbar__menu-divider">
+                                <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@InputDisabled()"
+                                        @onclick="ToggleDrawingAsync">
+                                    <span class="blazorpdf-toolbar__menu-menu-item-icon">
+                                        <DrawIcon Color="@Colors.Icon" />
+                                    </span>
+                                    <span class="blazorpdf-toolbar__menu-menu-item-text">@LocalizedStrings.Draw</span>
+                                </button>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        }
 
     </div>
 
