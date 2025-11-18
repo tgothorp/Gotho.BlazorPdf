@@ -23,6 +23,12 @@ steps:
     workingDir: 'Gotho.BlazorPdf.MudBlazor/'
 
 - task: UseDotNet@2
+  name: net10_install
+  inputs:
+    packageType: 'sdk'
+    version: '10.*'
+
+- task: UseDotNet@2
   name: net9_install
   inputs:
     packageType: 'sdk'
