@@ -14,6 +14,7 @@ public partial class PdfViewer : ComponentBase
     protected DotNetObjectReference<PdfViewer>? ObjectReference;
     protected PdfError? Error;
     protected string? PdfPassword;
+    protected string? PdfUploadError;
     protected PdfMetadata? Metadata;
 
     protected Pdf.Pdf? PdfFile { get; set; }
@@ -61,6 +62,18 @@ public partial class PdfViewer : ComponentBase
     /// </remarks>
     [Parameter]
     public bool HideThumbnails { get; set; }
+
+    /// <summary>
+    /// If no <c>URL</c> parameter is specified in the PdfViewer component then a user will be allowed to upload
+    /// a PDF file unless option is set to <c>false</c>
+    /// </summary>
+    /// <remarks>
+    /// As always, you should consider any potential security implications of allowing users to upload their own files
+    ///
+    /// <para><b>Default:</b> <c>false</c></para>
+    /// </remarks>
+    [Parameter]
+    public bool PermitPdfUploads { get; set; } = false;
 
     /// <summary>
     /// This event fires immediately after the PDF document is loaded.
@@ -408,13 +421,13 @@ public partial class PdfViewer : ComponentBase
         var file = e.File;
         if (file.Size > Config.MaxPdfFileUploadSize)
         {
-            // TODO: Handle file too large
+            PdfUploadError = LocalizedStrings.UploadTooLarge;
             return;
         }
 
         if (file.ContentType != "application/pdf")
         {
-            // TODO: Handle file too large
+            PdfUploadError = LocalizedStrings.UploadWrongFormat;
             return;
         }
 
