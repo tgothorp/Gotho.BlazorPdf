@@ -4,7 +4,7 @@ Blazor PDF is a simple yet powerful PDF viewer built for Blazor.
 
 ## Prerequisites
 
-In order to use this package, your project must target .NET Version 8.0 or 9.0
+In order to use this package, your project must target .NET Version 8.0, 9.0 or 10.0
 
 ## Installation
 
