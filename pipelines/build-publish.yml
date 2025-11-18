@@ -26,7 +26,7 @@ steps:
   name: net10_install
   inputs:
     packageType: 'sdk'
-    version: '10.*'
+    version: '10.x'
 
 - task: UseDotNet@2
   name: net9_install
