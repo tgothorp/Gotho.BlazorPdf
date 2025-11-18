@@ -252,15 +252,31 @@
             </div>
         }
         
-        @if (PdfFile is null && Config.PermitPdfFileUpload)
+        @if (PdfFile is null)
         {
-            <div class="blazorpdf-pdf__upload-container">
-                <div class="blazorpdf-pdf__upload">
-                    <h1>Upload File</h1>
-                    <p>Max file size: @Config.MaxPdfFileUploadSize.GetReadableFileSize()</p>
-                    <InputFile OnChange="UploadFile" accept="application/pdf" />
+            if (PermitPdfUploads)
+            {
+                <div class="blazorpdf-pdf__upload-container">
+                    <div class="blazorpdf-pdf__upload">
+                        <h1>Upload File</h1>
+                        <p>Max file size: @Config.MaxPdfFileUploadSize.GetReadableFileSize()</p>
+                        <InputFile OnChange="UploadFile" accept="application/pdf"/>
+                        
+                        @if (!PdfUploadError.IsNullOrEmpty())
+                        {
+                            <p>@PdfUploadError</p>
+                        }
+                    </div>
                 </div>
-            </div>
+            }
+            else
+            {
+                <div class="blazorpdf-pdf__error">
+                    <div class="blazorpdf-pdf__error-content">
+                        <h1>@LocalizedStrings.NoFile</h1>
+                    </div>
+                </div>
+            }
         }
 
         @if (Error is not null)
