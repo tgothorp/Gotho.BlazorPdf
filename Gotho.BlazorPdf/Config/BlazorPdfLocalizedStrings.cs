@@ -28,6 +28,7 @@ public class BlazorPdfLocalizedStrings
     public string DrawingThickness { get; set; } = "Thickness";
     public string DrawingUndo { get; set; } = "Undo";
     public string DrawingClear { get; set; } = "Clear";
+    public string NoFile { get; set; } = "No File";
     public string PasswordRequired { get; set; } = "Password Required";
     public string PasswordHint { get; set; } = "Please enter the password for the PDF document";
     
@@ -43,4 +44,7 @@ public class BlazorPdfLocalizedStrings
     public string MetadataModifiedDate { get; set; } = "Last Modification Date";
     public string MetadataCustomData { get; set; } = "Custom Metadata";
     public string MetadataClose { get; set; } = "Close";
+
+    public string UploadTooLarge { get; set; } = "Target file is too large.";
+    public string UploadWrongFormat { get; set; } = "Target file is not a PDF document.";
 }
