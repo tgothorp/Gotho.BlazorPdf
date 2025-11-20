@@ -11,3 +11,20 @@
     right: 5px;
     z-index: 999;
 }
+
+.mudpdf_metadata {
+    position: absolute;
+    left: 0;
+    right: 0;
+    max-width: min(50%, 500px);
+    z-index: 9999;
+    margin: 15px auto auto;
+}
+
+.mudpdf_metadata__overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.55);
+    z-index: 9998;
+}
