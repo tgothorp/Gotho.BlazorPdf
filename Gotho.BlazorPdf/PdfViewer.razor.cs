@@ -90,6 +90,7 @@ public partial class PdfViewer : ComponentBase
     /// <summary>
     /// Invoked when a file is uploaded by a user
     /// </summary>
+    [Parameter]
     public EventCallback<PdfViewerFileUploaded> OnFileUploaded { get; set; }
 
     /// <summary>
