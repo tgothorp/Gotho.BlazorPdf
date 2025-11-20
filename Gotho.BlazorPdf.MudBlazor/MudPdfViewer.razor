@@ -144,67 +144,70 @@
             
             @if (Metadata is not null)
             {
-                <MudCard Class="pa-2">
-                    <MudCardHeader>
-                        <CardHeaderContent>
-                            <MudText Typo="Typo.h5">@LocalizedStrings.MetadataHeader</MudText>
-                        </CardHeaderContent>
-                    </MudCardHeader>
-                    <MudCardContent>
-                        <MudStack>
-                            <MudStack Spacing="0">
-                                <MudText Typo="Typo.subtitle1">@LocalizedStrings.MetadataTitle</MudText>
-                                <MudText>@MetadataOrEmpty(Metadata.Title)</MudText>
-                            </MudStack>
-                            <MudStack Spacing="0">
-                                <MudText Typo="Typo.subtitle1">@LocalizedStrings.MetadataSubject</MudText>
-                                <MudText>@MetadataOrEmpty(Metadata.Subject)</MudText>
-                            </MudStack>
-                            <MudStack Spacing="0">
-                                <MudText Typo="Typo.subtitle1">@LocalizedStrings.MetadataAuthor</MudText>
-                                <MudText>@MetadataOrEmpty(Metadata.Author)</MudText>
-                            </MudStack>
-                            <MudStack Spacing="0">
-                                <MudText Typo="Typo.subtitle1">@LocalizedStrings.MetadataCreator</MudText>
-                                <MudText>@MetadataOrEmpty(Metadata.Creator)</MudText>
-                            </MudStack>
-                            <MudStack Spacing="0">
-                                <MudText Typo="Typo.subtitle1">@LocalizedStrings.MetadataProducer</MudText>
-                                <MudText>@MetadataOrEmpty(Metadata.Producer)</MudText>
-                            </MudStack>
-                            <MudStack Spacing="0">
-                                <MudText Typo="Typo.subtitle1">@LocalizedStrings.MetadataPdfFormatVersion</MudText>
-                                <MudText>@MetadataOrEmpty(Metadata.FormatVersion)</MudText>
-                            </MudStack>
-                            <MudStack Spacing="0">
-                                <MudText Typo="Typo.subtitle1">@LocalizedStrings.MetadataKeywords</MudText>
-                                <MudText>@MetadataOrEmpty(Metadata.Keywords)</MudText>
-                            </MudStack>
-                            <MudStack Spacing="0">
-                                <MudText Typo="Typo.subtitle1">@LocalizedStrings.MetadataCreationDate</MudText>
-                                <MudText>@(Metadata.CreationDate is null ? "N/A" : Metadata.CreationDate.Value.ToString("g", CultureInfo.CurrentCulture))</MudText>
-                            </MudStack>
-                            <MudStack Spacing="0">
-                                <MudText Typo="Typo.subtitle1">@LocalizedStrings.MetadataModifiedDate</MudText>
-                                <MudText>@(Metadata.ModifiedDate is null ? "N/A" : Metadata.ModifiedDate.Value.ToString("g", CultureInfo.CurrentCulture))</MudText>
-                            </MudStack>
+                <div class="mudpdf_metadata__overlay"></div>
+                <div class="mudpdf_metadata ">
+                    <MudCard Class="pa-2">
+                        <MudCardHeader>
+                            <CardHeaderContent>
+                                <MudText Typo="Typo.h5">@LocalizedStrings.MetadataHeader</MudText>
+                            </CardHeaderContent>
+                        </MudCardHeader>
+                        <MudCardContent>
+                            <MudStack>
+                                <MudStack Spacing="0">
+                                    <MudText Typo="Typo.subtitle1">@LocalizedStrings.MetadataTitle</MudText>
+                                    <MudText>@MetadataOrEmpty(Metadata.Title)</MudText>
+                                </MudStack>
+                                <MudStack Spacing="0">
+                                    <MudText Typo="Typo.subtitle1">@LocalizedStrings.MetadataSubject</MudText>
+                                    <MudText>@MetadataOrEmpty(Metadata.Subject)</MudText>
+                                </MudStack>
+                                <MudStack Spacing="0">
+                                    <MudText Typo="Typo.subtitle1">@LocalizedStrings.MetadataAuthor</MudText>
+                                    <MudText>@MetadataOrEmpty(Metadata.Author)</MudText>
+                                </MudStack>
+                                <MudStack Spacing="0">
+                                    <MudText Typo="Typo.subtitle1">@LocalizedStrings.MetadataCreator</MudText>
+                                    <MudText>@MetadataOrEmpty(Metadata.Creator)</MudText>
+                                </MudStack>
+                                <MudStack Spacing="0">
+                                    <MudText Typo="Typo.subtitle1">@LocalizedStrings.MetadataProducer</MudText>
+                                    <MudText>@MetadataOrEmpty(Metadata.Producer)</MudText>
+                                </MudStack>
+                                <MudStack Spacing="0">
+                                    <MudText Typo="Typo.subtitle1">@LocalizedStrings.MetadataPdfFormatVersion</MudText>
+                                    <MudText>@MetadataOrEmpty(Metadata.FormatVersion)</MudText>
+                                </MudStack>
+                                <MudStack Spacing="0">
+                                    <MudText Typo="Typo.subtitle1">@LocalizedStrings.MetadataKeywords</MudText>
+                                    <MudText>@MetadataOrEmpty(Metadata.Keywords)</MudText>
+                                </MudStack>
+                                <MudStack Spacing="0">
+                                    <MudText Typo="Typo.subtitle1">@LocalizedStrings.MetadataCreationDate</MudText>
+                                    <MudText>@(Metadata.CreationDate is null ? "N/A" : Metadata.CreationDate.Value.ToString("g", CultureInfo.CurrentCulture))</MudText>
+                                </MudStack>
+                                <MudStack Spacing="0">
+                                    <MudText Typo="Typo.subtitle1">@LocalizedStrings.MetadataModifiedDate</MudText>
+                                    <MudText>@(Metadata.ModifiedDate is null ? "N/A" : Metadata.ModifiedDate.Value.ToString("g", CultureInfo.CurrentCulture))</MudText>
+                                </MudStack>
                             
-                            @if (Metadata.CustomMetadata is not null && Metadata.CustomMetadata.Any())
-                            {
-                                foreach (var customMetadata in Metadata.CustomMetadata)
+                                @if (Metadata.CustomMetadata is not null && Metadata.CustomMetadata.Any())
                                 {
-                                    <MudStack Spacing="0">
-                                        <MudText Typo="Typo.subtitle1">@customMetadata.Key</MudText>
-                                        <MudText>@customMetadata.Value</MudText>
-                                    </MudStack>
+                                    foreach (var customMetadata in Metadata.CustomMetadata)
+                                    {
+                                        <MudStack Spacing="0">
+                                            <MudText Typo="Typo.subtitle1">@customMetadata.Key</MudText>
+                                            <MudText>@customMetadata.Value</MudText>
+                                        </MudStack>
+                                    }
                                 }
-                            }
-                        </MudStack>
-                    </MudCardContent>
-                    <MudCardActions Style="flex-direction: row-reverse">
-                        <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="@(() => ClearMetadata())">Close</MudButton>
-                    </MudCardActions>
-                </MudCard>
+                            </MudStack>
+                        </MudCardContent>
+                        <MudCardActions Style="flex-direction: row-reverse">
+                            <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="@(() => ClearMetadata())">Close</MudButton>
+                        </MudCardActions>
+                    </MudCard>
+                </div>
             }
 
             <div class="@(Error is not null ? "blazorpdf-d-none" : "")">
