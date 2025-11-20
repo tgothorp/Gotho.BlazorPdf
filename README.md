@@ -1,12 +1,12 @@
 <div align="center">
 
-<h1>Blazor PDF (Formally Mud PDF)</h1>
+<h1>Blazor PDF</h1>
 
 <div><img src="img/square_small.png" width="230" alt="MudPDF" /></div>
 
 <div><a href="https://blazorpdf.info">Demo</a> | <a href="https://blazorpdf.info/docs/quickstart">Quickstart</a> | <a href="https://blazorpdf.info/docs">Documentation</a></div>
 
-Originally a port of the BlazorBootstrap PDF viewer for the [MudBlazor](https://mudblazor.com) component library. Blazor PDF is a simple yet powerful PDF viewer for Blazor framework.
+Originally a port of the BlazorBootstrap PDF viewer for the [MudBlazor](https://mudblazor.com) component library. Blazor PDF is a simple yet powerful PDF viewer for the Blazor framework.
 
 ![NuGet Version](https://img.shields.io/nuget/v/Gotho.BlazorPdf)
 ![NuGet Downloads](https://img.shields.io/nuget/dt/Gotho.BlazorPdf)
@@ -59,9 +59,7 @@ You should now be fully setup to use the `PdfViewer` component in your code!
 
 ## Prerequisites
 
-In order to use this package, your project will need to be configured with the following;
-
-- **.NET** Version 8.0 or 9.0
+In order to use this package, your project must target **.NET** Version 8.0, or higher
 
 ## Usage & Examples
 
