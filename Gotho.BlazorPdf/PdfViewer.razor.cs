@@ -17,7 +17,7 @@ public partial class PdfViewer : ComponentBase
     protected string? PdfUploadError;
     protected PdfMetadata? Metadata;
 
-    protected Pdf.Pdf? PdfFile { get; set; }
+    public Pdf.Pdf? PdfFile { get; set; }
 
     /// <summary>
     /// Sets the display orientation of the PDF document
@@ -163,6 +163,13 @@ public partial class PdfViewer : ComponentBase
             OnPageChanged.InvokeAsync(new PdfViewerEventArgs(pdfViewerModel.CurrentPage, pdfViewerModel.TotalPages));
     }
 
+    [JSInvokable]
+    public void PdfMetadata(PdfMetadata metadata)
+    {
+        Metadata = metadata;
+        StateHasChanged();
+    }
+
     /// <summary>
     /// Invoked by BlazorPdf's JS interop code when a PDF file fails to load, usually due to requiring a password
     /// </summary>
@@ -181,17 +188,6 @@ public partial class PdfViewer : ComponentBase
     }
 
     /// <summary>
-    /// Invoked by BlazorPdf's JS interop code when viewing a PDF's metadata
-    /// </summary>
-    /// <remarks>Do not call this method from your code</remarks>
-    [JSInvokable]
-    public void PdfMetadata(PdfMetadata metadata)
-    {
-        Metadata = metadata;
-        StateHasChanged();
-    }
-
-    /// <summary>
     /// Invoked by BlazorPdf's JS interops code when text searching
     /// </summary>
     /// <remarks>Do not call this method from your code</remarks>
@@ -202,10 +198,10 @@ public partial class PdfViewer : ComponentBase
         using var reader = new StreamReader(s);
         var json = await reader.ReadToEndAsync();
         var results = JsonSerializer.Deserialize<List<PdfSearchResult>>(json);
-        
+
         PdfFile?.Search.UpdateResults(results ?? []);
 
-        if (PdfFile?.Search.CurrentSearchResult is not null 
+        if (PdfFile?.Search.CurrentSearchResult is not null
             && PdfFile?.Search.CurrentSearchResult?.Page != PdfFile?.Paging.CurrentPage)
             PdfFile?.Paging.GotoPage(PdfFile.Search.CurrentSearchResult!.Page);
 
@@ -240,32 +236,47 @@ public partial class PdfViewer : ComponentBase
 
     #region Paging
 
-    protected async Task FirstPageAsync()
+    internal async Task FirstPageAsync()
     {
+        if (PdfFile is null)
+            return;
+
         if (PdfFile.Paging.FirstPage())
             await PdfInterop.UpdateAsync(ObjectReference!, PdfFile);
     }
 
-    protected async Task LastPageAsync()
+    internal async Task LastPageAsync()
     {
+        if (PdfFile is null)
+            return;
+
         if (PdfFile.Paging.LastPage())
             await PdfInterop.UpdateAsync(ObjectReference!, PdfFile);
     }
 
-    protected async Task NextPageAsync()
+    internal async Task NextPageAsync()
     {
+        if (PdfFile is null)
+            return;
+
         if (PdfFile.Paging.NextPage())
             await PdfInterop.UpdateAsync(ObjectReference!, PdfFile);
     }
 
-    protected async Task PreviousPageAsync()
+    internal async Task PreviousPageAsync()
     {
+        if (PdfFile is null)
+            return;
+
         if (PdfFile.Paging.PreviousPage())
             await PdfInterop.UpdateAsync(ObjectReference!, PdfFile);
     }
 
-    protected async Task PageNumberChanged(int value)
+    internal async Task PageNumberChanged(int value)
     {
+        if (PdfFile is null)
+            return;
+
         if (PdfFile.Paging.GotoPage(value))
             await PdfInterop.UpdateAsync(ObjectReference!, PdfFile);
     }
@@ -274,20 +285,29 @@ public partial class PdfViewer : ComponentBase
 
     #region Zooming
 
-    protected async Task ZoomInAsync()
+    internal async Task ZoomInAsync()
     {
+        if (PdfFile is null)
+            return;
+
         if (PdfFile.Zooming.ZoomIn())
             await PdfInterop.UpdateAsync(ObjectReference!, PdfFile);
     }
 
-    protected async Task ZoomOutAsync()
+    internal async Task ZoomOutAsync()
     {
+        if (PdfFile is null)
+            return;
+
         if (PdfFile.Zooming.ZoomOut())
             await PdfInterop.UpdateAsync(ObjectReference!, PdfFile);
     }
 
-    protected async Task ResetZoomAsync()
+    internal async Task ResetZoomAsync()
     {
+        if (PdfFile is null)
+            return;
+
         if (PdfFile.Zooming.ResetZoom())
             await PdfInterop.UpdateAsync(ObjectReference!, PdfFile);
     }
@@ -296,20 +316,29 @@ public partial class PdfViewer : ComponentBase
 
     #region Rotation
 
-    protected async Task RotateClockwiseAsync()
+    internal async Task RotateClockwiseAsync()
     {
+        if (PdfFile is null)
+            return;
+
         PdfFile.Orientation.RotateClockwise();
         await PdfInterop.UpdateAsync(ObjectReference!, PdfFile);
     }
 
-    protected async Task RotateCounterclockwiseAsync()
+    internal async Task RotateCounterclockwiseAsync()
     {
+        if (PdfFile is null)
+            return;
+
         PdfFile.Orientation.RotateCounterClockwise();
         await PdfInterop.UpdateAsync(ObjectReference!, PdfFile);
     }
 
-    protected async Task SwitchOrientationAsync()
+    internal async Task SwitchOrientationAsync()
     {
+        if (PdfFile is null)
+            return;
+
         PdfFile.Orientation.Flip();
         await PdfInterop.UpdateAsync(ObjectReference!, PdfFile);
     }
@@ -318,31 +347,46 @@ public partial class PdfViewer : ComponentBase
 
     #region Drawing
 
-    protected async Task ToggleDrawingAsync()
+    internal async Task ToggleDrawingAsync()
     {
+        if (PdfFile is null)
+            return;
+
         PdfFile.DrawLayer.Toggle();
         await PdfInterop.UpdateAsync(ObjectReference!, PdfFile);
     }
 
-    protected async Task UpdatePenColorAsync(string color)
+    internal async Task UpdatePenColorAsync(string color)
     {
+        if (PdfFile is null)
+            return;
+
         PdfFile.DrawLayer.UpdateColor(color);
         await PdfInterop.UpdateAsync(ObjectReference!, PdfFile);
     }
 
-    protected async Task UpdatePenThickness(int thickness)
+    internal async Task UpdatePenThickness(int thickness)
     {
+        if (PdfFile is null)
+            return;
+
         PdfFile.DrawLayer.UpdateThickness(thickness);
         await PdfInterop.UpdateAsync(ObjectReference!, PdfFile);
     }
 
-    protected async Task UndoLastStrokeAsync()
+    internal async Task UndoLastStrokeAsync()
     {
+        if (PdfFile is null)
+            return;
+
         await PdfInterop.UndoLastStrokeAsync(ObjectReference!, PdfFile);
     }
 
-    protected async Task ClearAllPageStrokesAsync()
+    internal async Task ClearAllPageStrokesAsync()
     {
+        if (PdfFile is null)
+            return;
+
         await PdfInterop.ClearStrokesForPageAsync(ObjectReference!, PdfFile);
     }
 
@@ -350,19 +394,19 @@ public partial class PdfViewer : ComponentBase
 
     #region Searching
 
-    protected async Task Search(string query)
+    internal async Task Search(string query)
     {
         PdfFile?.Search.UpdateSearchQuery(query);
         await PdfInterop.UpdateAsync(ObjectReference!, PdfFile!);
     }
 
-    protected async Task ClearSearchResults()
+    internal async Task ClearSearchResults()
     {
         PdfFile?.Search.UpdateSearchQuery(null);
         await PdfInterop.ClearSearchResults(ObjectReference!, PdfFile!);
     }
 
-    protected async Task NextResult()
+    internal async Task NextResult()
     {
         if (!PdfFile!.Search.NextResult())
         {
@@ -375,7 +419,7 @@ public partial class PdfViewer : ComponentBase
         await PdfInterop.UpdateAsync(ObjectReference!, PdfFile!);
     }
 
-    protected async Task PreviousResult()
+    internal async Task PreviousResult()
     {
         if (!PdfFile!.Search.PreviousResult())
         {
@@ -392,22 +436,22 @@ public partial class PdfViewer : ComponentBase
 
     #region Other
 
-    protected async Task DownloadDocumentAsync()
+    internal async Task DownloadDocumentAsync()
     {
         await PdfInterop.DownloadDocumentAsync(ObjectReference!, PdfFile!);
     }
 
-    protected async Task PrintDocumentAsync()
+    internal async Task PrintDocumentAsync()
     {
         await PdfInterop.PrintDocumentAsync(ObjectReference!, PdfFile!);
     }
 
-    protected async Task ViewMetadataAsync()
+    internal async Task ViewMetadataAsync()
     {
         await PdfInterop.ViewMetadataAsync(ObjectReference!, PdfFile!);
     }
 
-    protected void ClearMetadata()
+    internal void ClearMetadata()
     {
         Metadata = null;
         StateHasChanged();

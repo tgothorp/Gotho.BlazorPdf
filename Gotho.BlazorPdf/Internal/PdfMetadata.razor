@@ -1,0 +1,84 @@
+﻿@using System.Globalization
+
+@attribute [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+
+<div class="blazorpdf-pdf__overlay"></div>
+<div class="blazorpdf-pdf__metadata">
+    <div class="blazorpdf-pdf__metadata-content">
+
+        <h1 class="blazorpdf-pdf__metadata-title">@PdfViewer.LocalizedStrings.MetadataHeader</h1>
+
+        <div class="blazorpdf-pdf__metadata-item">
+            <p class="blazorpdf-pdf__metadata-item-key">@PdfViewer.LocalizedStrings.MetadataTitle</p>
+            <p class="blazorpdf-pdf__metadata-item-value">@MetadataOrEmpty(Metadata.Title)</p>
+        </div>
+
+        <div class="blazorpdf-pdf__metadata-item">
+            <p class="blazorpdf-pdf__metadata-item-key">@PdfViewer.LocalizedStrings.MetadataSubject</p>
+            <p class="blazorpdf-pdf__metadata-item-value">@MetadataOrEmpty(Metadata.Subject)</p>
+        </div>
+
+        <div class="blazorpdf-pdf__metadata-item">
+            <p class="blazorpdf-pdf__metadata-item-key">@PdfViewer.LocalizedStrings.MetadataAuthor</p>
+            <p class="blazorpdf-pdf__metadata-item-value">@MetadataOrEmpty(Metadata.Author)</p>
+        </div>
+
+        <div class="blazorpdf-pdf__metadata-item">
+            <p class="blazorpdf-pdf__metadata-item-key">@PdfViewer.LocalizedStrings.MetadataCreator</p>
+            <p class="blazorpdf-pdf__metadata-item-value">@MetadataOrEmpty(Metadata.Creator)</p>
+        </div>
+
+        <div class="blazorpdf-pdf__metadata-item">
+            <p class="blazorpdf-pdf__metadata-item-key">@PdfViewer.LocalizedStrings.MetadataProducer</p>
+            <p class="blazorpdf-pdf__metadata-item-value">@MetadataOrEmpty(Metadata.Producer)</p>
+        </div>
+
+        <div class="blazorpdf-pdf__metadata-item">
+            <p class="blazorpdf-pdf__metadata-item-key">@PdfViewer.LocalizedStrings.MetadataPdfFormatVersion</p>
+            <p class="blazorpdf-pdf__metadata-item-value">@MetadataOrEmpty(Metadata.FormatVersion)</p>
+        </div>
+
+        <div class="blazorpdf-pdf__metadata-item">
+            <p class="blazorpdf-pdf__metadata-item-key">@PdfViewer.LocalizedStrings.MetadataKeywords</p>
+            <p class="blazorpdf-pdf__metadata-item-value">@MetadataOrEmpty(Metadata.Keywords)</p>
+        </div>
+
+        <div class="blazorpdf-pdf__metadata-item">
+            <p class="blazorpdf-pdf__metadata-item-key">@PdfViewer.LocalizedStrings.MetadataCreationDate</p>
+            <p class="blazorpdf-pdf__metadata-item-value">@(Metadata.CreationDate is null ? "N/A" : Metadata.CreationDate.Value.ToString("g", CultureInfo.CurrentCulture))</p>
+        </div>
+
+        <div class="blazorpdf-pdf__metadata-item">
+            <p class="blazorpdf-pdf__metadata-item-key">@PdfViewer.LocalizedStrings.MetadataModifiedDate</p>
+            <p class="blazorpdf-pdf__metadata-item-value">@(Metadata.ModifiedDate is null ? "N/A" : Metadata.ModifiedDate.Value.ToString("g", CultureInfo.CurrentCulture))</p>
+        </div>
+
+        @if (Metadata.CustomMetadata is not null && Metadata.CustomMetadata.Any())
+        {
+            <div class="blazorpdf-pdf__metadata-item">
+                <p class="blazorpdf-pdf__metadata-item-key">@PdfViewer.LocalizedStrings.MetadataCustomData</p>
+
+                @foreach (var item in Metadata.CustomMetadata)
+                {
+                    <p class="blazorpdf-pdf__metadata-item-value">@item.Key : @item.Value</p>
+                }
+            </div>
+        }
+
+        <div class="blazorpdf-pdf__close-container">
+            <button class="blazorpdf-pdf__close-container-button" @onclick="@(PdfViewer.ClearMetadata)">
+                @PdfViewer.LocalizedStrings.MetadataClose
+            </button>
+        </div>
+    </div>
+</div>
+
+@code {
+    [CascadingParameter] public required PdfViewer PdfViewer { get; set; }
+    [Parameter, EditorRequired] public Pdf.PdfMetadata Metadata { get; set; }
+    
+    private static string MetadataOrEmpty(string? metadata)
+    {
+        return string.IsNullOrEmpty(metadata) ? "N/A" : metadata;
+    }
+}

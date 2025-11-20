@@ -1,0 +1,96 @@
+﻿@using Gotho.BlazorPdf.BlazorPdfIcons
+
+@attribute [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+
+<div class="blazorpdf-toolbar__item">
+    <div class="blazorpdf-toolbar__menu-wrapper">
+        <input type="checkbox" id="menu-toggle" hidden>
+        <label for="menu-toggle" class="blazorpdf-toolbar__menu-trigger-button">
+            <span>
+                <MenuIcon Color="@PdfViewer.Colors.Icon"/>
+            </span>
+        </label>
+        <div class="blazorpdf-toolbar__menu">
+            <label for="menu-toggle" class="blazorpdf-toolbar__menu-overlay"></label>
+            <div class="blazorpdf-toolbar__menu-content">
+                <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@PdfViewer.InputDisabled()" @onclick="PdfViewer.RotateClockwiseAsync">
+                    <span class="blazorpdf-toolbar__menu-menu-item-icon">
+                        <RotateCWIcon Color="@PdfViewer.Colors.Icon"/>
+                    </span>
+                    <span class="blazorpdf-toolbar__menu-menu-item-text">@PdfViewer.LocalizedStrings.RotateClockwise</span>
+                </button>
+                <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@PdfViewer.InputDisabled()" @onclick="PdfViewer.RotateCounterclockwiseAsync">
+                    <span class="blazorpdf-toolbar__menu-menu-item-icon">
+                        <RotateCCWIcon Color="@PdfViewer.Colors.Icon"/>
+                    </span>
+                    <span class="blazorpdf-toolbar__menu-menu-item-text">@PdfViewer.LocalizedStrings.RotateCounterclockwise</span>
+                </button>
+                <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@PdfViewer.InputDisabled()" @onclick="PdfViewer.SwitchOrientationAsync">
+                    <span class="blazorpdf-toolbar__menu-menu-item-icon">
+                        <SwitchOrientationIcon Color="@PdfViewer.Colors.Icon"/>
+                    </span>
+                    <span class="blazorpdf-toolbar__menu-menu-item-text">@PdfViewer.LocalizedStrings.SwitchOrientation</span>
+                </button>
+
+                <hr class="blazorpdf-toolbar__menu-divider">
+
+                <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@PdfViewer.InputDisabled()" @onclick="PdfViewer.FirstPageAsync">
+                    <span class="blazorpdf-toolbar__menu-menu-item-icon">
+                        <FirstPageIcon Color="@PdfViewer.Colors.Icon"/>
+                    </span>
+                    <span class="blazorpdf-toolbar__menu-menu-item-text">@PdfViewer.LocalizedStrings.FirstPage</span>
+                </button>
+                <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@PdfViewer.InputDisabled()" @onclick="PdfViewer.LastPageAsync">
+                    <span class="blazorpdf-toolbar__menu-menu-item-icon">
+                        <LastPageIcon Color="@PdfViewer.Colors.Icon"/>
+                    </span>
+                    <span class="blazorpdf-toolbar__menu-menu-item-text">@PdfViewer.LocalizedStrings.LastPage</span>
+                </button>
+                <hr class="blazorpdf-toolbar__menu-divider">
+                <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@PdfViewer.InputDisabled()" @onclick="PdfViewer.ResetZoomAsync">
+                    <span class="blazorpdf-toolbar__menu-menu-item-icon">
+                        <ZoomResetIcon Color="@PdfViewer.Colors.Icon"/>
+                    </span>
+                    <span class="blazorpdf-toolbar__menu-menu-item-text">@PdfViewer.LocalizedStrings.ResetZoom</span>
+                </button>
+
+                <hr class="blazorpdf-toolbar__menu-divider">
+
+                <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@PdfViewer.InputDisabled()" @onclick="PdfViewer.PrintDocumentAsync">
+                    <span class="blazorpdf-toolbar__menu-menu-item-icon">
+                        <PrintIcon Color="@PdfViewer.Colors.Icon"/>
+                    </span>
+                    <span class="blazorpdf-toolbar__menu-menu-item-text">@PdfViewer.LocalizedStrings.PrintDocument</span>
+                </button>
+                <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@PdfViewer.InputDisabled()" @onclick="PdfViewer.DownloadDocumentAsync">
+                    <span class="blazorpdf-toolbar__menu-menu-item-icon">
+                        <DownloadIcon Color="@PdfViewer.Colors.Icon"/>
+                    </span>
+                    <span class="blazorpdf-toolbar__menu-menu-item-text">@PdfViewer.LocalizedStrings.DownloadDocument</span>
+                </button>
+                <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@PdfViewer.InputDisabled()" @onclick="PdfViewer.ViewMetadataAsync">
+                    <span class="blazorpdf-toolbar__menu-menu-item-icon">
+                        <MetadataIcon Color="@PdfViewer.Colors.Icon"/>
+                    </span>
+                    <span class="blazorpdf-toolbar__menu-menu-item-text">@PdfViewer.LocalizedStrings.ViewMetadata</span>
+                </button>
+
+                @if (!PdfViewer.ScrollMode)
+                {
+                    <hr class="blazorpdf-toolbar__menu-divider">
+                    <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@PdfViewer.InputDisabled()" @onclick="PdfViewer.ToggleDrawingAsync">
+                        <span class="blazorpdf-toolbar__menu-menu-item-icon">
+                            <DrawIcon Color="@PdfViewer.Colors.Icon"/>
+                        </span>
+                        <span
+                            class="blazorpdf-toolbar__menu-menu-item-text">@PdfViewer.LocalizedStrings.Draw</span>
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [CascadingParameter] public required PdfViewer PdfViewer { get; set; }
+}
