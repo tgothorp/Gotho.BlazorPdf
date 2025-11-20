@@ -13,4 +13,12 @@ public class BlazorPdfConfig
     /// <para><b>Default:</b> <c>false</c></para>
     /// </remarks>
     public bool UseProjectWorker { get; set; } = false;
+
+    /// <summary>
+    /// Determines the maximum file size that can be uploaded, used in conjunction with <c>PermitPdfUploads</c>
+    /// </summary>
+    /// <remarks>
+    /// <para><b>Default:</b> 10MB (<c>10 * 1024 * 1024</c>)</para>
+    /// </remarks>
+    public long MaxPdfFileUploadSize { get; set; } = 10 * 1024 * 1024;
 }

@@ -2,11 +2,12 @@
 
     <PropertyGroup>
         <PackageId>Gotho.BlazorPdf</PackageId>
-        <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+        <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-        <Version>1.1.2</Version>
+        <Version>2.0.0</Version>
         <Title>Gotho.BlazorPdf</Title>
         <Authors>tgothorp</Authors>
         <Company>tgothorp</Company>
@@ -20,6 +21,10 @@
         <RootNamespace>Gotho.BlazorPdf</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup>
+        <InternalsVisibleTo Include="$(AssemblyName).MudBlazor" />
+    </ItemGroup>
+    
     <Target Name="CompileTypeScript" BeforeTargets="Build">
         <Exec Command="npm run ts" />
     </Target>
@@ -36,6 +41,11 @@
         <SupportedPlatform Include="browser"/>
     </ItemGroup>
 
+    <ItemGroup Condition=" '$(TargetFramework)' == 'net10.0' ">
+        <PackageReference Include="Microsoft.AspNetCore.Components" Version="10.0.*" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.*" />
+    </ItemGroup>
+    
     <ItemGroup Condition=" '$(TargetFramework)' == 'net9.0' ">
         <PackageReference Include="Microsoft.AspNetCore.Components" Version="9.0.*" />
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.*" />
