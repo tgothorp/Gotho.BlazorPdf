@@ -15,7 +15,7 @@
             <MudText Typo="Typo.h2" Class="mb-5">Uploading PDFs</MudText>
             <MudText>You can enable uploading of PDFs by setting the 'PermitPdfUploads' parameter to 'true' when configuring your PDF viewer. You can also specify the maximum file size as well as a callback containing the uploaded file.</MudText>
 
-            <MudAlert Severity="Severity.Warning">You should consider the potential security implications of allowing users to upload PDF files to your application</MudAlert>
+            <MudAlert Class="my-3" Severity="Severity.Warning">You should consider the potential security implications of allowing users to upload PDF files to your application</MudAlert>
             
             <MudText Typo="Typo.h4" Class="mt-5 mb-1">Enable PDF Uploads</MudText>
             <CodeSnippet Body="@UploadConfiguration.EnableUploads"/>
@@ -24,10 +24,24 @@
             <CodeSnippet Body="@UploadConfiguration.MaxUploadSize"/>
             
             <MudText Typo="Typo.h4" Class="mt-5 mb-1">Upload Event Callback</MudText>
-            @* <CodeSnippet Body="@UploadConfiguration.MaxUploadSize"/> *@
-            @* *@
-            @* <MudText Typo="Typo.h4" Class="mt-5 mb-1">Demo</MudText> *@
-            @* <PdfViewer PermitPdfUploads="true"/> *@
+            <CodeSnippet Body="@UploadConfiguration.OnUpload"/>
+            
+            <MudText>Callback object</MudText>
+            <CodeSnippet Body="@UploadConfiguration.CallbackObject"/>
+            
+            <MudText Typo="Typo.h4" Class="mt-5 mb-1">Demo</MudText>
+            <PdfViewer PermitPdfUploads="true" OnFileUploaded=@FileUploaded/>
         </MudItem>
     </MudGrid>
 </div>
+
+@code
+{
+    [Inject] public ISnackbar Snackbar { get; set; }
+    
+    private void FileUploaded(PdfViewerFileUploaded data)
+    {
+        var fileInfo = $"Uploaded {data.FileName} ({data.Size} bytes)";
+        Snackbar.Add(new MarkupString(fileInfo));
+    }
+}

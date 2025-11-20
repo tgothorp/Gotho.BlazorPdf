@@ -10,6 +10,10 @@ All notable changes and releases will be documented here
 - PDF text can now be searched
 - Updated documentation 
 
+### Breaking Changes
+
+- `SinglePageMode` has been renamed to `ScrollMode`, Set this to `true` to enable the traditional scrolling document view
+
 ## [2025-08-10] - V1.1.2
 
 - Fixed `HideThumbnails` option not behaving as expected.
