@@ -61,7 +61,7 @@ You should now be fully setup to use the `PdfViewer` component in your code!
 
 In order to use this package, your project will need to be configured with the following;
 
-- **.NET** Version 8.0 or 9.0
+- **.NET** Version 8.0, 9.0 or 10.0
 
 ## Usage & Examples
 

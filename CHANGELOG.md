@@ -2,7 +2,15 @@
 
 All notable changes and releases will be documented here
 
-## [2025-08-10] - V1.1.2 (Latest Release)
+## [2025-11-XX] - V2.0.0 (Latest Release)
+
+- Support for .NET 10
+- Added ability for PDF documents to be uploaded & viewed
+- PDF metadata can now be viewed
+- PDF text can now be searched
+- Updated documentation 
+
+## [2025-08-10] - V1.1.2
 
 - Fixed `HideThumbnails` option not behaving as expected.
 

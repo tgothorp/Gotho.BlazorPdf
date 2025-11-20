@@ -1,0 +1,33 @@
+@page "/docs/uploading"
+
+<PageTitle>Blazor PDF | Uploading PDFs</PageTitle>
+
+<PageMetadata Title="Blazor PDF | Uploading PDFs"
+              Description="PDFs can also be uploaded and viewed."
+              Url="https://blazorpdf.info/docs/uploading"/>
+
+<div style="max-width: 1440px; margin: 3em auto auto;">
+    <MudGrid>
+        <MudItem sm="3">
+            <DocsMenu/>
+        </MudItem>
+        <MudItem sm="9" Style="overflow: auto">
+            <MudText Typo="Typo.h2" Class="mb-5">Uploading PDFs</MudText>
+            <MudText>You can enable uploading of PDFs by setting the 'PermitPdfUploads' parameter to 'true' when configuring your PDF viewer. You can also specify the maximum file size as well as a callback containing the uploaded file.</MudText>
+
+            <MudAlert Severity="Severity.Warning">You should consider the potential security implications of allowing users to upload PDF files to your application</MudAlert>
+            
+            <MudText Typo="Typo.h4" Class="mt-5 mb-1">Enable PDF Uploads</MudText>
+            <CodeSnippet Body="@UploadConfiguration.EnableUploads"/>
+            
+            <MudText Typo="Typo.h4" Class="mt-5 mb-1">Specify Max Upload Size</MudText>
+            <CodeSnippet Body="@UploadConfiguration.MaxUploadSize"/>
+            
+            <MudText Typo="Typo.h4" Class="mt-5 mb-1">Upload Event Callback</MudText>
+            @* <CodeSnippet Body="@UploadConfiguration.MaxUploadSize"/> *@
+            @* *@
+            @* <MudText Typo="Typo.h4" Class="mt-5 mb-1">Demo</MudText> *@
+            @* <PdfViewer PermitPdfUploads="true"/> *@
+        </MudItem>
+    </MudGrid>
+</div>
