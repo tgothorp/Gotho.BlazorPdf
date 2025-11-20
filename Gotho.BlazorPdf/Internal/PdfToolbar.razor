@@ -1,0 +1,121 @@
+﻿@using Gotho.BlazorPdf.BlazorPdfIcons
+
+@attribute [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+
+<div role="toolbar" class="blazorpdf-toolbar" style="background-color: @PdfViewer.Colors.Toolbar">
+
+    @if (PdfViewer.PdfFile is not null)
+    {
+        @*Toggle Thumbnail*@
+        @if (!PdfViewer.HideThumbnails)
+        {
+            <div class="blazorpdf-toolbar__item blazorpdf__hide-on-mobile">
+                <button class="blazorpdf-toolbar__item-button" disabled="@PdfViewer.InputDisabled()" @onclick="@(async () => await InvokeToggleThumbnails())" aria-label="@PdfViewer.LocalizedStrings.ToggleThumbnails">
+                    <span>
+                        <ThumbnailsIcon Color="@PdfViewer.Colors.Icon"/>
+                    </span>
+                </button>
+            </div>
+        }
+
+        @*Previous Page*@
+        <div class="blazorpdf-toolbar__item">
+            <button class="blazorpdf-toolbar__item-button" disabled="@PdfViewer.InputDisabled()" @onclick="PdfViewer.PreviousPageAsync" aria-label="@PdfViewer.LocalizedStrings.PreviousPage">
+                <span>
+                    <PreviousPageIcon Color="@PdfViewer.Colors.Icon"/>
+                </span>
+            </button>
+        </div>
+
+        @*Next Page*@
+        <div class="blazorpdf-toolbar__item">
+            <button class="blazorpdf-toolbar__item-button" disabled="@PdfViewer.InputDisabled()" @onclick="PdfViewer.NextPageAsync" aria-label="@PdfViewer.LocalizedStrings.NextPage">
+                <span>
+                    <NextPageIcon Color="@PdfViewer.Colors.Icon"/>
+                </span>
+            </button>
+        </div>
+
+        @*Current Page*@
+        <div class="blazorpdf-toolbar__item blazorpdf__hide-on-mobile">
+            <input type="number" value="@PdfViewer.PdfFile.Paging.CurrentPage" disabled="@PdfViewer.InputDisabled()" @onchange="PageChanged"/>
+        </div>
+
+        @* of *@
+        <div class="blazorpdf-toolbar__item blazorpdf__hide-on-mobile">
+            <p>@PdfViewer.LocalizedStrings.PageOf</p>
+        </div>
+
+        @*Page Total*@
+        <div class="blazorpdf-toolbar__item blazorpdf__hide-on-mobile">
+            <p>@PdfViewer.PdfFile.Paging.TotalPages</p>
+        </div>
+
+        <div class="blazorpdf-toolbar__spacer blazorpdf__hide-on-mobile"></div>
+
+        @*Zoom Out*@
+        <div class="blazorpdf-toolbar__item">
+            <button class="blazorpdf-toolbar__item-button" @onclick="PdfViewer.ZoomOutAsync" disabled="@PdfViewer.InputDisabled()" aria-label="@PdfViewer.LocalizedStrings.ZoomOut">
+                <span>
+                    <ZoomOutIcon Color="@PdfViewer.Colors.Icon"/>
+                </span>
+            </button>
+        </div>
+
+        @*Current Zoom*@
+        <div class="blazorpdf-toolbar__item blazorpdf__hide-on-mobile">
+            <span class="blazorpdf-toolbar__item-chip">@PdfViewer.PdfFile.Zooming.GetZoomPercentageString()</span>
+        </div>
+
+        @*Zoom In*@
+        <div class="blazorpdf-toolbar__item">
+            <button class="blazorpdf-toolbar__item-button" @onclick="PdfViewer.ZoomInAsync" disabled="@PdfViewer.InputDisabled()" aria-label="@PdfViewer.LocalizedStrings.ZoomIn">
+                <span>
+                    <ZoomInIcon Color="@PdfViewer.Colors.Icon"/>
+                </span>
+            </button>
+        </div>
+
+        <div class="blazorpdf-toolbar__spacer"></div>
+
+        @if (!PdfViewer.ScrollMode)
+        {
+            @*Find*@
+            <div class="blazorpdf-toolbar__item blazorpdf__hide-on-mobile">
+                <button class="blazorpdf-toolbar__item-button" @onclick="@(async () => await InvokeToggleFind())" disabled="@PdfViewer.InputDisabled()" aria-label="@PdfViewer.LocalizedStrings.Find">
+                    <span>
+                        <FindIcon Color="@PdfViewer.Colors.Icon"/>
+                    </span>
+                </button>
+            </div>
+        }
+
+        <PdfMenu/>
+    }
+</div>
+
+@code {
+    [CascadingParameter] public required PdfViewer PdfViewer { get; set; }
+
+    [Parameter, EditorRequired] public EventCallback ToggleFind { get; set; }
+    [Parameter, EditorRequired] public EventCallback ToggleThumbnails { get; set; }
+
+    private async Task PageChanged(ChangeEventArgs obj)
+    {
+        if (int.TryParse(obj.Value as string, out var result))
+        {
+            await PdfViewer.PageNumberChanged(result);
+        }
+    }
+
+    private async Task InvokeToggleFind()
+    {
+        await ToggleFind.InvokeAsync();
+    }
+
+    private async Task InvokeToggleThumbnails()
+    {
+        await ToggleThumbnails.InvokeAsync();
+    }
+
+}
