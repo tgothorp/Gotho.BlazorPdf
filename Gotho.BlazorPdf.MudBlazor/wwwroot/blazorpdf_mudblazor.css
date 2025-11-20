@@ -42,4 +42,5 @@
     right: 0;
     margin-top: 10px;
     margin-right: 10px;
+    z-index: 999;
 }
