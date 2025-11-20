@@ -16,9 +16,11 @@ public class MudPdfIconConfig
     public string ResetZoom { get; set; } = global::MudBlazor.Icons.Material.Filled.ResetTv;
     public string PrintDocument { get; set; } = global::MudBlazor.Icons.Material.Filled.Print;
     public string DownloadDocument { get; set; } = global::MudBlazor.Icons.Material.Filled.Download;
+    public string UploadPdf { get; set; } = global::MudBlazor.Icons.Material.Filled.UploadFile;
     public string ViewMetadata { get; set; } = global::MudBlazor.Icons.Material.Filled.Info;
     public string Warning { get; set; } = global::MudBlazor.Icons.Material.Filled.Warning;
     public string Error { get; set; } = global::MudBlazor.Icons.Material.Filled.Error;
     public string Draw { get; set; } = global::MudBlazor.Icons.Material.Filled.Draw;
     public string DrawClose { get; set; } = global::MudBlazor.Icons.Material.Filled.Close;
+    public string Find { get; set; } = global::MudBlazor.Icons.Material.Filled.Search;
 }
