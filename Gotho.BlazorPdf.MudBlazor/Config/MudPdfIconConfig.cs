@@ -22,4 +22,5 @@ public class MudPdfIconConfig
     public string Error { get; set; } = global::MudBlazor.Icons.Material.Filled.Error;
     public string Draw { get; set; } = global::MudBlazor.Icons.Material.Filled.Draw;
     public string DrawClose { get; set; } = global::MudBlazor.Icons.Material.Filled.Close;
+    public string Find { get; set; } = global::MudBlazor.Icons.Material.Filled.Search;
 }

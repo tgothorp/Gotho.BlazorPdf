@@ -73,6 +73,14 @@
                                        aria-label="@LocalizedStrings.ZoomIn"/>
                     </MudTooltip>
                     <MudSpacer/>
+                    <MudTooltip Text="@LocalizedStrings.Find" Arrow="true" Placement="Placement.Top">
+                        <MudIconButton Icon="@Icons.Find"
+                                       Size="Size.Medium"
+                                       Color="@MudColors.IconColor"
+                                       Disabled="InputDisabled()"
+                                       OnClick="ToggleFind"
+                                       aria-label="@LocalizedStrings.Find"/>
+                    </MudTooltip>
                     <MudMenu Icon="@Icons.Menu" Color="MudColors.IconColor">
                         <MudMenuItem IconColor="MudColors.IconColor" Icon="@Icons.RotateClockwise"
                                      Label="@LocalizedStrings.RotateClockwise" OnClick="RotateClockwiseAsync"/>
@@ -113,6 +121,35 @@
         </MudItem>
         <MudItem xs="12">
             <div class="blazorpdf-pdf" style="background-color: @Colors.Background">
+
+                @if (_showFind && PdfFile is not null)
+                {
+                    <div class="mudpdf_find">
+                        <MudCard>
+                            <MudCardContent>
+                                <MudStack Row="true" Spacing="1">
+                                    <MudTextField
+                                        @bind-Value="_searchQuery"
+                                        OnKeyDown="FindKeyPressed"
+                                        Label="Find in Document"
+                                        DebounceInterval="5"
+                                        Placeholder="Query..."
+                                        Variant="Variant.Filled"/>
+                                    <MudIconButton
+                                        Icon="@(global::MudBlazor.Icons.Material.Filled.ChevronLeft)"
+                                        Variant="Variant.Outlined"
+                                        Color="@MudColors.IconColor"
+                                        OnClick="PreviousResult"/>
+                                    <MudIconButton
+                                        Icon="@(global::MudBlazor.Icons.Material.Filled.ChevronRight)"
+                                        Variant="Variant.Outlined"
+                                        Color="@MudColors.IconColor"
+                                        OnClick="NextResult"/>
+                                </MudStack>
+                            </MudCardContent>
+                        </MudCard>
+                    </div>
+                }
 
                 @if (PdfFile is null)
                 {
@@ -282,14 +319,26 @@
 
 @code {
 
+    private bool _showFind = false;
     private bool _showThumbnails = true;
     private InputType _passwordInputType = InputType.Password;
     private string _passwordInputIcon = global::MudBlazor.Icons.Material.Filled.VisibilityOff;
     private bool _passwordVisible = false;
+    private string? _searchQuery = null;
 
     private bool InputDisabled()
     {
         return Loading || Error is not null;
+    }
+
+    private async Task ToggleFind()
+    {
+        _showFind = !_showFind;
+        if (!_showFind)
+        {
+            _searchQuery = null;
+            await ClearSearchResults();
+        }
     }
 
     private void ToggleThumbnails()
@@ -334,6 +383,14 @@
             return;
 
         await UploadFile(new InputFileChangeEventArgs([obj]));
+    }
+
+    private async Task FindKeyPressed(KeyboardEventArgs obj)
+    {
+        if (obj.Key == "Enter" && !string.IsNullOrEmpty(_searchQuery))
+        {
+            await Search(_searchQuery);
+        }
     }
 
 }

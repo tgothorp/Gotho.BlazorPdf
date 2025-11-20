@@ -36,3 +36,10 @@
     max-width: min(50%, 500px);
     margin: 15px auto 15px auto;
 }
+
+.mudpdf_find {
+    position: absolute;
+    right: 0;
+    margin-top: 10px;
+    margin-right: 10px;
+}
