@@ -28,3 +28,11 @@
     background-color: rgba(0, 0, 0, 0.55);
     z-index: 9998;
 }
+
+.mudpdf_upload {
+    position: relative;
+    left: 0;
+    right: 0;
+    max-width: min(50%, 500px);
+    margin: 15px auto 15px auto;
+}

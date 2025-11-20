@@ -6,45 +6,45 @@
     <MudCard Class="pa-2">
         <MudCardHeader>
             <CardHeaderContent>
-                <MudText Typo="Typo.h5">@PdfViewer.LocalizedStrings.MetadataHeader</MudText>
+                <MudText Typo="Typo.h5">@MudPdfViewer.LocalizedStrings.MetadataHeader</MudText>
             </CardHeaderContent>
         </MudCardHeader>
         <MudCardContent>
             <MudStack>
                 <MudStack Spacing="0">
-                    <MudText Typo="Typo.subtitle1">@PdfViewer.LocalizedStrings.MetadataTitle</MudText>
+                    <MudText Typo="Typo.subtitle1">@MudPdfViewer.LocalizedStrings.MetadataTitle</MudText>
                     <MudText>@MetadataOrEmpty(Metadata.Title)</MudText>
                 </MudStack>
                 <MudStack Spacing="0">
-                    <MudText Typo="Typo.subtitle1">@PdfViewer.LocalizedStrings.MetadataSubject</MudText>
+                    <MudText Typo="Typo.subtitle1">@MudPdfViewer.LocalizedStrings.MetadataSubject</MudText>
                     <MudText>@MetadataOrEmpty(Metadata.Subject)</MudText>
                 </MudStack>
                 <MudStack Spacing="0">
-                    <MudText Typo="Typo.subtitle1">@PdfViewer.LocalizedStrings.MetadataAuthor</MudText>
+                    <MudText Typo="Typo.subtitle1">@MudPdfViewer.LocalizedStrings.MetadataAuthor</MudText>
                     <MudText>@MetadataOrEmpty(Metadata.Author)</MudText>
                 </MudStack>
                 <MudStack Spacing="0">
-                    <MudText Typo="Typo.subtitle1">@PdfViewer.LocalizedStrings.MetadataCreator</MudText>
+                    <MudText Typo="Typo.subtitle1">@MudPdfViewer.LocalizedStrings.MetadataCreator</MudText>
                     <MudText>@MetadataOrEmpty(Metadata.Creator)</MudText>
                 </MudStack>
                 <MudStack Spacing="0">
-                    <MudText Typo="Typo.subtitle1">@PdfViewer.LocalizedStrings.MetadataProducer</MudText>
+                    <MudText Typo="Typo.subtitle1">@MudPdfViewer.LocalizedStrings.MetadataProducer</MudText>
                     <MudText>@MetadataOrEmpty(Metadata.Producer)</MudText>
                 </MudStack>
                 <MudStack Spacing="0">
-                    <MudText Typo="Typo.subtitle1">@PdfViewer.LocalizedStrings.MetadataPdfFormatVersion</MudText>
+                    <MudText Typo="Typo.subtitle1">@MudPdfViewer.LocalizedStrings.MetadataPdfFormatVersion</MudText>
                     <MudText>@MetadataOrEmpty(Metadata.FormatVersion)</MudText>
                 </MudStack>
                 <MudStack Spacing="0">
-                    <MudText Typo="Typo.subtitle1">@PdfViewer.LocalizedStrings.MetadataKeywords</MudText>
+                    <MudText Typo="Typo.subtitle1">@MudPdfViewer.LocalizedStrings.MetadataKeywords</MudText>
                     <MudText>@MetadataOrEmpty(Metadata.Keywords)</MudText>
                 </MudStack>
                 <MudStack Spacing="0">
-                    <MudText Typo="Typo.subtitle1">@PdfViewer.LocalizedStrings.MetadataCreationDate</MudText>
+                    <MudText Typo="Typo.subtitle1">@MudPdfViewer.LocalizedStrings.MetadataCreationDate</MudText>
                     <MudText>@(Metadata.CreationDate is null ? "N/A" : Metadata.CreationDate.Value.ToString("g", CultureInfo.CurrentCulture))</MudText>
                 </MudStack>
                 <MudStack Spacing="0">
-                    <MudText Typo="Typo.subtitle1">@PdfViewer.LocalizedStrings.MetadataModifiedDate</MudText>
+                    <MudText Typo="Typo.subtitle1">@MudPdfViewer.LocalizedStrings.MetadataModifiedDate</MudText>
                     <MudText>@(Metadata.ModifiedDate is null ? "N/A" : Metadata.ModifiedDate.Value.ToString("g", CultureInfo.CurrentCulture))</MudText>
                 </MudStack>
             
@@ -67,7 +67,7 @@
 </div>
 
 @code {
-    [CascadingParameter] public required MudPdfViewer PdfViewer { get; set; }
+    [CascadingParameter] public required MudPdfViewer MudPdfViewer { get; set; }
     
     [Parameter, EditorRequired] public Pdf.PdfMetadata Metadata { get; set; }
     [Parameter, EditorRequired] public EventCallback ClearMetadata { get; set; }
