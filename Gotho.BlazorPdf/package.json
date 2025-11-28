@@ -34,7 +34,7 @@
   "dependencies": {
     "@types/blazor__javascript-interop": "^3.1.7",
     "file-saver": "^2.0.5",
-    "pdfjs-dist": "^4.2.67",
+    "pdfjs-dist": "5.4.149",
     "print-js": "^1.6.0"
   }
 }

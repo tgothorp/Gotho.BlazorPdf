@@ -6,7 +6,7 @@ import DotNetObject = DotNet.DotNetObject;
 import FileSaver from "file-saver";
 import {GlobalWorkerOptions, getDocument, PDFPageProxy, PDFDocumentProxy} from "pdfjs-dist";
 
-GlobalWorkerOptions.workerSrc = "./pdf.worker.min.mjs";
+GlobalWorkerOptions.workerSrc = "./pdf.worker.5-4-149.min.mjs";
 let workerInitialised = false;
 
 /**
@@ -14,7 +14,7 @@ let workerInitialised = false;
  * the required worker directly so we must grab it via a fetch().
  */
 async function setupProjectWorker() {
-    const response = await fetch('./pdf.worker.min.mjs');
+    const response = await fetch('./pdf.worker.5-4-149.min.mjs');
     const workerCode = await response.text();
 
     const blob = new Blob([workerCode], {type: 'application/javascript'});
@@ -119,7 +119,7 @@ export async function printDocument(dotnetReference: DotNetObject, id: string) {
         canvas.width = viewport.width;
         canvas.height = viewport.height;
 
-        await page.render({ canvasContext: context, viewport }).promise;
+        await page.render({ canvasContext: context, canvas:canvas, viewport:viewport }).promise;
 
         const pdfImage = context.canvas;
 
@@ -256,6 +256,7 @@ async function renderPdf(pdf: Pdf) {
             pdf.canvas.height = viewport.height;
 
             const renderData = {
+                canvas: pdf.canvas,
                 canvasContext: pdf.getCanvasContext(),
                 viewport: viewport
             }
@@ -279,7 +280,7 @@ async function renderPdf(pdf: Pdf) {
                 textLayerBuilder.div = textLayer;
                 
                 // Wait for text layer to render before applying highlights
-                textLayerBuilder.render(viewport).then(() => {
+                textLayerBuilder.render({viewport:viewport}).then(() => {
                     if (pdf.previousQuery === null)
                         return;
 
@@ -333,7 +334,7 @@ async function renderPdf(pdf: Pdf) {
             canvas.height = viewport.height;
             container.appendChild(canvas);
 
-            const renderTask = page.render({canvasContext: ctx, viewport});
+            const renderTask = page.render({canvasContext: ctx, canvas:canvas, viewport:viewport});
             await renderTask.promise.then(async () => {
 
                 // Effective yet slightly cursed way to ensure correct text layer 
@@ -352,8 +353,8 @@ async function renderPdf(pdf: Pdf) {
                 textLayerBuilder.div = textDiv;
                 textLayerBuilder.pdfPage = page;
                 
-                // Wait for text layer to render before applying highlights
-                textLayerBuilder.render(viewport).then(() => {
+                // Wait for the text layer to render before applying highlights
+                textLayerBuilder.render({viewport:viewport}).then(() => {
                     if (pdf.previousQuery === null)
                         return;
 
@@ -402,7 +403,7 @@ async function renderThumbnails(dotnetReference: DotNetObject, pdf: Pdf) {
 
         sidebar.appendChild(thumbCanvas);
 
-        await page.render({canvasContext: thumbCtx, viewport}).promise;
+        await page.render({canvasContext: thumbCtx, canvas:thumbCanvas, viewport:viewport}).promise;
 
         thumbCanvas.addEventListener('click', () => {
             goToPage(dotnetReference, pdf.id, pageNum);
