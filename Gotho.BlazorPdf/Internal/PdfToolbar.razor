@@ -77,7 +77,43 @@
         </div>
 
         <div class="blazorpdf-toolbar__spacer"></div>
-
+        
+        @* Print *@
+        @if (PdfViewer.PrintButtonLocation is PdfMenuItemLocation.Toolbar or PdfMenuItemLocation.Both)
+        {
+            <div class="blazorpdf-toolbar__item">
+                <button class="blazorpdf-toolbar__item-button" @onclick="PdfViewer.PrintDocumentAsync" disabled="@PdfViewer.InputDisabled()" aria-label="@PdfViewer.LocalizedStrings.PrintDocument">
+                    <span>
+                        <PrintIcon Color="@PdfViewer.Colors.Icon"/>
+                    </span>
+                </button>
+            </div>
+        }
+        
+        @* Download *@
+        @if (PdfViewer.DownloadButtonLocation is PdfMenuItemLocation.Toolbar or PdfMenuItemLocation.Both)
+        {
+            <div class="blazorpdf-toolbar__item">
+                <button class="blazorpdf-toolbar__item-button" @onclick="PdfViewer.DownloadDocumentAsync" disabled="@PdfViewer.InputDisabled()" aria-label="@PdfViewer.LocalizedStrings.DownloadDocument">
+                    <span>
+                        <DownloadIcon Color="@PdfViewer.Colors.Icon"/>
+                    </span>
+                </button>
+            </div>
+        }
+        
+        @* Draw *@
+        @if (PdfViewer is { ScrollMode: false, DrawButtonLocation: PdfMenuItemLocation.Toolbar or PdfMenuItemLocation.Both })
+        {
+            <div class="blazorpdf-toolbar__item">
+                <button class="blazorpdf-toolbar__item-button" @onclick="PdfViewer.ToggleDrawingAsync" disabled="@PdfViewer.InputDisabled()" aria-label="@PdfViewer.LocalizedStrings.Draw">
+                    <span>
+                        <DrawIcon Color="@PdfViewer.Colors.Icon"/>
+                    </span>
+                </button>
+            </div>
+        }
+        
         @if (!PdfViewer.ScrollMode)
         {
             @*Find*@

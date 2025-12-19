@@ -56,18 +56,26 @@
 
                 <hr class="blazorpdf-toolbar__menu-divider">
 
-                <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@PdfViewer.InputDisabled()" @onclick="PdfViewer.PrintDocumentAsync">
-                    <span class="blazorpdf-toolbar__menu-menu-item-icon">
-                        <PrintIcon Color="@PdfViewer.Colors.Icon"/>
-                    </span>
-                    <span class="blazorpdf-toolbar__menu-menu-item-text">@PdfViewer.LocalizedStrings.PrintDocument</span>
-                </button>
-                <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@PdfViewer.InputDisabled()" @onclick="PdfViewer.DownloadDocumentAsync">
-                    <span class="blazorpdf-toolbar__menu-menu-item-icon">
-                        <DownloadIcon Color="@PdfViewer.Colors.Icon"/>
-                    </span>
-                    <span class="blazorpdf-toolbar__menu-menu-item-text">@PdfViewer.LocalizedStrings.DownloadDocument</span>
-                </button>
+                @if (PdfViewer.PrintButtonLocation is PdfMenuItemLocation.Menu or PdfMenuItemLocation.Both)
+                {
+                    <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@PdfViewer.InputDisabled()" @onclick="PdfViewer.PrintDocumentAsync">
+                        <span class="blazorpdf-toolbar__menu-menu-item-icon">
+                            <PrintIcon Color="@PdfViewer.Colors.Icon"/>
+                        </span>
+                        <span class="blazorpdf-toolbar__menu-menu-item-text">@PdfViewer.LocalizedStrings.PrintDocument</span>
+                    </button>
+                }
+
+                @if (PdfViewer.DownloadButtonLocation is PdfMenuItemLocation.Menu or PdfMenuItemLocation.Both)
+                {
+                    <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@PdfViewer.InputDisabled()" @onclick="PdfViewer.DownloadDocumentAsync">
+                        <span class="blazorpdf-toolbar__menu-menu-item-icon">
+                            <DownloadIcon Color="@PdfViewer.Colors.Icon"/>
+                        </span>
+                        <span class="blazorpdf-toolbar__menu-menu-item-text">@PdfViewer.LocalizedStrings.DownloadDocument</span>
+                    </button>
+                }
+
                 <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@PdfViewer.InputDisabled()" @onclick="PdfViewer.ViewMetadataAsync">
                     <span class="blazorpdf-toolbar__menu-menu-item-icon">
                         <MetadataIcon Color="@PdfViewer.Colors.Icon"/>
@@ -75,7 +83,7 @@
                     <span class="blazorpdf-toolbar__menu-menu-item-text">@PdfViewer.LocalizedStrings.ViewMetadata</span>
                 </button>
 
-                @if (!PdfViewer.ScrollMode)
+                @if (PdfViewer is { ScrollMode: false, DrawButtonLocation: PdfMenuItemLocation.Menu or PdfMenuItemLocation.Both })
                 {
                     <hr class="blazorpdf-toolbar__menu-divider">
                     <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@PdfViewer.InputDisabled()" @onclick="PdfViewer.ToggleDrawingAsync">
