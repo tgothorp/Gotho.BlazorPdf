@@ -106,6 +106,12 @@ public partial class PdfViewer : ComponentBase
     public BlazorPdfColors Colors { get; set; } = new();
 
     /// <summary>
+    /// Hides the dropdown menu. (default: false)
+    /// </summary>
+    [Parameter]
+    public bool HideDropdownMenu { get; set; } = false;
+
+    /// <summary>
     /// Should the option to print the PDF document be displayed on the toolbar, in the dropdown menu, in both, or not at all? (default: Menu)
     /// </summary>
     [Parameter]
@@ -116,6 +122,15 @@ public partial class PdfViewer : ComponentBase
     /// </summary>
     [Parameter]
     public PdfMenuItemLocation DownloadButtonLocation { get; set; } = PdfMenuItemLocation.Menu;
+    
+    /// <summary>
+    /// Should the option to find text in the PDF document be displayed on the toolbar, in the dropdown menu, in both, or not at all? (default: Toolbar)
+    /// </summary>
+    /// <remarks>
+    /// The option to find text in the PDF document is ALWAYS disabled for scroll mode
+    /// </remarks>
+    [Parameter]
+    public PdfMenuItemLocation FindButtonLocation { get; set; } = PdfMenuItemLocation.Toolbar;
     
     /// <summary>
     /// Should the option to draw on the PDF document be displayed on the toolbar, in the dropdown menu, in both, or not at all? (default: Menu)

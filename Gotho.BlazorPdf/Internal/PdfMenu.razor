@@ -63,6 +63,16 @@
                 </button>
 
                 <hr class="blazorpdf-toolbar__menu-divider">
+                
+                @if (PdfViewer is { ScrollMode: false, FindButtonLocation: PdfMenuItemLocation.Menu or PdfMenuItemLocation.Both })
+                {
+                    <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@PdfViewer.InputDisabled()" @onclick="@InvokeToggleFind">
+                        <span class="blazorpdf-toolbar__menu-menu-item-icon">
+                            <FindIcon Color="@PdfViewer.Colors.Icon"/>
+                        </span>
+                        <span class="blazorpdf-toolbar__menu-menu-item-text">@PdfViewer.LocalizedStrings.Find</span>
+                    </button>
+                }
 
                 @if (PdfViewer.PrintButtonLocation is PdfMenuItemLocation.Menu or PdfMenuItemLocation.Both)
                 {
@@ -107,6 +117,9 @@
 </div>
 
 @code {
+    
+    [Parameter, EditorRequired] public EventCallback ToggleFind { get; set; }
+    
     [CascadingParameter] public required PdfViewer PdfViewer { get; set; }
 
     private bool _isMenuOpen = false;
@@ -119,4 +132,9 @@
         await action();
     }
 
+    private async Task InvokeToggleFind()
+    {
+        _isMenuOpen = false;
+        await ToggleFind.InvokeAsync();
+    }
 }

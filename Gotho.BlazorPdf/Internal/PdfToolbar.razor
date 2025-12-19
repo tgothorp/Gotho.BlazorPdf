@@ -114,9 +114,9 @@
             </div>
         }
         
-        @if (!PdfViewer.ScrollMode)
+        @*Find*@
+        @if (PdfViewer is { ScrollMode: false, FindButtonLocation: PdfMenuItemLocation.Toolbar or PdfMenuItemLocation.Both })
         {
-            @*Find*@
             <div class="blazorpdf-toolbar__item blazorpdf__hide-on-mobile">
                 <button class="blazorpdf-toolbar__item-button" @onclick="@(async () => await InvokeToggleFind())" disabled="@PdfViewer.InputDisabled()" aria-label="@PdfViewer.LocalizedStrings.Find">
                     <span>
@@ -126,7 +126,10 @@
             </div>
         }
 
-        <PdfMenu/>
+        @if (!PdfViewer.HideDropdownMenu)
+        {
+            <PdfMenu ToggleFind="ToggleFind"/>
+        }
     }
 </div>
 
