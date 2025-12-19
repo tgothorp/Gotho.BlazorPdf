@@ -4,28 +4,33 @@
 
 <div class="blazorpdf-toolbar__item">
     <div class="blazorpdf-toolbar__menu-wrapper">
-        <input type="checkbox" id="menu-toggle" hidden>
-        <label for="menu-toggle" class="blazorpdf-toolbar__menu-trigger-button">
-            <span>
-                <MenuIcon Color="@PdfViewer.Colors.Icon"/>
-            </span>
-        </label>
-        <div class="blazorpdf-toolbar__menu">
-            <label for="menu-toggle" class="blazorpdf-toolbar__menu-overlay"></label>
+
+        <button type="button" @onclick="ToggleMenu" class="blazorpdf-toolbar__menu-trigger-button">
+            <span><MenuIcon Color="@PdfViewer.Colors.Icon"/></span>
+        </button>
+
+        @if (_isMenuOpen)
+        {
+            <div class="blazorpdf-toolbar__menu-overlay" @onclick="ToggleMenu"></div>
+        }
+
+        <div class="blazorpdf-toolbar__menu @(_isMenuOpen ? "is-visible" : "")">
             <div class="blazorpdf-toolbar__menu-content">
-                <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@PdfViewer.InputDisabled()" @onclick="PdfViewer.RotateClockwiseAsync">
+                <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@PdfViewer.InputDisabled()" @onclick="@(() => HandleMenuAction(PdfViewer.RotateClockwiseAsync))">
                     <span class="blazorpdf-toolbar__menu-menu-item-icon">
                         <RotateCWIcon Color="@PdfViewer.Colors.Icon"/>
                     </span>
                     <span class="blazorpdf-toolbar__menu-menu-item-text">@PdfViewer.LocalizedStrings.RotateClockwise</span>
                 </button>
-                <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@PdfViewer.InputDisabled()" @onclick="PdfViewer.RotateCounterclockwiseAsync">
+                
+                <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@PdfViewer.InputDisabled()" @onclick="@(() => HandleMenuAction(PdfViewer.RotateCounterclockwiseAsync))">
                     <span class="blazorpdf-toolbar__menu-menu-item-icon">
                         <RotateCCWIcon Color="@PdfViewer.Colors.Icon"/>
                     </span>
                     <span class="blazorpdf-toolbar__menu-menu-item-text">@PdfViewer.LocalizedStrings.RotateCounterclockwise</span>
                 </button>
-                <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@PdfViewer.InputDisabled()" @onclick="PdfViewer.SwitchOrientationAsync">
+                
+                <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@PdfViewer.InputDisabled()" @onclick="@(() => HandleMenuAction(PdfViewer.SwitchOrientationAsync))">
                     <span class="blazorpdf-toolbar__menu-menu-item-icon">
                         <SwitchOrientationIcon Color="@PdfViewer.Colors.Icon"/>
                     </span>
@@ -34,20 +39,23 @@
 
                 <hr class="blazorpdf-toolbar__menu-divider">
 
-                <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@PdfViewer.InputDisabled()" @onclick="PdfViewer.FirstPageAsync">
+                <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@PdfViewer.InputDisabled()" @onclick="@(() => HandleMenuAction(PdfViewer.FirstPageAsync))">
                     <span class="blazorpdf-toolbar__menu-menu-item-icon">
                         <FirstPageIcon Color="@PdfViewer.Colors.Icon"/>
                     </span>
                     <span class="blazorpdf-toolbar__menu-menu-item-text">@PdfViewer.LocalizedStrings.FirstPage</span>
                 </button>
-                <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@PdfViewer.InputDisabled()" @onclick="PdfViewer.LastPageAsync">
+                
+                <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@PdfViewer.InputDisabled()" @onclick="@(() => HandleMenuAction(PdfViewer.LastPageAsync))">
                     <span class="blazorpdf-toolbar__menu-menu-item-icon">
                         <LastPageIcon Color="@PdfViewer.Colors.Icon"/>
                     </span>
                     <span class="blazorpdf-toolbar__menu-menu-item-text">@PdfViewer.LocalizedStrings.LastPage</span>
                 </button>
+                
                 <hr class="blazorpdf-toolbar__menu-divider">
-                <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@PdfViewer.InputDisabled()" @onclick="PdfViewer.ResetZoomAsync">
+                
+                <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@PdfViewer.InputDisabled()" @onclick="@(() => HandleMenuAction(PdfViewer.ResetZoomAsync))">
                     <span class="blazorpdf-toolbar__menu-menu-item-icon">
                         <ZoomResetIcon Color="@PdfViewer.Colors.Icon"/>
                     </span>
@@ -58,7 +66,7 @@
 
                 @if (PdfViewer.PrintButtonLocation is PdfMenuItemLocation.Menu or PdfMenuItemLocation.Both)
                 {
-                    <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@PdfViewer.InputDisabled()" @onclick="PdfViewer.PrintDocumentAsync">
+                    <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@PdfViewer.InputDisabled()" @onclick="@(() => HandleMenuAction(PdfViewer.PrintDocumentAsync))">
                         <span class="blazorpdf-toolbar__menu-menu-item-icon">
                             <PrintIcon Color="@PdfViewer.Colors.Icon"/>
                         </span>
@@ -68,7 +76,7 @@
 
                 @if (PdfViewer.DownloadButtonLocation is PdfMenuItemLocation.Menu or PdfMenuItemLocation.Both)
                 {
-                    <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@PdfViewer.InputDisabled()" @onclick="PdfViewer.DownloadDocumentAsync">
+                    <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@PdfViewer.InputDisabled()" @onclick="@(() => HandleMenuAction(PdfViewer.DownloadDocumentAsync))">
                         <span class="blazorpdf-toolbar__menu-menu-item-icon">
                             <DownloadIcon Color="@PdfViewer.Colors.Icon"/>
                         </span>
@@ -76,7 +84,7 @@
                     </button>
                 }
 
-                <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@PdfViewer.InputDisabled()" @onclick="PdfViewer.ViewMetadataAsync">
+                <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@PdfViewer.InputDisabled()" @onclick="@(() => HandleMenuAction(PdfViewer.ViewMetadataAsync))">
                     <span class="blazorpdf-toolbar__menu-menu-item-icon">
                         <MetadataIcon Color="@PdfViewer.Colors.Icon"/>
                     </span>
@@ -86,12 +94,11 @@
                 @if (PdfViewer is { ScrollMode: false, DrawButtonLocation: PdfMenuItemLocation.Menu or PdfMenuItemLocation.Both })
                 {
                     <hr class="blazorpdf-toolbar__menu-divider">
-                    <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@PdfViewer.InputDisabled()" @onclick="PdfViewer.ToggleDrawingAsync">
+                    <button type="button" class="blazorpdf-toolbar__menu-menu-item" disabled="@PdfViewer.InputDisabled()" @onclick="@(() => HandleMenuAction(PdfViewer.ToggleDrawingAsync))">
                         <span class="blazorpdf-toolbar__menu-menu-item-icon">
                             <DrawIcon Color="@PdfViewer.Colors.Icon"/>
                         </span>
-                        <span
-                            class="blazorpdf-toolbar__menu-menu-item-text">@PdfViewer.LocalizedStrings.Draw</span>
+                        <span class="blazorpdf-toolbar__menu-menu-item-text">@PdfViewer.LocalizedStrings.Draw</span>
                     </button>
                 }
             </div>
@@ -101,4 +108,15 @@
 
 @code {
     [CascadingParameter] public required PdfViewer PdfViewer { get; set; }
+
+    private bool _isMenuOpen = false;
+
+    private void ToggleMenu() => _isMenuOpen = !_isMenuOpen;
+
+    private async Task HandleMenuAction(Func<Task> action)
+    {
+        _isMenuOpen = false;
+        await action();
+    }
+
 }
