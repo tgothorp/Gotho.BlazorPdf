@@ -7,10 +7,10 @@ internal class PdfInterop(IJSRuntime jsRuntime) : IAsyncDisposable
     private readonly Lazy<Task<IJSObjectReference>> js =
         new(() => jsRuntime.InvokeAsync<IJSObjectReference>("import", $"./_content/Gotho.BlazorPdf/blazorpdf.min.js?v={PdfViewerVersion.Version}").AsTask());
 
-    public async Task InitializeAsync(object objRef, Pdf pdf, bool scrollMode, bool useProjectWorker)
+    public async Task InitializeAsync(object objRef, Pdf pdf, bool useProjectWorker)
     {
         var module = await js.Value;
-        await module.InvokeVoidAsync("initPdfViewer", objRef, pdf.GetPdfState(), scrollMode, useProjectWorker);
+        await module.InvokeVoidAsync("initPdfViewer", objRef, pdf.GetPdfState(), useProjectWorker);
     }
 
     public async Task UpdateAsync(object objRef, Pdf pdf)

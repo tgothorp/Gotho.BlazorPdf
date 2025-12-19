@@ -1,10 +1,12 @@
 export class PdfState {
-    public id: string | null = null;
+    public id!: string;
     public url: string | null = null;
+    public fileName: string | null = null;
+    public fileBytes: Uint8Array | null = null;
     public orientation: number = 0;
     public scale: number = 1;
     public currentPage: number = 1;
-    public singlePageMode: boolean = true;
+    public scrollMode: boolean = false;
     public password: string | null = null;
     public source: string = "Url";
     public drawLayerEnabled: boolean = false;

@@ -10,16 +10,33 @@ namespace Gotho.BlazorPdf.Pdf;
 /// </remarks>
 public class Pdf
 {
-    public Pdf(string id, string? url, PdfOrientation orientation)
+    public Pdf(string url, string? fileName, PdfSource source, PdfOrientation orientation, bool scrollMode)
     {
-        Id = id;
+        Id = "".GenerateRandomString();
+        Url = url;
+        FileName = source == PdfSource.Base64 ? fileName : null;
+        Source = source;
+        ScrollMode = scrollMode;
         Orientation = new Orientation(orientation);
-        UpdateUrl(url);
+    }
+
+    public Pdf(byte[] fileBytes, string fileName, PdfOrientation orientation, bool scrollMode)
+    {
+        Id = "".GenerateRandomString();
+        Url = null;
+        FileBytes = fileBytes;
+        FileName = fileName;
+        ScrollMode = scrollMode;
+        Source = PdfSource.Binary;
+        Orientation = new Orientation(orientation);
     }
 
     public string Id { get; init; }
     public string? Url { get; private set; }
+    public string? FileName { get; private set; }
+    public byte[]? FileBytes { get; private set; }
     public PdfSource Source { get; private set; }
+    public bool ScrollMode { get; private set; }
 
     public Orientation Orientation { get; init; }
     public Zoom Zooming { get; init; } = new();
@@ -28,20 +45,6 @@ public class Pdf
     public Search Search { get; set; } = new();
 
     public string? Password { get; private set; } = null;
-
-    public void UpdateUrl(string? url)
-    {
-        Url = url;
-
-        if (string.IsNullOrWhiteSpace(url))
-            Source = PdfSource.Base64;
-        else
-            Source = Url.IsProbablyUrl()
-                ? PdfSource.Url
-                : Url.IsProbablyBase64()
-                    ? PdfSource.Base64
-                    : PdfSource.Binary;
-    }
 
     public void UpdatePassword(string? password)
     {
@@ -54,9 +57,12 @@ public class Pdf
         {
             Id = Id,
             Url = Url,
+            FileName = FileName,
+            FileBytes = FileBytes,
             Source = Source.ToString(),
             CurrentPage = Paging.CurrentPage,
             Orientation = Orientation.GetOrientation(),
+            ScrollMode = ScrollMode,
             Scale = Zooming.GetScale(),
             Password = Password,
             DrawLayerEnabled = DrawLayer.Enabled,

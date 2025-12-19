@@ -1,0 +1,41 @@
+@page "/binary"
+
+@using System.IO
+
+<div class="pdf-upload-container">
+    <label for="pdfInput">Select PDF Document:</label>
+    <InputFile id="pdfInput" OnChange="HandleFileSelected" accept=".pdf" class="form-control" />
+
+    @if (isProcessing)
+    {
+        <p><em>Processing file...</em></p>
+    }
+</div>
+
+<PdfViewer @ref="_pdfViewer"/>
+
+@code {
+    private bool isProcessing = false;
+    private long maxFileSize = 1024 * 1024 * 10; // 10 MB limit
+    
+    public required PdfViewer _pdfViewer { get; set; }
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        isProcessing = true;
+        var file = e.File;
+
+        // 1. Load into a Stream
+        // Use OpenReadStream with a max size to prevent memory exhaustion attacks
+        using var stream = file.OpenReadStream(maxFileSize);
+
+        // 2. Load into a Byte Array
+        using var memoryStream = new MemoryStream();
+        await stream.CopyToAsync(memoryStream);
+        byte[] pdfBytes = memoryStream.ToArray();
+
+        await _pdfViewer.LoadPdfAsync(pdfBytes, "My special PDF file.");
+
+        isProcessing = false;
+    }
+}

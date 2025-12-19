@@ -116,13 +116,13 @@ public partial class PdfViewer : ComponentBase
     /// </summary>
     [Parameter]
     public PdfMenuItemLocation PrintButtonLocation { get; set; } = PdfMenuItemLocation.Menu;
-    
+
     /// <summary>
     /// Should the option to download the PDF document be displayed on the toolbar, in the dropdown menu, in both, or not at all? (default: Menu)
     /// </summary>
     [Parameter]
     public PdfMenuItemLocation DownloadButtonLocation { get; set; } = PdfMenuItemLocation.Menu;
-    
+
     /// <summary>
     /// Should the option to find text in the PDF document be displayed on the toolbar, in the dropdown menu, in both, or not at all? (default: Toolbar)
     /// </summary>
@@ -131,7 +131,7 @@ public partial class PdfViewer : ComponentBase
     /// </remarks>
     [Parameter]
     public PdfMenuItemLocation FindButtonLocation { get; set; } = PdfMenuItemLocation.Toolbar;
-    
+
     /// <summary>
     /// Should the option to draw on the PDF document be displayed on the toolbar, in the dropdown menu, in both, or not at all? (default: Menu)
     /// </summary>
@@ -149,7 +149,7 @@ public partial class PdfViewer : ComponentBase
         ObjectReference ??= DotNetObjectReference.Create(this);
 
         if (!Url.IsNullOrEmpty())
-            PdfFile = new Pdf.Pdf("".GenerateRandomString(), Url!, PdfOrientation);
+            PdfFile = new Pdf.Pdf(Url!, "Pdf Document", Url.IsProbablyUrl() ? PdfSource.Url : PdfSource.Base64, PdfOrientation, ScrollMode);
         else
             Loading = false;
 
@@ -159,7 +159,7 @@ public partial class PdfViewer : ComponentBase
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender && PdfFile is not null)
-            await PdfInterop.InitializeAsync(ObjectReference!, PdfFile, ScrollMode, Config.UseProjectWorker);
+            await PdfInterop.InitializeAsync(ObjectReference!, PdfFile, Config.UseProjectWorker);
 
         await base.OnAfterRenderAsync(firstRender);
     }
@@ -245,31 +245,39 @@ public partial class PdfViewer : ComponentBase
         await PdfInterop.UpdateAsync(ObjectReference!, PdfFile!);
     }
 
-    /// <summary>
-    /// Loads a PDF from the given URL, can be used as an alternative to the <c>Url</c> parameter.
-    /// </summary>
-    /// <param name="url">This can be a URL or a Base64 string</param>
-    public async Task LoadPdfAsync(string? url = null)
+    #region Loading
+
+    public async Task LoadPdfAsync(string? urlOrBase64String, string? fileName = "PDF Document")
     {
-        if (Error is not null && Error.ErrorType == PdfErrorType.PasswordRequired && string.IsNullOrEmpty(PdfPassword))
-        {
-            Error.Message = "Please supply a password.";
-            StateHasChanged();
-            return;
-        }
+        ArgumentNullException.ThrowIfNull(urlOrBase64String);
 
-        if (PdfFile is null)
-            PdfFile = new Pdf.Pdf("".GenerateRandomString(), url!, PdfOrientation);
-        else if (url is not null)
-            PdfFile.UpdateUrl(url);
-
-        PdfFile.UpdatePassword(PdfPassword);
+        PdfFile = new Pdf.Pdf(urlOrBase64String, fileName, urlOrBase64String.IsProbablyUrl() ? PdfSource.Url : PdfSource.Base64, PdfOrientation, ScrollMode);
         Loading = true;
         Error = null;
         StateHasChanged();
 
-        await PdfInterop.InitializeAsync(ObjectReference!, PdfFile, ScrollMode, Config.UseProjectWorker);
+        await PdfInterop.InitializeAsync(ObjectReference!, PdfFile, Config.UseProjectWorker);
     }
+
+    public async Task LoadPdfAsync(Stream stream, string? fileName = "PDF Document")
+    {
+        using var ms = new MemoryStream();
+        await stream.CopyToAsync(ms);
+        await LoadPdfAsync(ms.ToArray(), fileName);
+    }
+
+    public async Task LoadPdfAsync(byte[] pdfBytes, string? fileName = "PDF Document")
+    {
+        PdfFile = new Pdf.Pdf(pdfBytes, fileName!, PdfOrientation, ScrollMode);
+
+        Loading = true;
+        Error = null;
+        StateHasChanged();
+
+        await PdfInterop.InitializeAsync(ObjectReference!, PdfFile, Config.UseProjectWorker);
+    }
+
+    #endregion
 
     #region Paging
 
@@ -494,9 +502,6 @@ public partial class PdfViewer : ComponentBase
         StateHasChanged();
     }
 
-    #endregion
-
-
     protected async Task UploadFile(InputFileChangeEventArgs e)
     {
         var file = e.File;
@@ -513,15 +518,13 @@ public partial class PdfViewer : ComponentBase
         }
 
         await using var stream = file.OpenReadStream(Config.MaxPdfFileUploadSize);
-        using var ms = new MemoryStream();
-        await stream.CopyToAsync(ms);
-
-        var base64 = Convert.ToBase64String(ms.ToArray());
-        Url = base64;
-        PdfFile = new Pdf.Pdf("".GenerateRandomString(), Url!, PdfOrientation);
+        await LoadPdfAsync(stream, file.Name);
         StateHasChanged();
 
-        await PdfInterop.InitializeAsync(ObjectReference!, PdfFile, ScrollMode, Config.UseProjectWorker);
+        await PdfInterop.InitializeAsync(ObjectReference!, PdfFile!, Config.UseProjectWorker);
+
+        var ms = new MemoryStream();
+        await stream.CopyToAsync(ms);
         await OnFileUploaded.InvokeAsync(new PdfViewerFileUploaded
         {
             FileName = file.Name,
@@ -529,4 +532,28 @@ public partial class PdfViewer : ComponentBase
             Contents = ms.ToArray()
         });
     }
+
+    protected async Task UpdatePdfPassword()
+    {
+        if (string.IsNullOrEmpty(PdfPassword))
+        {
+            Error = new PdfError
+            {
+                ErrorType = PdfErrorType.PasswordRequired,
+                Message = "Please supply a password."
+            };
+            StateHasChanged();
+            return;
+        }
+
+        PdfFile!.UpdatePassword(PdfPassword);
+
+        Loading = true;
+        Error = null;
+        StateHasChanged();
+
+        await PdfInterop.InitializeAsync(ObjectReference!, PdfFile, Config.UseProjectWorker);
+    }
+
+    #endregion
 }
