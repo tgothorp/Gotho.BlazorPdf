@@ -88,7 +88,7 @@ public partial class PdfViewer : ComponentBase
     public EventCallback<PdfViewerEventArgs> OnPageChanged { get; set; }
 
     /// <summary>
-    /// Invoked when a file is uploaded by a user
+    /// Invoked when a user uploads a file
     /// </summary>
     [Parameter]
     public EventCallback<PdfViewerFileUploaded> OnFileUploaded { get; set; }
@@ -104,6 +104,42 @@ public partial class PdfViewer : ComponentBase
     /// </summary>
     [Parameter]
     public BlazorPdfColors Colors { get; set; } = new();
+
+    /// <summary>
+    /// Hides the dropdown menu. (default: false)
+    /// </summary>
+    [Parameter]
+    public bool HideDropdownMenu { get; set; } = false;
+
+    /// <summary>
+    /// Should the option to print the PDF document be displayed on the toolbar, in the dropdown menu, in both, or not at all? (default: Menu)
+    /// </summary>
+    [Parameter]
+    public PdfMenuItemLocation PrintButtonLocation { get; set; } = PdfMenuItemLocation.Menu;
+    
+    /// <summary>
+    /// Should the option to download the PDF document be displayed on the toolbar, in the dropdown menu, in both, or not at all? (default: Menu)
+    /// </summary>
+    [Parameter]
+    public PdfMenuItemLocation DownloadButtonLocation { get; set; } = PdfMenuItemLocation.Menu;
+    
+    /// <summary>
+    /// Should the option to find text in the PDF document be displayed on the toolbar, in the dropdown menu, in both, or not at all? (default: Toolbar)
+    /// </summary>
+    /// <remarks>
+    /// The option to find text in the PDF document is ALWAYS disabled for scroll mode
+    /// </remarks>
+    [Parameter]
+    public PdfMenuItemLocation FindButtonLocation { get; set; } = PdfMenuItemLocation.Toolbar;
+    
+    /// <summary>
+    /// Should the option to draw on the PDF document be displayed on the toolbar, in the dropdown menu, in both, or not at all? (default: Menu)
+    /// </summary>
+    /// <remarks>
+    /// The option to draw on the PDF document is ALWAYS disabled for scroll mode
+    /// </remarks>
+    [Parameter]
+    public PdfMenuItemLocation DrawButtonLocation { get; set; } = PdfMenuItemLocation.Menu;
 
     [Inject] private PdfInterop PdfInterop { get; set; } = default!;
     [Inject] protected BlazorPdfConfig Config { get; set; } = default!;
