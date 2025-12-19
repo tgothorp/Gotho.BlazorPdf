@@ -6,6 +6,7 @@ All notable changes and releases will be documented here
 
 - The 'Print', 'Download', 'Find' and 'Draw' buttons can now be placed on the toolbar, the menu, both or hidden
 - Added option to hide dropdown menu
+- Fix loading old JS asset when upgrading versions
 
 ## [2025-11-20] - V2.0.0
 
