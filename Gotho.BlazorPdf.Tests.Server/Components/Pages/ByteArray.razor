@@ -30,11 +30,11 @@
         using var stream = file.OpenReadStream(maxFileSize);
 
         // 2. Load into a Byte Array
-        using var memoryStream = new MemoryStream();
-        await stream.CopyToAsync(memoryStream);
-        byte[] pdfBytes = memoryStream.ToArray();
+        // using var memoryStream = new MemoryStream();
+        // await stream.CopyToAsync(memoryStream);
+        // byte[] pdfBytes = memoryStream.ToArray();
 
-        await _pdfViewer.LoadPdfAsync(pdfBytes, "My special PDF file.");
+        await _pdfViewer.LoadPdfAsync(stream, e.File.Name);
 
         isProcessing = false;
     }

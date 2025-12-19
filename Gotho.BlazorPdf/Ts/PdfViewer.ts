@@ -48,7 +48,6 @@ export async function initPdfViewer(dotnetReference: DotNetObject, pdfDto: PdfSt
 }
 
 export async function updatePdf(dotnetReference: DotNetObject, pdfDto: PdfState) {
-    closeMenu();
     const pdf = Pdf.getPdf(pdfDto.id as string)
     const previousPage = pdf.currentPage;
     pdf.updatePdf(pdfDto)
@@ -102,7 +101,6 @@ export async function goToPage(dotnetReference: DotNetObject, id: string, pageNu
 }
 
 export async function printDocument(dotnetReference: DotNetObject, id: string) {
-    closeMenu();
     const pdf = Pdf.getPdf(id);
     const imageDataArray: string[] = [];
 
@@ -164,42 +162,46 @@ export async function printDocument(dotnetReference: DotNetObject, id: string) {
 }
 
 export async function downloadDocument(dotnetReference: DotNetObject, id: string) {
-    closeMenu();
     const pdf = Pdf.getPdf(id);
-    if (pdf.url) {
 
-        if (pdf.source == "base64") {
+    if (pdf.source === 'binary' && pdf.fileBytes) {
+        const fileName = pdf.fileName ?? 'document.pdf';
+        const blob = new Blob([pdf.fileBytes], { type: 'application/pdf' });
+        FileSaver.saveAs(blob, fileName);
+        return;
+    }
 
-            let base64Data = pdf.url;
+    if (pdf.source == "base64" && pdf.url) {
 
-            if (pdf.url.indexOf('data:') === 0) {
-                const split = pdf.url.split(',');
-                base64Data = split.length > 1 ? split[1] : '';
-            }
+        let base64Data = pdf.url;
 
-            try {
-                const byteCharacters = atob(base64Data);
-                const byteNumbers = new Array(byteCharacters.length);
-                for (let i = 0; i < byteCharacters.length; i++) {
-                    byteNumbers[i] = byteCharacters.charCodeAt(i);
-                }
-                const byteArray = new Uint8Array(byteNumbers);
-                const blob = new Blob([byteArray], {type: 'application/pdf'});
-
-                FileSaver.saveAs(blob, "document.pdf");
-            } catch (e) {
-                console.error('Failed to decode base64 PDF:', e);
-            }
-
-        } else {
-            fetch(pdf.url).then(response => {
-                if (response.ok) {
-                    response.blob().then(blob => {
-                        FileSaver.saveAs(blob, pdf.fileName ?? 'document.pdf');
-                    });
-                }
-            });
+        if (pdf.url.indexOf('data:') === 0) {
+            const split = pdf.url.split(',');
+            base64Data = split.length > 1 ? split[1] : '';
         }
+
+        try {
+            const byteCharacters = atob(base64Data);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            const blob = new Blob([byteArray], {type: 'application/pdf'});
+
+            FileSaver.saveAs(blob, "document.pdf");
+        } catch (e) {
+            console.error('Failed to decode base64 PDF:', e);
+        }
+
+    } else {
+        fetch(pdf.url!).then(response => {
+            if (response.ok) {
+                response.blob().then(blob => {
+                    FileSaver.saveAs(blob, pdf.fileName ?? 'document.pdf');
+                });
+            }
+        });
     }
 }
 
@@ -214,7 +216,6 @@ export function clearStrokesForPage(dotnetReference: DotNetObject, id: string) {
 }
 
 export async function viewMetadata(dotnetReference: DotNetObject, id: string) {
-    closeMenu();
     const pdf = Pdf.getPdf(id);
 
     const data = await pdf.getMetadata();
