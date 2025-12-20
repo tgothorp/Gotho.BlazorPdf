@@ -2,13 +2,14 @@
 
 All notable changes and releases will be documented here
 
-## [2025-12-XX] - V2.1.0 (Latest Release)
+## [2025-12-20] - V2.1.0 (Latest Release)
 
 - Added ability to load PDFs from stream or byte array.
 - The 'Print', 'Download', 'Find' and 'Draw' buttons can now be placed on the toolbar, the menu, both or hidden.
 - Added option to hide dropdown menu.
 - Improved loading of base64 encoded PDFs
 - Fix loading old JS asset when upgrading versions.
+- Fix page buttons when using scroll mode on `<MudPdfViewer/>`
 
 ## [2025-11-20] - V2.0.0
 
