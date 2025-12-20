@@ -1,6 +1,4 @@
-@page "/binary"
-
-@using System.IO
+@page "/stream"
 
 <div>
     <label for="pdfInput">Select PDF Document:</label>
@@ -20,13 +18,8 @@
         isProcessing = true;
         var file = e.File;
 
-
         using var stream = file.OpenReadStream(maxFileSize);
-        using var memoryStream = new MemoryStream();
-        await stream.CopyToAsync(memoryStream);
-        var pdfBytes = memoryStream.ToArray();
-
-        await _pdfViewer.LoadPdfAsync(pdfBytes, e.File.Name);
+        await _pdfViewer.LoadPdfAsync(stream, e.File.Name);
 
         isProcessing = false;
     }
