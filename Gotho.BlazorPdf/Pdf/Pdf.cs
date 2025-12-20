@@ -10,16 +10,39 @@ namespace Gotho.BlazorPdf.Pdf;
 /// </remarks>
 public class Pdf
 {
-    public Pdf(string id, string? url, PdfOrientation orientation)
+    public Pdf(string url, string? fileName, PdfOrientation orientation, bool scrollMode)
     {
-        Id = id;
+        Id = "".GenerateRandomString();
+        ScrollMode = scrollMode;
         Orientation = new Orientation(orientation);
-        UpdateUrl(url);
+
+        if (url.IsProbablyUrl())
+        {
+            Url = url;
+            FileName = null;
+        }
+        else
+        {
+            FileBytes = ConvertBase64ToByte(url);
+            FileName = fileName;
+        }
+    }
+
+    public Pdf(byte[] fileBytes, string fileName, PdfOrientation orientation, bool scrollMode)
+    {
+        Id = "".GenerateRandomString();
+        Url = null;
+        FileBytes = fileBytes;
+        FileName = fileName;
+        ScrollMode = scrollMode;
+        Orientation = new Orientation(orientation);
     }
 
     public string Id { get; init; }
     public string? Url { get; private set; }
-    public PdfSource Source { get; private set; }
+    public string? FileName { get; private set; }
+    public byte[]? FileBytes { get; private set; }
+    public bool ScrollMode { get; private set; }
 
     public Orientation Orientation { get; init; }
     public Zoom Zooming { get; init; } = new();
@@ -28,20 +51,6 @@ public class Pdf
     public Search Search { get; set; } = new();
 
     public string? Password { get; private set; } = null;
-
-    public void UpdateUrl(string? url)
-    {
-        Url = url;
-
-        if (string.IsNullOrWhiteSpace(url))
-            Source = PdfSource.Base64;
-        else
-            Source = Url.IsProbablyUrl()
-                ? PdfSource.Url
-                : Url.IsProbablyBase64()
-                    ? PdfSource.Base64
-                    : PdfSource.Binary;
-    }
 
     public void UpdatePassword(string? password)
     {
@@ -54,9 +63,11 @@ public class Pdf
         {
             Id = Id,
             Url = Url,
-            Source = Source.ToString(),
+            FileName = FileName,
+            FileBytes = FileBytes,
             CurrentPage = Paging.CurrentPage,
             Orientation = Orientation.GetOrientation(),
+            ScrollMode = ScrollMode,
             Scale = Zooming.GetScale(),
             Password = Password,
             DrawLayerEnabled = DrawLayer.Enabled,
@@ -65,5 +76,15 @@ public class Pdf
             SearchQuery = Search.SearchQuery,
             ActiveResultIndex = Search.GetSearchIndex(Paging.CurrentPage)
         };
+    }
+
+    private byte[] ConvertBase64ToByte(string base64)
+    {
+        if (base64.Contains(","))
+        {
+            base64 = base64.Split(',')[1];
+        }
+
+        return Convert.FromBase64String(base64);
     }
 }

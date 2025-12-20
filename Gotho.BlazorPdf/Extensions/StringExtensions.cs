@@ -13,6 +13,7 @@ internal static class StringExtensions
     
 
     public static bool IsNullOrEmpty(this string? _) => string.IsNullOrEmpty(_);
+    public static bool IsNotNullOrEmpty(this string? _) => !string.IsNullOrEmpty(_);
 
     public static bool IsProbablyUrl(this string? input)
     {
@@ -22,7 +23,7 @@ internal static class StringExtensions
         return input.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
                input.StartsWith("https://", StringComparison.OrdinalIgnoreCase);
     }
-
+    
     public static bool IsProbablyBase64(this string? input)
     {
         var len = input?.Length ?? 0;

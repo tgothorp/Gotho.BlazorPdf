@@ -1,0 +1,26 @@
+@page "/stream"
+
+<div>
+    <label for="pdfInput">Select PDF Document:</label>
+    <InputFile id="pdfInput" OnChange="HandleFileSelected" accept=".pdf" class="form-control" />
+</div>
+
+<PdfViewer @ref="_pdfViewer"/>
+
+@code {
+    private bool isProcessing = false;
+    private long maxFileSize = 1024 * 1024 * 10; // 10 MB limit
+    
+    public required PdfViewer _pdfViewer { get; set; }
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        isProcessing = true;
+        var file = e.File;
+
+        using var stream = file.OpenReadStream(maxFileSize);
+        await _pdfViewer.LoadPdfAsync(stream, e.File.Name);
+
+        isProcessing = false;
+    }
+}

@@ -3,6 +3,7 @@ import {PdfState} from "./PdfState";
 import {PdfDrawLayer} from "./PdfDrawLayer";
 import {PdfMetadata} from "./PdfMetadata";
 import {PdfSearchResult} from "./PdfSearchResult";
+import {DocumentInitParameters} from "pdfjs-dist/types/src/display/api";
 
 const pdfInstances = {}
 
@@ -44,8 +45,9 @@ export class Pdf {
     public canvas: any;
     public scale: number;
     public rotation: number;
-    public url: string;
-    public filename: string;
+    public url: string | null = null;
+    public fileBytes: Uint8Array | null = null;
+    public fileName: string | null = null;
     public document: PDFDocumentProxy | null;
     public metadata: PdfMetadata | null;
     public textContent: Record<number, PdfJsTextContentItem[]>
@@ -57,32 +59,38 @@ export class Pdf {
     public previousPage: number;
     public queuedPage: number | null;
     public password: string | null;
-    public source: string;
-    
+
     public previousQuery: string | null;
     public searchResults: PdfSearchResult[] = [];
     public activeSearchIndex: number | null = null;
-    
+
     public drawLayer: PdfDrawLayer;
 
-    constructor(id: string, scale: number, rotation: number, url: string, scrollMode: boolean, source: string, password: string | null = null) {
-        this.id = id;
-        this.canvas = Pdf.getCanvas(id);
-        this.scale = scale;
-        this.rotation = rotation;
-        this.url = url;
-        this.filename = getFilenameFromUrl(url)
+    constructor(pdfState: PdfState) {
+
+        this.id = pdfState.id;
+        this.canvas = Pdf.getCanvas(this.id);
+        this.scale = pdfState.scale;
+        this.rotation = pdfState.orientation;
+        this.url = pdfState.url;
+        this.scrollMode = pdfState.scrollMode;
+        this.password = pdfState.password
+        this.drawLayer = new PdfDrawLayer(this.id);
+
+        if (pdfState.url) {
+            this.fileName = getFilenameFromUrl(this.url!)
+        } else {
+            this.fileName = pdfState.fileName!;
+            this.fileBytes = pdfState.fileBytes!;
+        }
+
         this.document = null;
         this.metadata = null;
         this.renderInProgress = false;
-        this.scrollMode = scrollMode;
         this.pageCount = 0;
         this.currentPage = 1;
         this.previousPage = 1;
         this.queuedPage = null;
-        this.source = source.toLowerCase();
-        this.password = password
-        this.drawLayer = new PdfDrawLayer(id);
         this.textContent = {};
         this.previousQuery = null;
 
@@ -95,13 +103,30 @@ export class Pdf {
         return Object.values(pdfInstances).filter((c: any) => c.canvas === canvas).pop() as Pdf;
     }
 
-    public updatePdf(dto: PdfState)
-    {
+    public updatePdf(dto: PdfState) {
         this.rotation = dto.orientation;
         this.scale = dto.scale;
         this.previousPage = this.currentPage;
         this.currentPage = dto.currentPage;
         this.activeSearchIndex = dto.activeResultIndex;
+    }
+
+    public getDocumentInitParams(): DocumentInitParameters {
+        let documentInitParams: DocumentInitParameters = {}
+
+        if (this.url) {
+            documentInitParams.url = this.url!;
+        }
+
+        if (this.fileBytes) {
+            documentInitParams.data = this.fileBytes!;
+        }
+
+        if (this.password) {
+            documentInitParams.password = this.password;
+        }
+
+        return documentInitParams;
     }
 
     // @ts-ignore
@@ -112,9 +137,8 @@ export class Pdf {
         for (let i = 1; i < this.pageCount + 1; i++) {
             const page = await doc.getPage(i);
             const text = await page.getTextContent() as PdfJsTextContent;
-            
-            if (!this.textContent.hasOwnProperty(i))
-            {
+
+            if (!this.textContent.hasOwnProperty(i)) {
                 this.textContent[i] = text.items!;
             }
         }
@@ -138,15 +162,14 @@ export class Pdf {
         this.scale = scale;
     }
 
-    public async getMetadata() : Promise<PdfMetadata> {
+    public async getMetadata(): Promise<PdfMetadata> {
         if (this.metadata !== null)
             return this.metadata;
-        
+
         const data = await this.document!.getMetadata() as PdfJsMetadata;
         const custom: Record<string, string> = {};
-        
-        if (data.info.Custom)
-        {
+
+        if (data.info.Custom) {
             // @ts-ignore
             for (const [key, value] of Object.entries(data.info.Custom)) {
                 if (value != null) {
@@ -170,26 +193,25 @@ export class Pdf {
 
         return this.metadata;
     }
-    
+
     public clearSearchResults(): void {
         this.previousQuery = null;
     }
-    
+
     public search(query: string): Array<PdfSearchResult> {
         query = query.toLowerCase();
         this.previousQuery = query;
-        
+
         let result = new Array<PdfSearchResult>();
         if (!query)
             return result;
-        
+
         for (let page = 1; page < Object.keys(this.textContent).length + 1; page++) {
             const textOnPage = this.textContent[page];
 
             for (let i = 0; i < textOnPage.length; i++) {
                 const text = textOnPage[i].str!.toLowerCase();
-                if (text.indexOf(query) !== -1)
-                {
+                if (text.indexOf(query) !== -1) {
                     result.push(new PdfSearchResult(page, i));
                 }
             }
@@ -198,7 +220,7 @@ export class Pdf {
         this.searchResults = result;
         return this.searchResults;
     }
-    
+
     public getCanvasContext(): any {
         return this.canvas.getContext("2d");
     }
@@ -251,4 +273,13 @@ export class Pdf {
 
         return new Date(dateStr);
     }
+}
+
+function base64ToUint8Array(base64: string): Uint8Array {
+    const raw = atob(base64);
+    const uint8 = new Uint8Array(raw.length);
+    for (let i = 0; i < raw.length; i++) {
+        uint8[i] = raw.charCodeAt(i);
+    }
+    return uint8;
 }

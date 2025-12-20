@@ -1,6 +1,13 @@
 ﻿@inherits LayoutComponentBase
 
-@Body
+<div style="width: 100%; display: flex;">
+    <div class="side-menu" style="width: 25%;">
+        <SideMenu/>
+    </div>
+    <div style="width: 75%;">
+        @Body
+    </div>
+</div>
 
 <div id="blazor-error-ui" data-nosnippet>
     An unhandled error has occurred.
