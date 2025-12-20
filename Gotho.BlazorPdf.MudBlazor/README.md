@@ -1,6 +1,6 @@
 # Blazor PDF (MudBlazor Extension)
 
-This packages provides a MudBlazor-specific PDF viewing experience for use with [Blazor PDF](https://blazorpdf.info)
+This package provides a MudBlazor-specific PDF viewing experience for use with [Blazor PDF](https://blazorpdf.info)
 
 ## Prerequisites
 
@@ -11,4 +11,4 @@ In order to use this package, your project will need to be configured with the f
 
 ## Installation
 
-Please see the [documentation site](https://mudpdf.info/docs) for setup guide.
+Please see the [documentation site](https://mudpdf.info/docs) for a setup guide.

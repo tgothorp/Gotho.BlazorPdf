@@ -99,7 +99,7 @@
                                 <span
                                     class="blazorpdf-pdf__input-help">@LocalizedStrings.PasswordHint</span>
                             </div>
-                            <button class="blazorpdf-pdf__error-submit" type="button" @onclick="@(() => LoadPdfAsync())">
+                            <button class="blazorpdf-pdf__error-submit" type="button" @onclick="@(UpdatePdfPassword)">
                                 Submit
                             </button>
                         }

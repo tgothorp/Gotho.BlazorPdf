@@ -11,7 +11,7 @@ let workerInitialised = false;
 
 /**
  * This is a work-around for .NET MAUI, the MAUI browser used by Blazor cannot load
- * the required worker directly so we must grab it via a fetch().
+ * the required worker directly, so we must grab it via a fetch().
  */
 async function setupProjectWorker() {
     const response = await fetch('./pdf.worker.min.mjs');
@@ -22,7 +22,7 @@ async function setupProjectWorker() {
     workerInitialised = true;
 }
 
-export async function initPdfViewer(dotnetReference: DotNetObject, pdfDto: PdfState, scrollMode: boolean, useProjectWorker: boolean) : Promise<void> {
+export async function initPdfViewer(dotnetReference: DotNetObject, pdfDto: PdfState, useProjectWorker: boolean): Promise<void> {
     console.log("Initializing PDF " + pdfDto.id);
 
     if (useProjectWorker && !workerInitialised) {
@@ -31,35 +31,31 @@ export async function initPdfViewer(dotnetReference: DotNetObject, pdfDto: PdfSt
         workerInitialised = true;
     }
 
-    if (pdfDto.url) {
-        const pdf = new Pdf(pdfDto.id as string, pdfDto.scale, pdfDto.orientation, pdfDto.url, scrollMode, pdfDto.source, pdfDto.password)
+    try {
+        const pdf = new Pdf(pdfDto)
+        const loadedDocument = await getDocument(pdf.getDocumentInitParams()).promise;
+        await pdf.setDocument(loadedDocument)
+        await renderPdf(pdf)
+        await renderThumbnails(dotnetReference, pdf)
 
-        try {
-            const loadedDocument = await getDocument(getDocumentInit(pdfDto)).promise;
-            await pdf.setDocument(loadedDocument)
-            await renderPdf(pdf)
-            await renderThumbnails(dotnetReference, pdf)
-
-            await dotnetReference.invokeMethodAsync('DocumentLoaded', {
-                currentPage: pdf.currentPage,
-                totalPages: pdf.pageCount
-            });
-        } catch (err: any) {
-            await dotnetReference.invokeMethodAsync('PdfViewerError', {name: err.name, message: err.message});
-        }
+        await dotnetReference.invokeMethodAsync('DocumentLoaded', {
+            currentPage: pdf.currentPage,
+            totalPages: pdf.pageCount
+        });
+    } catch (err: any) {
+        await dotnetReference.invokeMethodAsync('PdfViewerError', {name: err.name, message: err.message});
     }
 }
 
 export async function updatePdf(dotnetReference: DotNetObject, pdfDto: PdfState) {
-    closeMenu();
     const pdf = Pdf.getPdf(pdfDto.id as string)
     const previousPage = pdf.currentPage;
     pdf.updatePdf(pdfDto)
     pdf.drawLayer.updatePenSettings(pdfDto.penColor, pdfDto.penThickness);
-    
+
     if (pdfDto.searchQuery && pdfDto.searchQuery !== pdf.previousQuery) {
         const results = pdf.search(pdfDto.searchQuery);
-        const blob = new Blob([JSON.stringify(results)], { type: 'application/json' });
+        const blob = new Blob([JSON.stringify(results)], {type: 'application/json'});
         const streamRef = DotNet.createJSStreamReference(blob);
         await dotnetReference.invokeMethodAsync('SearchResultsFromStream', streamRef);
     }
@@ -105,21 +101,20 @@ export async function goToPage(dotnetReference: DotNetObject, id: string, pageNu
 }
 
 export async function printDocument(dotnetReference: DotNetObject, id: string) {
-    closeMenu();
     const pdf = Pdf.getPdf(id);
     const imageDataArray: string[] = [];
 
     for (let pageNum = 1; pageNum <= pdf.pageCount; pageNum++) {
         const page = await pdf.document!.getPage(pageNum);
         const scale = 2;
-        const viewport = page.getViewport({ scale });
+        const viewport = page.getViewport({scale});
 
         const canvas = document.createElement('canvas');
         const context = canvas.getContext('2d') as CanvasRenderingContext2D;
         canvas.width = viewport.width;
         canvas.height = viewport.height;
 
-        await page.render({ canvasContext: context, viewport }).promise;
+        await page.render({canvasContext: context, viewport}).promise;
 
         const pdfImage = context.canvas;
 
@@ -163,46 +158,27 @@ export async function printDocument(dotnetReference: DotNetObject, id: string) {
         }
         imageDataArray.push(mergedCanvas.toDataURL('image/png'));
     }
-    printjs({ printable: imageDataArray, type: 'image' });
+    printjs({printable: imageDataArray, type: 'image'});
 }
 
 export async function downloadDocument(dotnetReference: DotNetObject, id: string) {
-    closeMenu();
     const pdf = Pdf.getPdf(id);
+
+    if (pdf.fileBytes) {
+        const fileName = pdf.fileName ?? 'document.pdf';
+        const blob = new Blob([pdf.fileBytes], { type: 'application/pdf' });
+        FileSaver.saveAs(blob, fileName);
+        return;
+    }
+
     if (pdf.url) {
-
-        if (pdf.source == "base64") {
-
-            let base64Data = pdf.url;
-
-            if (pdf.url.indexOf('data:') === 0) {
-                const split = pdf.url.split(',');
-                base64Data = split.length > 1 ? split[1] : '';
+        fetch(pdf.url!).then(response => {
+            if (response.ok) {
+                response.blob().then(blob => {
+                    FileSaver.saveAs(blob, pdf.fileName ?? 'document.pdf');
+                });
             }
-
-            try {
-                const byteCharacters = atob(base64Data);
-                const byteNumbers = new Array(byteCharacters.length);
-                for (let i = 0; i < byteCharacters.length; i++) {
-                    byteNumbers[i] = byteCharacters.charCodeAt(i);
-                }
-                const byteArray = new Uint8Array(byteNumbers);
-                const blob = new Blob([byteArray], {type: 'application/pdf'});
-
-                FileSaver.saveAs(blob, "document.pdf");
-            } catch (e) {
-                console.error('Failed to decode base64 PDF:', e);
-            }
-
-        } else {
-            fetch(pdf.url).then(response => {
-                if (response.ok) {
-                    response.blob().then(blob => {
-                        FileSaver.saveAs(blob, pdf.filename ?? 'document.pdf');
-                    });
-                }
-            });
-        }
+        });
     }
 }
 
@@ -217,9 +193,8 @@ export function clearStrokesForPage(dotnetReference: DotNetObject, id: string) {
 }
 
 export async function viewMetadata(dotnetReference: DotNetObject, id: string) {
-    closeMenu();
     const pdf = Pdf.getPdf(id);
-    
+
     const data = await pdf.getMetadata();
     await dotnetReference.invokeMethodAsync('PdfMetadata', data);
 }
@@ -277,7 +252,7 @@ async function renderPdf(pdf: Pdf) {
 
                 const textLayerBuilder = new TextLayerBuilder({pdfPage})
                 textLayerBuilder.div = textLayer;
-                
+
                 // Wait for text layer to render before applying highlights
                 textLayerBuilder.render(viewport).then(() => {
                     if (pdf.previousQuery === null)
@@ -296,7 +271,7 @@ async function renderPdf(pdf: Pdf) {
                         const before = text.slice(0, matchIndex);
                         const match = text.slice(matchIndex, matchIndex + query.length);
                         const after = text.slice(matchIndex + query.length);
-                        
+
                         if (pdf.activeSearchIndex === resultIndex) {
                             span.innerHTML = `${before}<mark class="active">${match}</mark>${after}`;
                         } else {
@@ -318,7 +293,7 @@ async function renderPdf(pdf: Pdf) {
     } else {
         const container = document.getElementById(pdf.id) as HTMLElement;
         container.innerHTML = '';
-        
+
         let fixedScale = pdf.scale;
         let fixedRotation = pdf.rotation;
 
@@ -351,7 +326,7 @@ async function renderPdf(pdf: Pdf) {
                 const textLayerBuilder = new TextLayerBuilder({pdfPage: page})
                 textLayerBuilder.div = textDiv;
                 textLayerBuilder.pdfPage = page;
-                
+
                 // Wait for text layer to render before applying highlights
                 textLayerBuilder.render(viewport).then(() => {
                     if (pdf.previousQuery === null)
@@ -418,35 +393,4 @@ async function updateMetadata(dotnetReference: DotNetObject, pdf: Pdf) {
         currentPage: pdf.currentPage,
         totalPages: pdf.pageCount
     });
-}
-
-function base64ToUint8Array(base64: string): Uint8Array {
-    const raw = atob(base64);
-    const uint8 = new Uint8Array(raw.length);
-    for (let i = 0; i < raw.length; i++) {
-        uint8[i] = raw.charCodeAt(i);
-    }
-    return uint8;
-}
-
-function getDocumentInit(pdfDto: PdfState) {
-    let documentInit: any = {};
-
-    if (pdfDto.source === "Base64") {
-        documentInit.data = base64ToUint8Array(pdfDto.url as string);
-    } else {
-        documentInit.url = pdfDto.url;
-    }
-
-    if (pdfDto.password)
-        documentInit.password = pdfDto.password;
-
-    return documentInit;
-}
-
-function closeMenu() {
-    const checkbox = document.getElementById('menu-toggle') as HTMLInputElement | null;
-    if (checkbox && checkbox.type === 'checkbox') {
-        checkbox.checked = false;
-    }
 }

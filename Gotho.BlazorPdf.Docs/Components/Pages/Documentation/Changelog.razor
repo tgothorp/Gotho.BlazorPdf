@@ -13,8 +13,17 @@
         <MudItem sm="3">
             <DocsMenu/>
         </MudItem>
-        <MudItem sm="9" Style="overflow: auto">
+        <MudItem sm="9" Style="overflow: visible">
             <MudText Typo="Typo.h2" Class="mb-5">Changelog</MudText>
+            
+            <MudText Class="mt-5" Typo="Typo.h4">[2025-12-20] - V2.1.0</MudText>
+            <MudText>Added ability to load PDFs from stream or byte array.</MudText>
+            <MudText>The 'Print', 'Download', 'Find' and 'Draw' buttons can now be placed on the toolbar, the menu, both or hidden.</MudText>
+            <MudText>Added option to hide dropdown menu.</MudText>
+            <MudText>Improved loading of base64 encoded PDFs.</MudText>
+            <MudText>Fix loading old JS asset when upgrading versions.</MudText>
+            <MudText>Fix page buttons when using scroll mode on `@("<MudPdfViewer/>")`.</MudText>
+            <MudText>Updated documentation.</MudText>
             
             <MudText Class="mt-5" Typo="Typo.h4">[2025-11-20] - V2.0.0</MudText>
             <MudText>[Breaking Change] `SinglePageMode` has been renamed to `ScrollMode`, Set this to `true` to enable the traditional scrolling document view.</MudText>

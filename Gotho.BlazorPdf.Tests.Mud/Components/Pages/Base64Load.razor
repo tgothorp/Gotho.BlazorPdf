@@ -1,0 +1,19 @@
+@page "/base64-load"
+@using Gotho.BlazorPdf.Tests.Server.Data
+
+<PageTitle>Base64 Document</PageTitle>
+
+<MudPdfViewer @ref="_pdfViewer"/>
+
+<button @onclick="LoadPdf">Load PDF Document</button>
+
+@code {
+
+    public required MudPdfViewer _pdfViewer { get; set; }
+    
+    private async Task LoadPdf()
+    {
+        await _pdfViewer.LoadPdfAsync(PdfBase64String.File, "Base64 file");
+        StateHasChanged();
+    }
+}

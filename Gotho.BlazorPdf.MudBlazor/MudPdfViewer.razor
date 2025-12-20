@@ -45,7 +45,7 @@
                     <div style="max-width: 60px;">
                         <MudNumericField
                             T="int"
-                            Text="@PdfFile.Paging.CurrentPage.ToString()"
+                            Value="@PdfFile.Paging.CurrentPage"
                             Variant="Variant.Filled"
                             Margin="Margin.Dense"
                             HideSpinButtons="true"
@@ -73,44 +73,88 @@
                                        aria-label="@LocalizedStrings.ZoomIn"/>
                     </MudTooltip>
                     <MudSpacer/>
-                    <MudTooltip Text="@LocalizedStrings.Find" Arrow="true" Placement="Placement.Top">
-                        <MudIconButton Icon="@Icons.Find"
-                                       Size="Size.Medium"
-                                       Color="@MudColors.IconColor"
-                                       Disabled="InputDisabled()"
-                                       OnClick="ToggleFind"
-                                       aria-label="@LocalizedStrings.Find"/>
-                    </MudTooltip>
-                    <MudMenu Icon="@Icons.Menu" Color="MudColors.IconColor">
-                        <MudMenuItem IconColor="MudColors.IconColor" Icon="@Icons.RotateClockwise"
-                                     Label="@LocalizedStrings.RotateClockwise" OnClick="RotateClockwiseAsync"/>
-                        <MudMenuItem IconColor="MudColors.IconColor" Icon="@Icons.RotateCounterclockwise"
-                                     Label="@LocalizedStrings.RotateCounterclockwise"
-                                     OnClick="RotateCounterclockwiseAsync"/>
-                        <MudMenuItem IconColor="MudColors.IconColor" Icon="@Icons.SwitchOrientation"
-                                     Label="@LocalizedStrings.SwitchOrientation" OnClick="SwitchOrientationAsync"/>
-                        <MudDivider/>
-                        <MudMenuItem IconColor="MudColors.IconColor" Icon="@Icons.FirstPage"
-                                     Label="@LocalizedStrings.FirstPage"
-                                     OnClick="FirstPageAsync"/>
-                        <MudMenuItem IconColor="MudColors.IconColor" Icon="@Icons.LastPage"
-                                     Label="@LocalizedStrings.LastPage"
-                                     OnClick="LastPageAsync"/>
-                        <MudDivider/>
-                        <MudMenuItem IconColor="MudColors.IconColor" Icon="@Icons.ResetZoom"
-                                     Label="@LocalizedStrings.ResetZoom"
-                                     OnClick="ResetZoomAsync"/>
-                        <MudDivider/>
-                        <MudMenuItem IconColor="MudColors.IconColor" Icon="@Icons.PrintDocument"
-                                     Label="@LocalizedStrings.PrintDocument" OnClick="PrintDocumentAsync"/>
-                        <MudMenuItem IconColor="MudColors.IconColor" Icon="@Icons.DownloadDocument"
-                                     Label="@LocalizedStrings.DownloadDocument" OnClick="DownloadDocumentAsync"/>
-                        <MudMenuItem IconColor="MudColors.IconColor" Icon="@Icons.ViewMetadata"
-                                     Label="@LocalizedStrings.ViewMetadata" OnClick="ViewMetadataAsync"/>
-                        <MudDivider/>
-                        <MudMenuItem IconColor="MudColors.IconColor" Icon="@Icons.Draw" Label="@LocalizedStrings.Draw"
-                                     OnClick="ToggleDrawingAsync"/>
-                    </MudMenu>
+                    @if (PrintButtonLocation is PdfMenuItemLocation.Toolbar or PdfMenuItemLocation.Both)
+                    {
+                        <MudTooltip Text="@LocalizedStrings.PrintDocument" Arrow="true" Placement="Placement.Top">
+                            <MudIconButton Icon="@Icons.PrintDocument"
+                                           Size="Size.Medium"
+                                           Color="@MudColors.IconColor"
+                                           Disabled="InputDisabled()"
+                                           OnClick="PrintDocumentAsync"
+                                           aria-label="@LocalizedStrings.PrintDocument"/>
+                        </MudTooltip>
+                    }
+
+                    @if (DownloadButtonLocation is PdfMenuItemLocation.Toolbar or PdfMenuItemLocation.Both)
+                    {
+                        <MudTooltip Text="@LocalizedStrings.DownloadDocument" Arrow="true" Placement="Placement.Top">
+                            <MudIconButton Icon="@Icons.DownloadDocument"
+                                           Size="Size.Medium"
+                                           Color="@MudColors.IconColor"
+                                           Disabled="InputDisabled()"
+                                           OnClick="DownloadDocumentAsync"
+                                           aria-label="@LocalizedStrings.DownloadDocument"/>
+                        </MudTooltip>
+                    }
+
+                    @if (!ScrollMode && DrawButtonLocation is PdfMenuItemLocation.Toolbar or PdfMenuItemLocation.Both)
+                    {
+                        <MudTooltip Text="@LocalizedStrings.Draw" Arrow="true" Placement="Placement.Top">
+                            <MudIconButton Icon="@Icons.Draw"
+                                           Size="Size.Medium"
+                                           Color="@MudColors.IconColor"
+                                           Disabled="InputDisabled()"
+                                           OnClick="ToggleDrawingAsync"
+                                           aria-label="@LocalizedStrings.Draw"/>
+                        </MudTooltip>
+                    }
+
+                    @if (!ScrollMode && FindButtonLocation is PdfMenuItemLocation.Toolbar or PdfMenuItemLocation.Both)
+                    {
+                        <MudTooltip Text="@LocalizedStrings.Find" Arrow="true" Placement="Placement.Top">
+                            <MudIconButton Icon="@Icons.Find"
+                                           Size="Size.Medium"
+                                           Color="@MudColors.IconColor"
+                                           Disabled="InputDisabled()"
+                                           OnClick="ToggleFind"
+                                           aria-label="@LocalizedStrings.Find"/>
+                        </MudTooltip>
+                    }
+
+                    @if (!HideDropdownMenu)
+                    {
+                        <MudMenu Icon="@Icons.Menu" Color="MudColors.IconColor">
+                            <MudMenuItem IconColor="MudColors.IconColor" Icon="@Icons.RotateClockwise" Label="@LocalizedStrings.RotateClockwise" OnClick="RotateClockwiseAsync"/>
+                            <MudMenuItem IconColor="MudColors.IconColor" Icon="@Icons.RotateCounterclockwise" Label="@LocalizedStrings.RotateCounterclockwise" OnClick="RotateCounterclockwiseAsync"/>
+                            <MudMenuItem IconColor="MudColors.IconColor" Icon="@Icons.SwitchOrientation" Label="@LocalizedStrings.SwitchOrientation" OnClick="SwitchOrientationAsync"/>
+                            <MudDivider/>
+                            <MudMenuItem IconColor="MudColors.IconColor" Icon="@Icons.FirstPage" Label="@LocalizedStrings.FirstPage" OnClick="FirstPageAsync"/>
+                            <MudMenuItem IconColor="MudColors.IconColor" Icon="@Icons.LastPage" Label="@LocalizedStrings.LastPage" OnClick="LastPageAsync"/>
+                            <MudDivider/>
+                            <MudMenuItem IconColor="MudColors.IconColor" Icon="@Icons.ResetZoom" Label="@LocalizedStrings.ResetZoom" OnClick="ResetZoomAsync"/>
+                            <MudDivider/>
+                            @if (!ScrollMode && FindButtonLocation is PdfMenuItemLocation.Menu or PdfMenuItemLocation.Both)
+                            {
+                                <MudMenuItem IconColor="MudColors.IconColor" Icon="@Icons.Find" Label="@LocalizedStrings.Find" OnClick="ToggleFind"/>
+                            }
+                            @if (PrintButtonLocation is PdfMenuItemLocation.Menu or PdfMenuItemLocation.Both)
+                            {
+                                <MudMenuItem IconColor="MudColors.IconColor" Icon="@Icons.PrintDocument" Label="@LocalizedStrings.PrintDocument" OnClick="PrintDocumentAsync"/>
+                            }
+                            @if (DownloadButtonLocation is PdfMenuItemLocation.Menu or PdfMenuItemLocation.Both)
+                            {
+                                <MudMenuItem IconColor="MudColors.IconColor" Icon="@Icons.DownloadDocument" Label="@LocalizedStrings.DownloadDocument" OnClick="DownloadDocumentAsync"/>
+                            }
+
+                            <MudMenuItem IconColor="MudColors.IconColor" Icon="@Icons.ViewMetadata" Label="@LocalizedStrings.ViewMetadata" OnClick="ViewMetadataAsync"/>
+
+                            @if (!ScrollMode && DrawButtonLocation is PdfMenuItemLocation.Menu or PdfMenuItemLocation.Both)
+                            {
+                                <MudDivider/>
+                                <MudMenuItem IconColor="MudColors.IconColor" Icon="@Icons.Draw" Label="@LocalizedStrings.Draw" OnClick="ToggleDrawingAsync"/>
+                            }
+                        </MudMenu>
+                    }
                 }
             </MudToolBar>
 
@@ -190,13 +234,15 @@
                     }
                     else
                     {
-                        <MudCard>
-                            <MudCardContent>
-                                <MudStack Spacing="1">
-                                    <MudText>@LocalizedStrings.NoFile</MudText>
-                                </MudStack>
-                            </MudCardContent>
-                        </MudCard>
+                        <div class="mudpdf_upload">
+                            <MudCard>
+                                <MudCardContent>
+                                    <MudStack Spacing="1">
+                                        <MudText>@LocalizedStrings.NoFile</MudText>
+                                    </MudStack>
+                                </MudCardContent>
+                            </MudCard>
+                        </div>
                     }
                 }
 
@@ -240,7 +286,7 @@
                             </MudCardContent>
                             <MudCardActions Style="flex-direction: row-reverse">
                                 <MudButton Variant="Variant.Filled" Color="Color.Success"
-                                           OnClick="@(() => LoadPdfAsync())">@(Error?.ErrorType == PdfErrorType.PasswordRequired ? "Submit" : "Retry")</MudButton>
+                                           OnClick="@(() => UpdatePdfPassword())">@(Error?.ErrorType == PdfErrorType.PasswordRequired ? "Submit" : "Retry")</MudButton>
                             </MudCardActions>
                         </MudCard>
                     </div>
