@@ -53,6 +53,13 @@ public partial class PdfViewer : ComponentBase
     /// </summary>
     [Parameter]
     public string? Url { get; set; }
+    
+    /// <summary>
+    /// File name of the PDF to be displayed, if the <see cref="Url"/> property is a valid URL then this parameter is ignored,
+    /// otherwise this property will be used instead (Useful when specifying PDFs as base64 strings.)
+    /// </summary>
+    [Parameter]
+    public string? Filename { get; set; }
 
     /// <summary>
     /// Hides the thumbnail bar as well as the option to display it
@@ -148,8 +155,8 @@ public partial class PdfViewer : ComponentBase
     {
         ObjectReference ??= DotNetObjectReference.Create(this);
 
-        if (!Url.IsNullOrEmpty())
-            PdfFile = new Pdf.Pdf(Url!, "Pdf Document", Url.IsProbablyUrl() ? PdfSource.Url : PdfSource.Base64, PdfOrientation, ScrollMode);
+        if (Url.IsNotNullOrEmpty())
+            PdfFile = new Pdf.Pdf(Url!, Filename ?? "Pdf Document", PdfOrientation, ScrollMode);
         else
             Loading = false;
 
@@ -247,11 +254,19 @@ public partial class PdfViewer : ComponentBase
 
     #region Loading
 
+    /// <summary>
+    /// Load a PDF document
+    /// </summary>
+    /// <param name="urlOrBase64String">URL or base64 encoded PDF document</param>
+    /// <param name="fileName">PDF file name (Ignored for PDFs loaded via URL)</param>
+    /// <remarks>
+    /// URLs MUST start with either http:// or https://
+    /// </remarks>
     public async Task LoadPdfAsync(string? urlOrBase64String, string? fileName = "PDF Document")
     {
         ArgumentNullException.ThrowIfNull(urlOrBase64String);
 
-        PdfFile = new Pdf.Pdf(urlOrBase64String, fileName, urlOrBase64String.IsProbablyUrl() ? PdfSource.Url : PdfSource.Base64, PdfOrientation, ScrollMode);
+        PdfFile = new Pdf.Pdf(urlOrBase64String, fileName, PdfOrientation, ScrollMode);
         Loading = true;
         Error = null;
         StateHasChanged();
@@ -259,6 +274,11 @@ public partial class PdfViewer : ComponentBase
         await PdfInterop.InitializeAsync(ObjectReference!, PdfFile, Config.UseProjectWorker);
     }
 
+    /// <summary>
+    /// Load a PDF document
+    /// </summary>
+    /// <param name="stream">Stream containing the PDF document</param>
+    /// <param name="fileName">PDF file name</param>
     public async Task LoadPdfAsync(Stream stream, string? fileName = "PDF Document")
     {
         using var ms = new MemoryStream();
@@ -266,6 +286,11 @@ public partial class PdfViewer : ComponentBase
         await LoadPdfAsync(ms.ToArray(), fileName);
     }
 
+    /// <summary>
+    /// Load a PDF document
+    /// </summary>
+    /// <param name="pdfBytes">PDF document in binary format</param>
+    /// <param name="fileName">PDF file name</param>
     public async Task LoadPdfAsync(byte[] pdfBytes, string? fileName = "PDF Document")
     {
         PdfFile = new Pdf.Pdf(pdfBytes, fileName!, PdfOrientation, ScrollMode);

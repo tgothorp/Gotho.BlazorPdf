@@ -11,7 +11,7 @@ let workerInitialised = false;
 
 /**
  * This is a work-around for .NET MAUI, the MAUI browser used by Blazor cannot load
- * the required worker directly so we must grab it via a fetch().
+ * the required worker directly, so we must grab it via a fetch().
  */
 async function setupProjectWorker() {
     const response = await fetch('./pdf.worker.min.mjs');
@@ -164,37 +164,14 @@ export async function printDocument(dotnetReference: DotNetObject, id: string) {
 export async function downloadDocument(dotnetReference: DotNetObject, id: string) {
     const pdf = Pdf.getPdf(id);
 
-    if (pdf.source === 'binary' && pdf.fileBytes) {
+    if (pdf.fileBytes) {
         const fileName = pdf.fileName ?? 'document.pdf';
         const blob = new Blob([pdf.fileBytes], { type: 'application/pdf' });
         FileSaver.saveAs(blob, fileName);
         return;
     }
 
-    if (pdf.source == "base64" && pdf.url) {
-
-        let base64Data = pdf.url;
-
-        if (pdf.url.indexOf('data:') === 0) {
-            const split = pdf.url.split(',');
-            base64Data = split.length > 1 ? split[1] : '';
-        }
-
-        try {
-            const byteCharacters = atob(base64Data);
-            const byteNumbers = new Array(byteCharacters.length);
-            for (let i = 0; i < byteCharacters.length; i++) {
-                byteNumbers[i] = byteCharacters.charCodeAt(i);
-            }
-            const byteArray = new Uint8Array(byteNumbers);
-            const blob = new Blob([byteArray], {type: 'application/pdf'});
-
-            FileSaver.saveAs(blob, "document.pdf");
-        } catch (e) {
-            console.error('Failed to decode base64 PDF:', e);
-        }
-
-    } else {
+    if (pdf.url) {
         fetch(pdf.url!).then(response => {
             if (response.ok) {
                 response.blob().then(blob => {
@@ -416,11 +393,4 @@ async function updateMetadata(dotnetReference: DotNetObject, pdf: Pdf) {
         currentPage: pdf.currentPage,
         totalPages: pdf.pageCount
     });
-}
-
-function closeMenu() {
-    const checkbox = document.getElementById('menu-toggle') as HTMLInputElement | null;
-    if (checkbox && checkbox.type === 'checkbox') {
-        checkbox.checked = false;
-    }
 }

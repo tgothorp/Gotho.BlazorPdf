@@ -6,7 +6,6 @@ internal class PdfState
     public required string? Url { get; set; }
     public required string? FileName { get; set; }
     public required byte[]? FileBytes { get; set; }
-    public required string Source { get; set; }
 
     public required int CurrentPage { get; set; }
     public required int Orientation { get; set; }

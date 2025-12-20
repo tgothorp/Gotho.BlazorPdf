@@ -8,7 +8,6 @@ export class PdfState {
     public currentPage: number = 1;
     public scrollMode: boolean = false;
     public password: string | null = null;
-    public source: string = "Url";
     public drawLayerEnabled: boolean = false;
     public penColor: string = "#000000";
     public penThickness: number = 1

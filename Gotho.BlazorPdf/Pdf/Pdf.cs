@@ -10,14 +10,22 @@ namespace Gotho.BlazorPdf.Pdf;
 /// </remarks>
 public class Pdf
 {
-    public Pdf(string url, string? fileName, PdfSource source, PdfOrientation orientation, bool scrollMode)
+    public Pdf(string url, string? fileName, PdfOrientation orientation, bool scrollMode)
     {
         Id = "".GenerateRandomString();
-        Url = url;
-        FileName = source == PdfSource.Base64 ? fileName : null;
-        Source = source;
         ScrollMode = scrollMode;
         Orientation = new Orientation(orientation);
+
+        if (url.IsProbablyUrl())
+        {
+            Url = url;
+            FileName = null;
+        }
+        else
+        {
+            FileBytes = ConvertBase64ToByte(url);
+            FileName = fileName;
+        }
     }
 
     public Pdf(byte[] fileBytes, string fileName, PdfOrientation orientation, bool scrollMode)
@@ -27,7 +35,6 @@ public class Pdf
         FileBytes = fileBytes;
         FileName = fileName;
         ScrollMode = scrollMode;
-        Source = PdfSource.Binary;
         Orientation = new Orientation(orientation);
     }
 
@@ -35,7 +42,6 @@ public class Pdf
     public string? Url { get; private set; }
     public string? FileName { get; private set; }
     public byte[]? FileBytes { get; private set; }
-    public PdfSource Source { get; private set; }
     public bool ScrollMode { get; private set; }
 
     public Orientation Orientation { get; init; }
@@ -59,7 +65,6 @@ public class Pdf
             Url = Url,
             FileName = FileName,
             FileBytes = FileBytes,
-            Source = Source.ToString(),
             CurrentPage = Paging.CurrentPage,
             Orientation = Orientation.GetOrientation(),
             ScrollMode = ScrollMode,
@@ -71,5 +76,15 @@ public class Pdf
             SearchQuery = Search.SearchQuery,
             ActiveResultIndex = Search.GetSearchIndex(Paging.CurrentPage)
         };
+    }
+
+    private byte[] ConvertBase64ToByte(string base64)
+    {
+        if (base64.Contains(","))
+        {
+            base64 = base64.Split(',')[1];
+        }
+
+        return Convert.FromBase64String(base64);
     }
 }

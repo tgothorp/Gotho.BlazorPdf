@@ -4,9 +4,11 @@ All notable changes and releases will be documented here
 
 ## [2025-12-XX] - V2.1.0 (Latest Release)
 
-- The 'Print', 'Download', 'Find' and 'Draw' buttons can now be placed on the toolbar, the menu, both or hidden
-- Added option to hide dropdown menu
-- Fix loading old JS asset when upgrading versions
+- Added ability to load PDFs from stream or byte array.
+- The 'Print', 'Download', 'Find' and 'Draw' buttons can now be placed on the toolbar, the menu, both or hidden.
+- Added option to hide dropdown menu.
+- Improved loading of base64 encoded PDFs
+- Fix loading old JS asset when upgrading versions.
 
 ## [2025-11-20] - V2.0.0
 

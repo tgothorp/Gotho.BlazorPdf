@@ -59,7 +59,6 @@ export class Pdf {
     public previousPage: number;
     public queuedPage: number | null;
     public password: string | null;
-    public source: string;
 
     public previousQuery: string | null;
     public searchResults: PdfSearchResult[] = [];
@@ -74,16 +73,15 @@ export class Pdf {
         this.scale = pdfState.scale;
         this.rotation = pdfState.orientation;
         this.url = pdfState.url;
-        this.source = pdfState.source.toLowerCase();
         this.scrollMode = pdfState.scrollMode;
         this.password = pdfState.password
         this.drawLayer = new PdfDrawLayer(this.id);
 
-        if (this.source === 'binary') {
+        if (pdfState.url) {
+            this.fileName = getFilenameFromUrl(this.url!)
+        } else {
             this.fileName = pdfState.fileName!;
             this.fileBytes = pdfState.fileBytes!;
-        } else {
-            this.fileName = getFilenameFromUrl(this.url!)
         }
 
         this.document = null;
@@ -114,15 +112,13 @@ export class Pdf {
     }
 
     public getDocumentInitParams(): DocumentInitParameters {
-        let documentInitParams: DocumentInitParameters = {
-            url: this.source == 'binary' ? undefined : this.url!,
+        let documentInitParams: DocumentInitParameters = {}
+
+        if (this.url) {
+            documentInitParams.url = this.url!;
         }
 
-        if (this.source == 'base64') {
-            documentInitParams.data = base64ToUint8Array(this.url!);
-        }
-
-        if (this.source == 'binary') {
+        if (this.fileBytes) {
             documentInitParams.data = this.fileBytes!;
         }
 
