@@ -2,12 +2,12 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
         <loc>https://blazorpdf.info/</loc>
-        <lastmod>2025-04-03</lastmod>
+        <lastmod>2025-12-20</lastmod>
         <priority>1.0</priority>
     </url>
     <url>
         <loc>https://blazorpdf.info/docs</loc>
-        <lastmod>2025-03-23</lastmod>
+        <lastmod>2025-12-20</lastmod>
         <priority>0.8</priority>
     </url>
     <url>
@@ -17,7 +17,7 @@
     </url>
     <url>
         <loc>https://blazorpdf.info/docs/loading</loc>
-        <lastmod>2025-04-03</lastmod>
+        <lastmod>2025-12-20</lastmod>
         <priority>0.5</priority>
     </url>
     <url>
@@ -28,6 +28,11 @@
     <url>
         <loc>https://blazorpdf.info/docs/configuration/colours</loc>
         <lastmod>2025-04-03</lastmod>
+        <priority>0.5</priority>
+    </url>
+    <url>
+        <loc>https://blazorpdf.info/docs/configuration/toolbar</loc>
+        <lastmod>2025-12-20</lastmod>
         <priority>0.5</priority>
     </url>
     <url>
@@ -72,7 +77,7 @@
     </url>
     <url>
         <loc>https://blazorpdf.info/docs/changelog</loc>
-        <lastmod>2025-04-03</lastmod>
+        <lastmod>2025-12-20</lastmod>
         <priority>0.5</priority>
     </url>
 </urlset>

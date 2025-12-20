@@ -13,7 +13,7 @@
         </MudItem>
         <MudItem sm="9" Style="overflow: auto">
             <MudText Typo="Typo.h2" Class="mb-5">Loading PDFs</MudText>
-            <MudText>PDFs can be loaded by providing either a URL or a base64 encoded PDF file. Either set the "Url" parameter to your pdf's url / base64 encoded pdf or use the "LoadPdfAsync" function.</MudText>
+            <MudText>PDFs can be loaded by specifying either a URL or a base64 encoded PDF file in the `Url` parameter. PDFs can also be loaded from URL, Base64, Stream or Byte array via the "LoadPdfAsync" function.</MudText>
 
             <MudText Typo="Typo.h4" Class="mt-5 mb-1">URL Loading</MudText>
             <CodeSnippet Body="@QuickStart.Minimum"/>
@@ -21,8 +21,11 @@
             <MudText Typo="Typo.h4" Class="mt-5 mb-1">Base64 Loading</MudText>
             <CodeSnippet Body="@Base64Example.Example"/>
 
-            <MudText Typo="Typo.h4" Class="mt-5 mb-1">Loading with LoadPdfAsync</MudText>
-            <CodeSnippet Body="@QuickStart.Manual"/>
+            <MudText Typo="Typo.h4" Class="mt-5 mb-1">Loading From Stream</MudText>
+            <CodeSnippet Body="@Loading.FromStream"/>
+            
+            <MudText Typo="Typo.h4" Class="mt-5 mb-1">Loading From Byte Array</MudText>
+            <CodeSnippet Body="@Loading.FromByteArray"/>
         </MudItem>
     </MudGrid>
 </div>
