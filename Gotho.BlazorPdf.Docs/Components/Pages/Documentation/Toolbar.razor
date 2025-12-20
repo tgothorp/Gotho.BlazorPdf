@@ -1,0 +1,29 @@
+@page "/docs/configuration/toolbar"
+
+<PageTitle>Blazor PDF | Toolbar & Menu</PageTitle>
+
+<PageMetadata Title="Blazor PDF | Toolbar & Menu"
+              Description="Customising the PDF viewer toolbar and menu."
+              Url="https://blazorpdf.info/configuration/toolbar"/>
+
+<div style="max-width: 1440px; margin: 3em auto auto;">
+    <MudGrid>
+        <MudItem sm="3">
+            <DocsMenu/>
+        </MudItem>
+        <MudItem sm="9" Style="overflow: auto">
+            <MudText Typo="Typo.h2" Class="mb-5">Configuration | Toolbar & Menu</MudText>
+            <MudText>Certain elements can be placed on either the PDF viewer toolbar, the menu, in both places or completely hidden altogether. The menu can also be completely hidden for maximum customizability.</MudText>
+
+            <MudText Typo="Typo.h4" Class="mt-5 mb-1">Minimal Example</MudText>
+            
+            <CodeSnippet Body="@Code.Toolbar.Minimal"/>
+            
+            <PdfViewer Url="https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf" HideDropdownMenu="true" PrintButtonLocation="PdfMenuItemLocation.Toolbar" FindButtonLocation="PdfMenuItemLocation.None" DownloadButtonLocation="PdfMenuItemLocation.Toolbar"/>
+        </MudItem>
+    </MudGrid>
+</div>
+
+@code {
+    
+}
