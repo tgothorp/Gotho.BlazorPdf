@@ -45,7 +45,7 @@
                     <div style="max-width: 60px;">
                         <MudNumericField
                             T="int"
-                            Text="@PdfFile.Paging.CurrentPage.ToString()"
+                            Value="@PdfFile.Paging.CurrentPage"
                             Variant="Variant.Filled"
                             Margin="Margin.Dense"
                             HideSpinButtons="true"
@@ -234,13 +234,15 @@
                     }
                     else
                     {
-                        <MudCard>
-                            <MudCardContent>
-                                <MudStack Spacing="1">
-                                    <MudText>@LocalizedStrings.NoFile</MudText>
-                                </MudStack>
-                            </MudCardContent>
-                        </MudCard>
+                        <div class="mudpdf_upload">
+                            <MudCard>
+                                <MudCardContent>
+                                    <MudStack Spacing="1">
+                                        <MudText>@LocalizedStrings.NoFile</MudText>
+                                    </MudStack>
+                                </MudCardContent>
+                            </MudCard>
+                        </div>
                     }
                 }
 
