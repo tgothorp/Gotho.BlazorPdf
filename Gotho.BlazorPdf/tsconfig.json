@@ -3,6 +3,7 @@
     "target": "ESNext",
     "module": "ESNext",
     "lib": ["DOM", "ES2015", "es2017"],
+    "types": ["@types/blazor__javascript-interop"],
     "strict": true,
     "moduleResolution": "Node",
     "esModuleInterop": true,
