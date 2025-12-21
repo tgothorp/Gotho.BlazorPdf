@@ -512,4 +512,6 @@ dist
 
 *.js
 *.min.js
+*.min.js.map
+*.min.mjs
 *.min.css

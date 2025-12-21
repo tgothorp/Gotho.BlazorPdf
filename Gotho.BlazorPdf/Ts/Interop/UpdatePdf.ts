@@ -35,7 +35,7 @@ export async function updatePdf(dotnetReference: DotNetObject, pdfDto: PdfState)
         return;
     }
 
-    document.body.style.setProperty('--scale-factor', `${pdf.scale}`);
+    document.body.style.setProperty('--total-scale-factor', `${pdf.scale}`);
     await queuePdfRender(pdf, null);
     await updateMetadata(dotnetReference, pdf)
 }

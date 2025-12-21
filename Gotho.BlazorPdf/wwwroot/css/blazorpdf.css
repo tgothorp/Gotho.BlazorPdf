@@ -1,4 +1,4 @@
-@import url("../node_modules/pdfjs-dist/web/pdf_viewer.css");
+@import url("../../node_modules/pdfjs-dist/web/pdf_viewer.css");
 @import url("blazorpdf_menu.css");
 @import url("blazorpdf_viewer.css");
 @import url("blazorpdf_toolbar.css");
@@ -8,6 +8,7 @@
 @import url("blazorpdf_metadata.css");
 @import url("blazorpdf_upload.css");
 @import url("blazorpdf_find.css");
+@import url("blazorpdf_annotations.css");
 
 @media (max-width: 768px) {
     .blazorpdf__hide-on-mobile {
@@ -20,7 +21,9 @@
 }
 
 :root {
-    --scale-factor: 1.0;
+    --total-scale-factor: 1.0;
+    --scale-round-y: 1px;
+    --scale-round-x: 1px;
 }
 
 .blazorpdf-d-none {
