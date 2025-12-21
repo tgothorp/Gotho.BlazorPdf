@@ -1,4 +1,4 @@
-@import url("../node_modules/pdfjs-dist/web/pdf_viewer.css");
+@import url("../../node_modules/pdfjs-dist/web/pdf_viewer.css");
 @import url("blazorpdf_menu.css");
 @import url("blazorpdf_viewer.css");
 @import url("blazorpdf_toolbar.css");
@@ -22,7 +22,6 @@
 
 :root {
     --total-scale-factor: 1.0;
-    --scale-factor: 1.0;
     --scale-round-y: 1px;
     --scale-round-x: 1px;
 }

@@ -25,16 +25,18 @@
         <InternalsVisibleTo Include="$(AssemblyName).MudBlazor" />
     </ItemGroup>
     
-    <Target Name="CompileTypeScript" BeforeTargets="Build" Condition="'$(Configuration)' == 'Debug'">
+    <Target Name="NpmCommandsDebug" BeforeTargets="Build" Condition="'$(Configuration)' == 'Debug'">
+        <Exec Command="npm run clean"/>
         <Exec Command="npm run ts" />
-    </Target>
-
-    <Target Name="CompileTypeScriptRelease" BeforeTargets="Build" Condition="'$(Configuration)' == 'Release'">
-        <Exec Command="npm run ts-min" />
-    </Target>
-
-    <Target Name="MinifyCss" BeforeTargets="Build">
         <Exec Command="npm run css" />
+        <Exec Command="npm run copy-pdfjs-worker" />
+    </Target>
+
+    <Target Name="NpmCommandsRelease" BeforeTargets="Build" Condition="'$(Configuration)' == 'Release'">
+        <Exec Command="npm run clean"/>
+        <Exec Command="npm run ts-min" />
+        <Exec Command="npm run css" />
+        <Exec Command="npm run copy-pdfjs-worker" />
     </Target>
 
     <ItemGroup>

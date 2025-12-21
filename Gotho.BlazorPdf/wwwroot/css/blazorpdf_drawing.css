@@ -3,7 +3,7 @@
 }
 
 .blazorpdf-drawing__canvas:hover {
-    cursor: url("cursor-edit.svg"), auto;
+    cursor: url("../img/cursor-edit.svg"), auto;
 }
 
 .blazorpdf-drawing__container {
