@@ -6,7 +6,7 @@ import {renderPdf} from "./RenderPdf";
 
 import DotNetObject = DotNet.DotNetObject;
 
-GlobalWorkerOptions.workerSrc = "./pdf.worker.min.mjs";
+GlobalWorkerOptions.workerSrc = "./pdf.worker.mjs";
 let workerInitialised = false;
 
 /**
@@ -14,7 +14,7 @@ let workerInitialised = false;
  * the required worker directly, so we must grab it via a fetch().
  */
 async function setupProjectWorker() {
-    const response = await fetch('./pdf.worker.min.mjs');
+    const response = await fetch('./pdf.worker.mjs');
     const workerCode = await response.text();
 
     const blob = new Blob([workerCode], {type: 'application/javascript'});

@@ -8,6 +8,7 @@
 @import url("blazorpdf_metadata.css");
 @import url("blazorpdf_upload.css");
 @import url("blazorpdf_find.css");
+@import url("blazorpdf_annotations.css");
 
 @media (max-width: 768px) {
     .blazorpdf__hide-on-mobile {
@@ -20,7 +21,10 @@
 }
 
 :root {
+    --total-scale-factor: 1.0;
     --scale-factor: 1.0;
+    --scale-round-y: 1px;
+    --scale-round-x: 1px;
 }
 
 .blazorpdf-d-none {

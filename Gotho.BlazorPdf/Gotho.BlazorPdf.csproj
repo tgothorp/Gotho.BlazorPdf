@@ -25,11 +25,11 @@
         <InternalsVisibleTo Include="$(AssemblyName).MudBlazor" />
     </ItemGroup>
     
-    <Target Name="CompileTypeScript" BeforeTargets="Build">
+    <Target Name="CompileTypeScript" BeforeTargets="Build" Condition="'$(Configuration)' == 'Debug'">
         <Exec Command="npm run ts" />
     </Target>
 
-    <Target Name="MinifyJavaScript" BeforeTargets="Build" AfterTargets="CompileTypeScript">
+    <Target Name="CompileTypeScriptRelease" BeforeTargets="Build" Condition="'$(Configuration)' == 'Release'">
         <Exec Command="npm run ts-min" />
     </Target>
 
