@@ -2,3 +2,11 @@
     text-align: initial;
     inset: 0;
 }
+
+.annotationLayer .popup > .header {
+    color: black;
+}
+
+.annotationLayer .popupContent {
+    color: black;
+}

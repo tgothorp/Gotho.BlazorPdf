@@ -354,6 +354,13 @@
                                     @* Text Layer *@
                                     <div id="@($"{PdfFile.Id}_text")" class="textLayer"></div>
                                 </div>
+                                @* @if (EnableAnnotations) *@
+                                @* { *@
+                                @*     <div> *@
+                                @*         $1$ Annotation Layer #1# *@
+                                @*         <div id="@($"{PdfFile.Id}_annotations")" class="annotationLayer blazorpdf-annotation"></div> *@
+                                @*     </div> *@
+                                @* } *@
                             }
                         </div>
                     </div>
