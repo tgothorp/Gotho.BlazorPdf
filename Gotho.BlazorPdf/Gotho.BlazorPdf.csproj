@@ -7,7 +7,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-        <Version>2.1.0</Version>
+        <Version>2.2.0</Version>
         <Title>Gotho.BlazorPdf</Title>
         <Authors>tgothorp</Authors>
         <Company>tgothorp</Company>
@@ -25,16 +25,18 @@
         <InternalsVisibleTo Include="$(AssemblyName).MudBlazor" />
     </ItemGroup>
     
-    <Target Name="CompileTypeScript" BeforeTargets="Build">
+    <Target Name="NpmCommandsDebug" BeforeTargets="Build" Condition="'$(Configuration)' == 'Debug'">
+        <Exec Command="npm run clean"/>
         <Exec Command="npm run ts" />
-    </Target>
-
-    <Target Name="MinifyJavaScript" BeforeTargets="Build" AfterTargets="CompileTypeScript">
-        <Exec Command="npm run ts-min" />
-    </Target>
-
-    <Target Name="MinifyCss" BeforeTargets="Build">
         <Exec Command="npm run css" />
+        <Exec Command="npm run copy-pdfjs-worker" />
+    </Target>
+
+    <Target Name="NpmCommandsRelease" BeforeTargets="Build" Condition="'$(Configuration)' == 'Release'">
+        <Exec Command="npm run clean"/>
+        <Exec Command="npm run ts-min" />
+        <Exec Command="npm run css" />
+        <Exec Command="npm run copy-pdfjs-worker" />
     </Target>
 
     <ItemGroup>

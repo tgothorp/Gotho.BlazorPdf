@@ -1,17 +1,19 @@
 {
   "name": "gotho.blazorpdf",
-  "version": "3.0.1",
+  "version": "2.2.0",
   "description": "A simple PDF viewer component for use with Blazor",
   "main": "index.js",
   "scripts": {
+    "clean": "del-cli wwwroot/* --only-files",
     "typecheck": "tsc --noEmit",
-    "ts": "npm run typecheck && npx esbuild Ts/PdfViewer.ts --bundle --format=esm --target=esnext --outfile=wwwroot/blazorpdf.js --keep-names",
-    "css": "npx clean-css-cli -o wwwroot/blazorpdf.min.css wwwroot/blazorpdf.css",
-    "ts-min": "npx uglifyjs wwwroot/blazorpdf.js -o wwwroot/blazorpdf.min.js "
+    "ts": "npm run typecheck && npx esbuild Ts/PdfViewer.ts --bundle --format=esm --target=esnext --outfile=wwwroot/blazorpdf.min.js --sourcemap --keep-names",
+    "ts-min": "npm run typecheck && npx esbuild Ts/PdfViewer.ts --bundle --format=esm --target=esnext --outfile=wwwroot/blazorpdf.min.js --minify --keep-names",
+    "css": "npx clean-css-cli -o wwwroot/blazorpdf.min.css wwwroot/css/blazorpdf.css",
+    "copy-pdfjs-worker": "terser node_modules/pdfjs-dist/build/pdf.worker.mjs -c -m -o wwwroot/pdf.worker-5.1.91.min.mjs"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tgothorp/MudBlazor.PdfViewer.git"
+    "url": "git+https://github.com/tgothorp/Gotho.BlazorPdf.git"
   },
   "keywords": [
     "blazor",
@@ -21,20 +23,22 @@
   "author": "tgothorp",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/tgothorp/MudBlazor.PdfViewer/issues"
+    "url": "https://github.com/tgothorp/Gotho.BlazorPdf/issues"
   },
-  "homepage": "https://github.com/tgothorp/MudBlazor.PdfViewer#readme",
+  "homepage": "https://github.com/tgothorp/Gotho.BlazorPdf#readme",
   "devDependencies": {
     "@types/file-saver": "^2.0.7",
     "clean-css-cli": "^5.6.3",
+    "del-cli": "^7.0.0",
     "esbuild": "^0.25.0",
+    "terser": "^5.44.1",
     "typescript": "^5.7.3",
     "uglify-js": "^3.19.3"
   },
   "dependencies": {
     "@types/blazor__javascript-interop": "^3.1.7",
     "file-saver": "^2.0.5",
-    "pdfjs-dist": "^4.2.67",
+    "pdfjs-dist": "5.1.91",
     "print-js": "^1.6.0"
   }
 }

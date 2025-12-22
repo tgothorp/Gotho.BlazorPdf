@@ -2,7 +2,16 @@
 
 All notable changes and releases will be documented here
 
-## [2025-12-20] - V2.1.0 (Latest Release)
+## [2025-12-22] - V2.2.0  (Latest Release)
+
+- Basic support for annotations in single page mode
+- Split TypeScript over several files & general house keeping
+- Upgrade pdf-js to version 5.1.91
+- Fix pdf-js worker conflicting with other frameworks
+- Fix treating relative URLs as base64 strings
+- Fix password input type not being marked as `password`
+
+## [2025-12-20] - V2.1.0
 
 - Added ability to load PDFs from stream or byte array.
 - The 'Print', 'Download', 'Find' and 'Draw' buttons can now be placed on the toolbar, the menu, both or hidden.

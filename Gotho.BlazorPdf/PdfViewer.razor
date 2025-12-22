@@ -94,7 +94,7 @@
                         {
                             <h1>@LocalizedStrings.PasswordRequired</h1>
                             <div class="blazorpdf-pdf__input">
-                                <input type="text" @bind="PdfPassword" id="pdfPassword" class="blazorpdf-pdf__input-field"
+                                <input type="password" @bind="PdfPassword" id="pdfPassword" class="blazorpdf-pdf__input-field"
                                        placeholder="Password">
                                 <span
                                     class="blazorpdf-pdf__input-help">@LocalizedStrings.PasswordHint</span>
@@ -179,6 +179,14 @@
                                 @* Text Layer *@
                                 <div id="@($"{PdfFile.Id}_text")" class="textLayer"></div>
                             </div>
+
+                            @if (EnableAnnotations)
+                            {
+                                <div>
+                                    @* Annotation Layer *@
+                                    <div id="@($"{PdfFile.Id}_annotations")" class="annotationLayer blazorpdf-annotation"></div>
+                                </div>
+                            }
                         }
                     </div>
                 </div>

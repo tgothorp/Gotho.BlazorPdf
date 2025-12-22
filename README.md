@@ -13,6 +13,9 @@ Originally a port of the BlazorBootstrap PDF viewer for the [MudBlazor](https://
 ![GitHub License](https://img.shields.io/github/license/tgothorp/Gotho.BlazorPdf)
 
 
+<h3>
+Are you using BlazorPDF in your project? <a href="mailto:info@blazorpdf.info">Let me know!</a>
+</h3>
 </div>
 
 ## Contents

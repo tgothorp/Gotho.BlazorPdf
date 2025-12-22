@@ -51,6 +51,11 @@
         <priority>0.5</priority>
     </url>
     <url>
+        <loc>https://blazorpdf.info/docs/annotations</loc>
+        <lastmod>2025-12-22</lastmod>
+        <priority>0.5</priority>
+    </url>
+    <url>
         <loc>https://blazorpdf.info/docs/encryptedpdfs</loc>
         <lastmod>2025-03-23</lastmod>
         <priority>0.5</priority>
@@ -77,7 +82,7 @@
     </url>
     <url>
         <loc>https://blazorpdf.info/docs/changelog</loc>
-        <lastmod>2025-12-20</lastmod>
+        <lastmod>2025-12-22</lastmod>
         <priority>0.5</priority>
     </url>
 </urlset>
