@@ -16,15 +16,15 @@ public class Pdf
         ScrollMode = scrollMode;
         Orientation = new Orientation(orientation);
 
-        if (url.IsProbablyUrl())
-        {
-            Url = url;
-            FileName = null;
-        }
-        else
+        if (url.IsProbablyBase64())
         {
             FileBytes = ConvertBase64ToByte(url);
             FileName = fileName;
+        }
+        else
+        {
+            Url = url;
+            FileName = null;
         }
     }
 
