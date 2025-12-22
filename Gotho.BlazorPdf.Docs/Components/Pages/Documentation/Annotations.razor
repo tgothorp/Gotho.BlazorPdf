@@ -1,0 +1,29 @@
+@page "/docs/annotations"
+
+<PageTitle>Blazor PDF | Annotations</PageTitle>
+
+<PageMetadata Title="Blazor PDF | Annotations"
+              Description="Blazor PDF can automatically detect encrypted PDF files and prompt the user for a password."
+              Url="https://blazorpdf.info/docs/encryptedpdfs"/>
+
+<div style="max-width: 1440px; margin: 3em auto auto;">
+    <MudGrid>
+        <MudItem sm="3">
+            <DocsMenu/>
+        </MudItem>
+        <MudItem sm="9" Style="overflow: auto">
+            <MudText Typo="Typo.h2" Class="mb-5">Annotations</MudText>
+            <MudText>Blazor PDF provides basic support for embedded annotations & forms in single page mode, they can be enabled by setting `EnableAnnotations` to `true`</MudText>
+            
+            <MudAlert Class="my-3" Severity="Severity.Info">Displaying of annotation / form data is still in alpha and may not show all PDF data.</MudAlert>
+            
+            <CodeSnippet Body="@AnnotationsExample.Example"/>
+            
+            <PdfViewer Url="https://raw.githubusercontent.com/tgothorp/Gotho.BlazorPdf/refs/heads/main/files/test_pdf_annotated.pdf" EnableAnnotations="true"/>
+        </MudItem>
+    </MudGrid>
+</div>
+
+@code {
+
+}

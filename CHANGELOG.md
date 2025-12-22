@@ -2,7 +2,7 @@
 
 All notable changes and releases will be documented here
 
-## [202X-XX-XX] - V2.2.0  (Latest Release)
+## [2025-12-22] - V2.2.0  (Latest Release)
 
 - Basic support for annotations in single page mode
 - Split TypeScript over several files & general house keeping
