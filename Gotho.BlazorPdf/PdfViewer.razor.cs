@@ -71,6 +71,15 @@ public partial class PdfViewer : ComponentBase
     public bool HideThumbnails { get; set; }
 
     /// <summary>
+    /// Enables display of embedded PDF annotations and forms, Annotations are currently only available in single page mode.
+    /// </summary>
+    /// <remarks>
+    /// <para><b>Default:</b> <c>false</c></para> 
+    /// </remarks>
+    [Parameter]
+    public bool EnableAnnotations { get; set; }
+    
+    /// <summary>
     /// If no <c>URL</c> parameter is specified in the PdfViewer component then a user will be allowed to upload
     /// a PDF file unless option is set to <c>false</c>
     /// </summary>
@@ -271,6 +280,7 @@ public partial class PdfViewer : ComponentBase
         Error = null;
         StateHasChanged();
 
+        await Task.Yield();
         await PdfInterop.InitializeAsync(ObjectReference!, PdfFile, Config.UseProjectWorker);
     }
 
@@ -299,6 +309,7 @@ public partial class PdfViewer : ComponentBase
         Error = null;
         StateHasChanged();
 
+        await Task.Yield();
         await PdfInterop.InitializeAsync(ObjectReference!, PdfFile, Config.UseProjectWorker);
     }
 

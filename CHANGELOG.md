@@ -9,6 +9,7 @@ All notable changes and releases will be documented here
 - Upgrade pdf-js to version 5.1.91
 - Fix pdf-js worker conflicting with other frameworks
 - Fix treating relative URLs as base64 strings
+- Fix password input type not being marked as `password`
 
 ## [2025-12-20] - V2.1.0
 
