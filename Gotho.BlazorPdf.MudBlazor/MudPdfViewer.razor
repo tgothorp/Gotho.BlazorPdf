@@ -46,7 +46,7 @@
                         <MudNumericField
                             T="int"
                             Value="@PdfFile.Paging.CurrentPage"
-                            Variant="Variant.Filled"
+                            Variant="@PageFieldVariant"
                             Margin="Margin.Dense"
                             HideSpinButtons="true"
                             Disabled="InputDisabled()"
@@ -178,7 +178,7 @@
                                         Label="Find in Document"
                                         DebounceInterval="5"
                                         Placeholder="Query..."
-                                        Variant="Variant.Filled"/>
+                                        Variant="@SearchFieldVariant"/>
                                     <MudIconButton
                                         Icon="@(global::MudBlazor.Icons.Material.Filled.ChevronLeft)"
                                         Variant="Variant.Outlined"
@@ -272,7 +272,7 @@
                                     <MudTextField @bind-Value="PdfPassword" InputType="_passwordInputType"
                                                   Adornment="Adornment.End" AdornmentIcon="@_passwordInputIcon"
                                                   OnAdornmentClick="PeekPassword" Label="Password"
-                                                  Variant="Variant.Filled"
+                                                  Variant="@PasswordFieldVariant"
                                                   HelperText="Please enter the password for the PDF document."></MudTextField>
                                     @if (!string.IsNullOrEmpty(Error?.Message))
                                     {

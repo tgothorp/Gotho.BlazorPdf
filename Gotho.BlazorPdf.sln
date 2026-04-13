@@ -1,5 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.4.11626.88 stable
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gotho.BlazorPdf", "Gotho.BlazorPdf\Gotho.BlazorPdf.csproj", "{D212443C-E455-431B-A259-9B48C2CE23A4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gotho.BlazorPdf.Docs", "Gotho.BlazorPdf.Docs\Gotho.BlazorPdf.Docs.csproj", "{871A6502-3876-4B73-B072-60711EAD525D}"
@@ -40,6 +43,9 @@ Global
 		{9938825A-702C-42FD-A2B9-037326BC3C95}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9938825A-702C-42FD-A2B9-037326BC3C95}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9938825A-702C-42FD-A2B9-037326BC3C95}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{871A6502-3876-4B73-B072-60711EAD525D} = {66B7FF4B-BF29-4B24-87FE-788A1A5BA591}
