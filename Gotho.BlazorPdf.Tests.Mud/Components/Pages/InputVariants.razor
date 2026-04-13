@@ -1,0 +1,28 @@
+﻿@page "/input-variants"
+@using Gotho.BlazorPdf.Tests.Server.Data
+@using global::MudBlazor
+
+<PageTitle>Input Variants</PageTitle>
+
+<MudStack Spacing="8">
+    <MudSelect @bind-Value="@_selectedVariant"
+               Label="Page / Password / Search Field Variant" FitContent Variant="Variant.Outlined">
+        <MudSelectItem Value="Variant.Text">Variant.Text</MudSelectItem>
+        <MudSelectItem Value="Variant.Outlined">Variant.Outlined</MudSelectItem>
+        <MudSelectItem Value="Variant.Filled">Variant.Filled</MudSelectItem>
+    </MudSelect>
+    <MudDivider />
+    <div>
+        <MudText GutterBottom Typo="Typo.subtitle2">Password Field</MudText>
+        <MudPdfViewer PasswordFieldVariant="@_selectedVariant" PageFieldVariant="@_selectedVariant" Url="https://raw.githubusercontent.com/tgothorp/MudBlazor.PdfViewer/refs/heads/main/files/test_pdf_document-protected.pdf" />
+    </div>
+    <MudDivider />
+    <div>
+        <MudText GutterBottom Typo="Typo.subtitle2">Current Page Field</MudText>
+        <MudPdfViewer PageFieldVariant="@_selectedVariant" SearchFieldVariant="@_selectedVariant" Url="https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf" />
+    </div>
+</MudStack>
+
+@code {
+    private Variant _selectedVariant { get; set; } = Variant.Filled;
+}
