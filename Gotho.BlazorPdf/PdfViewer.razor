@@ -7,7 +7,7 @@
 
 <CascadingValue Value="this">
 
-    <div class="blazorpdf-container">
+    <div class="blazorpdf-container @(ScrollMode ? "blazorpdf--scroll-mode" : "")">
         
         <PdfToolbar ToggleFind="ToggleFind" ToggleThumbnails="ToggleThumbnails"/>
 
@@ -121,6 +121,7 @@
 
             <div class="@(Error is not null ? "blazorpdf-d-none" : "")">
                 <div id="@($"{PdfFile?.Id}_thumbs")"
+                     data-render-thumbnails="@(HideThumbnails ? "false" : "true")"
                      class="@((!HideThumbnails && ShowThumbnails) ? "blazorpdf-pdf__thumbnails" : "blazorpdf-pdf__thumbnails blazorpdf-d-none")"
                      style="background-color: @Colors.Background"></div>
             </div>
@@ -155,8 +156,8 @@
 
             @if (PdfFile is not null)
             {
-                <div class="@(Error is not null ? "blazorpdf-d-none" : "")" style="margin: auto">
-                    <div style="position: relative; background-color: @Colors.Background; margin: 25px">
+                <div class="@(Error is not null ? "blazorpdf-d-none" : "") @(ScrollMode ? "blazorpdf__scroll-host" : "")" style="margin: auto">
+                    <div class="blazorpdf__page-frame" style="position: relative; background-color: @Colors.Background; margin: 25px">
                         <div>
                             @* PDF Canvas *@
                             @if (ScrollMode)

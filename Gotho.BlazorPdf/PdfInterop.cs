@@ -63,4 +63,13 @@ internal class PdfInterop(IJSRuntime jsRuntime) : IAsyncDisposable
             await module.DisposeAsync();
         }
     }
+
+    public async Task DisposeViewerAsync(string id)
+    {
+        if (js.IsValueCreated)
+        {
+            var module = await js.Value;
+            await module.InvokeVoidAsync("disposePdfViewer", id);
+        }
+    }
 }

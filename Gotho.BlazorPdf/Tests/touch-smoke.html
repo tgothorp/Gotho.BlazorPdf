@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<base href="/Gotho.BlazorPdf/wwwroot/">
+<link rel="stylesheet" href="blazorpdf.min.css">
+<title>Touch zoom smoke test</title>
+<style>body { margin: 20px; } #smoke-viewer { width: 760px; max-width: 90vw; } #test { width: 100%; height: 600px; } #test_thumbs { display: none; }</style>
+<h1>Touch zoom smoke test</h1>
+<p id="status">Loading</p>
+<script>
+// Opt-in deterministic scheduler for an embedded test tab whose desktop window
+// is hidden (Chromium suspends native animation frames in that case).
+if (new URLSearchParams(location.search).has("background-tests")) {
+    window.requestAnimationFrame = callback => setTimeout(() => callback(performance.now()), 16);
+    window.cancelAnimationFrame = clearTimeout;
+}
+</script>
+<div id="modal-simulation" style="transform: translate(0px); overflow: hidden; position: relative; z-index: 1">
+<div id="smoke-viewer" class="blazorpdf-container blazorpdf--scroll-mode">
+    <div class="blazorpdf-toolbar">
+        <button type="button" data-blazorpdf-fullscreen data-fullscreen-enter="Full screen"
+                data-fullscreen-exit="Exit full screen" aria-label="Full screen" aria-pressed="false">Fullscreen</button>
+    </div>
+    <div class="blazorpdf-pdf"><div class="blazorpdf__scroll-host"><div class="blazorpdf__page-frame">
+        <div><div id="test" class="blazorpdf__scroll"></div></div>
+    </div></div></div>
+</div>
+</div>
+<div id="test_thumbs"></div>
+<script type="module">
+const viewer = await import(`./blazorpdf.min.js?run=${Date.now()}`);
+const {runSmokeTests, runLoadSmokeTests} = await import(`/Gotho.BlazorPdf/Tests/touch-smoke.js?run=${Date.now()}`);
+const {runFullscreenSmokeTests} = await import(`/Gotho.BlazorPdf/Tests/fullscreen-smoke.js?run=${Date.now()}`);
+const state = {id: "test", url: "/files/test_pdf_document.pdf", orientation: 0,
+    scale: 1, currentPage: 1, scrollMode: true, penColor: "#000000", penThickness: 2};
+const calls = [];
+const dotnet = { async invokeMethodAsync(method, ...args) {
+    calls.push({method, args});
+    if (method === "SetTouchZoom") state.scale = args[1];
+    if (method === "PdfViewerError") throw new Error(JSON.stringify(args));
+}};
+window.smoke = {viewer, state, calls, dotnet};
+window.runTouchSmokeTests = () => runSmokeTests(window.smoke);
+window.runLoadSmokeTests = () => runLoadSmokeTests(window.smoke);
+window.runFullscreenSmokeTests = () => runFullscreenSmokeTests(window.smoke);
+try {
+    await viewer.initPdfViewer(dotnet, state, false);
+    document.getElementById("status").textContent = "Ready";
+} catch (error) {
+    document.getElementById("status").textContent = "Failed: " + error;
+    console.error(error);
+}
+</script>
+</html>

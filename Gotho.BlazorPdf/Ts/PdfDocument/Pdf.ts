@@ -1,9 +1,10 @@
-import {PDFDocumentProxy, getFilenameFromUrl} from "pdfjs-dist"
+import {PDFDocumentProxy, PDFDocumentLoadingTask, getFilenameFromUrl} from "pdfjs-dist"
 import {PdfState} from "./PdfState";
 import {PdfDrawLayer} from "./PdfDrawLayer";
 import {PdfMetadata} from "./PdfMetadata";
 import {PdfSearchResult} from "./PdfSearchResult";
 import {DocumentInitParameters} from "pdfjs-dist/types/src/display/api";
+import type {ScrollViewer} from "../Interop/ScrollViewer";
 
 const pdfInstances = {}
 
@@ -65,6 +66,22 @@ export class Pdf {
     public activeSearchIndex: number | null = null;
 
     public drawLayer: PdfDrawLayer;
+    public scrollViewer?: ScrollViewer;
+    public renderQueued = false;
+    public disposed = false;
+    public loadingTask?: PDFDocumentLoadingTask;
+
+    public static async dispose(id: string) {
+        const pdf = (pdfInstances as Record<string, Pdf>)[id];
+        if (!pdf) return;
+        pdf.disposed = true;
+        pdf.scrollViewer?.dispose();
+        delete (pdfInstances as Record<string, Pdf>)[id];
+        if (pdf.loadingTask)
+            await pdf.loadingTask.destroy();
+        else
+            await pdf.document?.destroy();
+    }
 
     constructor(pdfState: PdfState) {
 
@@ -119,7 +136,9 @@ export class Pdf {
         }
 
         if (this.fileBytes) {
-            documentInitParams.data = this.fileBytes!;
+            // PDF.js transfers ownership of the buffer to its worker. Never transfer
+            // Blazor's interop buffer or a buffer retained for reloading the document.
+            documentInitParams.data = new Uint8Array(this.fileBytes!);
         }
 
         if (this.password) {
@@ -135,6 +154,7 @@ export class Pdf {
         this.pageCount = doc.numPages;
 
         for (let i = 1; i < this.pageCount + 1; i++) {
+            if (this.disposed) return;
             const page = await doc.getPage(i);
             const text = await page.getTextContent() as PdfJsTextContent;
 

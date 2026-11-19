@@ -8,7 +8,7 @@ using Microsoft.JSInterop;
 
 namespace Gotho.BlazorPdf;
 
-public partial class PdfViewer : ComponentBase
+public partial class PdfViewer : ComponentBase, IAsyncDisposable
 {
     protected bool Loading = true;
     protected DotNetObjectReference<PdfViewer>? ObjectReference;
@@ -16,6 +16,7 @@ public partial class PdfViewer : ComponentBase
     protected string? PdfPassword;
     protected string? PdfUploadError;
     protected PdfMetadata? Metadata;
+    private Pdf.Pdf? initialPdf;
 
     public Pdf.Pdf? PdfFile { get; set; }
 
@@ -127,6 +128,10 @@ public partial class PdfViewer : ComponentBase
     [Parameter]
     public bool HideDropdownMenu { get; set; } = false;
 
+    /// <summary>Hides the fullscreen button. Visible by default, including on tablets.</summary>
+    [Parameter]
+    public bool HideFullscreenButton { get; set; }
+
     /// <summary>
     /// Should the option to print the PDF document be displayed on the toolbar, in the dropdown menu, in both, or not at all? (default: Menu)
     /// </summary>
@@ -165,7 +170,7 @@ public partial class PdfViewer : ComponentBase
         ObjectReference ??= DotNetObjectReference.Create(this);
 
         if (Url.IsNotNullOrEmpty())
-            PdfFile = new Pdf.Pdf(Url!, Filename ?? "Pdf Document", PdfOrientation, ScrollMode);
+            PdfFile = initialPdf = new Pdf.Pdf(Url!, Filename ?? "Pdf Document", PdfOrientation, ScrollMode);
         else
             Loading = false;
 
@@ -174,10 +179,27 @@ public partial class PdfViewer : ComponentBase
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender && PdfFile is not null)
-            await PdfInterop.InitializeAsync(ObjectReference!, PdfFile, Config.UseProjectWorker);
+        // The parent's first OnAfterRenderAsync may already have called LoadPdfAsync.
+        // Only URL documents created by OnInitializedAsync need automatic initialization.
+        if (firstRender && initialPdf is not null && ReferenceEquals(PdfFile, initialPdf))
+            await PdfInterop.InitializeAsync(ObjectReference!, initialPdf, Config.UseProjectWorker);
 
         await base.OnAfterRenderAsync(firstRender);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        try
+        {
+            if (PdfFile is not null)
+                await PdfInterop.DisposeViewerAsync(PdfFile.Id);
+        }
+        catch (JSDisconnectedException) { }
+        finally
+        {
+            ObjectReference?.Dispose();
+        }
+        GC.SuppressFinalize(this);
     }
 
     /// <summary>
@@ -275,13 +297,17 @@ public partial class PdfViewer : ComponentBase
     {
         ArgumentNullException.ThrowIfNull(urlOrBase64String);
 
-        PdfFile = new Pdf.Pdf(urlOrBase64String, fileName, PdfOrientation, ScrollMode);
+        if (PdfFile is not null)
+            await PdfInterop.DisposeViewerAsync(PdfFile.Id);
+        var pdf = new Pdf.Pdf(urlOrBase64String, fileName, PdfOrientation, ScrollMode);
+        PdfFile = pdf;
         Loading = true;
         Error = null;
         StateHasChanged();
 
         await Task.Yield();
-        await PdfInterop.InitializeAsync(ObjectReference!, PdfFile, Config.UseProjectWorker);
+        if (ReferenceEquals(PdfFile, pdf))
+            await PdfInterop.InitializeAsync(ObjectReference!, pdf, Config.UseProjectWorker);
     }
 
     /// <summary>
@@ -303,14 +329,18 @@ public partial class PdfViewer : ComponentBase
     /// <param name="fileName">PDF file name</param>
     public async Task LoadPdfAsync(byte[] pdfBytes, string? fileName = "PDF Document")
     {
-        PdfFile = new Pdf.Pdf(pdfBytes, fileName!, PdfOrientation, ScrollMode);
+        if (PdfFile is not null)
+            await PdfInterop.DisposeViewerAsync(PdfFile.Id);
+        var pdf = new Pdf.Pdf(pdfBytes, fileName!, PdfOrientation, ScrollMode);
+        PdfFile = pdf;
 
         Loading = true;
         Error = null;
         StateHasChanged();
 
         await Task.Yield();
-        await PdfInterop.InitializeAsync(ObjectReference!, PdfFile, Config.UseProjectWorker);
+        if (ReferenceEquals(PdfFile, pdf))
+            await PdfInterop.InitializeAsync(ObjectReference!, pdf, Config.UseProjectWorker);
     }
 
     #endregion
@@ -365,6 +395,15 @@ public partial class PdfViewer : ComponentBase
     #endregion
 
     #region Zooming
+
+    /// <summary>Synchronizes a completed touch gesture. Not intended for application calls.</summary>
+    [JSInvokable]
+    public Task SetTouchZoom(string id, double scale)
+    {
+        if (PdfFile?.Id == id && PdfFile.Zooming.SetScale(scale))
+            return InvokeAsync(StateHasChanged);
+        return Task.CompletedTask;
+    }
 
     internal async Task ZoomInAsync()
     {

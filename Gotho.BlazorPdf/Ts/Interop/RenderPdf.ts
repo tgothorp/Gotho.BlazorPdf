@@ -20,6 +20,7 @@ const annotationIconMap: Record<string, string> = {
 
 export async function queuePdfRender(pdf: Pdf, pageNumber: number | null) {
     if (pdf.renderInProgress) {
+        pdf.renderQueued = true;
         if (pageNumber !== null) pdf.queuedPage = pageNumber;
         return;
     }
@@ -27,6 +28,7 @@ export async function queuePdfRender(pdf: Pdf, pageNumber: number | null) {
 }
 
 export async function renderPdf(pdf: Pdf) {
+    if (pdf.disposed) return;
     pdf.renderInProgress = true;
 
     try {
@@ -39,7 +41,8 @@ export async function renderPdf(pdf: Pdf) {
         pdf.renderInProgress = false;
 
         // Handle queued requests
-        if (pdf.queuedPage !== null) {
+        if (pdf.renderQueued || pdf.queuedPage !== null) {
+            pdf.renderQueued = false;
             pdf.queuedPage = null;
             await renderPdf(pdf);
         }
@@ -112,34 +115,7 @@ async function renderSinglePage(pdf: Pdf) {
 }
 
 async function renderScrollMode(pdf: Pdf) {
-    const container = document.getElementById(pdf.id) as HTMLElement;
-    container.innerHTML = '';
-
-    for (let pageNum = 1; pageNum <= pdf.pageCount; pageNum++) {
-        const page = await pdf.document!.getPage(pageNum);
-        const viewport = page.getViewport({scale: pdf.scale, rotation: pdf.rotation});
-
-        const canvas = document.createElement('canvas');
-        canvas.id = `${pdf.id}-page-${pageNum}`;
-        canvas.classList.add('blazorpdf__scroll-page');
-        canvas.width = viewport.width;
-        canvas.height = viewport.height;
-        container.appendChild(canvas);
-
-        const ctx = canvas.getContext('2d')!;
-        await page.render({canvasContext: ctx, viewport}).promise;
-
-        // Render Text Layer for scroll mode
-        const textDiv = document.createElement('div');
-        textDiv.classList.add('textLayer');
-        const topGap = (pageNum - 1) * 16;
-        textDiv.style.top = `${(viewport.height * (pageNum - 1)) + topGap}px`;
-        textDiv.style.height = `${viewport.height}px`;
-        textDiv.style.width = `${viewport.width}px`;
-        container.appendChild(textDiv);
-
-        await renderTextLayer(page, viewport, textDiv, pdf, ctx);
-    }
+    await pdf.scrollViewer?.update();
 }
 
 function setupLayerDiv(div: HTMLDivElement, canvas: HTMLCanvasElement) {
@@ -150,7 +126,7 @@ function setupLayerDiv(div: HTMLDivElement, canvas: HTMLCanvasElement) {
     div.style.width = canvas.offsetWidth + 'px';
 }
 
-async function renderTextLayer(page: pdfJsLib.PDFPageProxy, viewport: any, div: HTMLDivElement, pdf: Pdf, ctx: any) {
+export async function renderTextLayer(page: pdfJsLib.PDFPageProxy, viewport: any, div: HTMLDivElement, pdf: Pdf, ctx: any) {
     const builder = new TextLayerBuilder({pdfPage: page});
     builder.div = div;
 

@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.*" PrivateAssets="all" />
+    <ProjectReference Include="../Gotho.BlazorPdf/Gotho.BlazorPdf.csproj" Condition="'$(UsePrivatePackage)' != 'true'" />
+    <PackageReference Include="Gotho.BlazorPdf" Version="$(PrivatePdfVersion)" Condition="'$(UsePrivatePackage)' == 'true'" />
+  </ItemGroup>
+</Project>

@@ -10,7 +10,7 @@
         @if (!PdfViewer.HideThumbnails)
         {
             <div class="blazorpdf-toolbar__item blazorpdf__hide-on-mobile">
-                <button class="blazorpdf-toolbar__item-button" disabled="@PdfViewer.InputDisabled()" @onclick="@(async () => await InvokeToggleThumbnails())" aria-label="@PdfViewer.LocalizedStrings.ToggleThumbnails">
+                <button type="button" class="blazorpdf-toolbar__item-button" disabled="@PdfViewer.InputDisabled()" @onclick="@(async () => await InvokeToggleThumbnails())" aria-label="@PdfViewer.LocalizedStrings.ToggleThumbnails">
                     <span>
                         <ThumbnailsIcon Color="@PdfViewer.Colors.Icon"/>
                     </span>
@@ -20,7 +20,7 @@
 
         @*Previous Page*@
         <div class="blazorpdf-toolbar__item">
-            <button class="blazorpdf-toolbar__item-button" disabled="@PdfViewer.InputDisabled()" @onclick="PdfViewer.PreviousPageAsync" aria-label="@PdfViewer.LocalizedStrings.PreviousPage">
+            <button type="button" class="blazorpdf-toolbar__item-button" disabled="@PdfViewer.InputDisabled()" @onclick="PdfViewer.PreviousPageAsync" aria-label="@PdfViewer.LocalizedStrings.PreviousPage">
                 <span>
                     <PreviousPageIcon Color="@PdfViewer.Colors.Icon"/>
                 </span>
@@ -29,7 +29,7 @@
 
         @*Next Page*@
         <div class="blazorpdf-toolbar__item">
-            <button class="blazorpdf-toolbar__item-button" disabled="@PdfViewer.InputDisabled()" @onclick="PdfViewer.NextPageAsync" aria-label="@PdfViewer.LocalizedStrings.NextPage">
+            <button type="button" class="blazorpdf-toolbar__item-button" disabled="@PdfViewer.InputDisabled()" @onclick="PdfViewer.NextPageAsync" aria-label="@PdfViewer.LocalizedStrings.NextPage">
                 <span>
                     <NextPageIcon Color="@PdfViewer.Colors.Icon"/>
                 </span>
@@ -55,7 +55,7 @@
 
         @*Zoom Out*@
         <div class="blazorpdf-toolbar__item">
-            <button class="blazorpdf-toolbar__item-button" @onclick="PdfViewer.ZoomOutAsync" disabled="@PdfViewer.InputDisabled()" aria-label="@PdfViewer.LocalizedStrings.ZoomOut">
+            <button type="button" class="blazorpdf-toolbar__item-button" @onclick="PdfViewer.ZoomOutAsync" disabled="@PdfViewer.InputDisabled()" aria-label="@PdfViewer.LocalizedStrings.ZoomOut">
                 <span>
                     <ZoomOutIcon Color="@PdfViewer.Colors.Icon"/>
                 </span>
@@ -69,7 +69,7 @@
 
         @*Zoom In*@
         <div class="blazorpdf-toolbar__item">
-            <button class="blazorpdf-toolbar__item-button" @onclick="PdfViewer.ZoomInAsync" disabled="@PdfViewer.InputDisabled()" aria-label="@PdfViewer.LocalizedStrings.ZoomIn">
+            <button type="button" class="blazorpdf-toolbar__item-button" @onclick="PdfViewer.ZoomInAsync" disabled="@PdfViewer.InputDisabled()" aria-label="@PdfViewer.LocalizedStrings.ZoomIn">
                 <span>
                     <ZoomInIcon Color="@PdfViewer.Colors.Icon"/>
                 </span>
@@ -77,12 +77,29 @@
         </div>
 
         <div class="blazorpdf-toolbar__spacer"></div>
+
+        @if (!PdfViewer.HideFullscreenButton)
+        {
+            <div class="blazorpdf-toolbar__item blazorpdf__fullscreen-control">
+                @* Handled directly in JavaScript to retain the user activation
+                   required by requestFullscreen, including in Blazor Server. *@
+                <button type="button" class="blazorpdf-toolbar__item-button blazorpdf__fullscreen-toggle"
+                        data-blazorpdf-fullscreen
+                        data-fullscreen-enter="@PdfViewer.LocalizedStrings.EnterFullscreen"
+                        data-fullscreen-exit="@PdfViewer.LocalizedStrings.ExitFullscreen"
+                        aria-label="@PdfViewer.LocalizedStrings.EnterFullscreen"
+                        aria-pressed="false" title="@PdfViewer.LocalizedStrings.EnterFullscreen">
+                    <span class="blazorpdf__fullscreen-enter"><FullscreenIcon Color="@PdfViewer.Colors.Icon"/></span>
+                    <span class="blazorpdf__fullscreen-exit"><ExitFullscreenIcon Color="@PdfViewer.Colors.Icon"/></span>
+                </button>
+            </div>
+        }
         
         @* Print *@
         @if (PdfViewer.PrintButtonLocation is PdfMenuItemLocation.Toolbar or PdfMenuItemLocation.Both)
         {
             <div class="blazorpdf-toolbar__item">
-                <button class="blazorpdf-toolbar__item-button" @onclick="PdfViewer.PrintDocumentAsync" disabled="@PdfViewer.InputDisabled()" aria-label="@PdfViewer.LocalizedStrings.PrintDocument">
+                <button type="button" class="blazorpdf-toolbar__item-button" @onclick="PdfViewer.PrintDocumentAsync" disabled="@PdfViewer.InputDisabled()" aria-label="@PdfViewer.LocalizedStrings.PrintDocument">
                     <span>
                         <PrintIcon Color="@PdfViewer.Colors.Icon"/>
                     </span>
@@ -94,7 +111,7 @@
         @if (PdfViewer.DownloadButtonLocation is PdfMenuItemLocation.Toolbar or PdfMenuItemLocation.Both)
         {
             <div class="blazorpdf-toolbar__item">
-                <button class="blazorpdf-toolbar__item-button" @onclick="PdfViewer.DownloadDocumentAsync" disabled="@PdfViewer.InputDisabled()" aria-label="@PdfViewer.LocalizedStrings.DownloadDocument">
+                <button type="button" class="blazorpdf-toolbar__item-button" @onclick="PdfViewer.DownloadDocumentAsync" disabled="@PdfViewer.InputDisabled()" aria-label="@PdfViewer.LocalizedStrings.DownloadDocument">
                     <span>
                         <DownloadIcon Color="@PdfViewer.Colors.Icon"/>
                     </span>
@@ -106,7 +123,7 @@
         @if (PdfViewer is { ScrollMode: false, DrawButtonLocation: PdfMenuItemLocation.Toolbar or PdfMenuItemLocation.Both })
         {
             <div class="blazorpdf-toolbar__item">
-                <button class="blazorpdf-toolbar__item-button" @onclick="PdfViewer.ToggleDrawingAsync" disabled="@PdfViewer.InputDisabled()" aria-label="@PdfViewer.LocalizedStrings.Draw">
+                <button type="button" class="blazorpdf-toolbar__item-button" @onclick="PdfViewer.ToggleDrawingAsync" disabled="@PdfViewer.InputDisabled()" aria-label="@PdfViewer.LocalizedStrings.Draw">
                     <span>
                         <DrawIcon Color="@PdfViewer.Colors.Icon"/>
                     </span>
@@ -118,7 +135,7 @@
         @if (PdfViewer is { ScrollMode: false, FindButtonLocation: PdfMenuItemLocation.Toolbar or PdfMenuItemLocation.Both })
         {
             <div class="blazorpdf-toolbar__item blazorpdf__hide-on-mobile">
-                <button class="blazorpdf-toolbar__item-button" @onclick="@(async () => await InvokeToggleFind())" disabled="@PdfViewer.InputDisabled()" aria-label="@PdfViewer.LocalizedStrings.Find">
+                <button type="button" class="blazorpdf-toolbar__item-button" @onclick="@(async () => await InvokeToggleFind())" disabled="@PdfViewer.InputDisabled()" aria-label="@PdfViewer.LocalizedStrings.Find">
                     <span>
                         <FindIcon Color="@PdfViewer.Colors.Icon"/>
                     </span>
