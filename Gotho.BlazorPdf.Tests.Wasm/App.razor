@@ -1,0 +1,63 @@
+@using Gotho.BlazorPdf
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Web
+@inject HttpClient Http
+
+<h3>WebAssembly: byte-array loading after parent render</h3>
+<button type="button" @onclick="SelectAgain">Select document again</button>
+<button type="button" @onclick="Toggle">Show/hide viewer</button>
+<button type="button" @onclick="ToggleMode">Toggle scroll/single page</button>
+<button type="button" @onclick="ToggleFullscreenButton">Show/hide fullscreen button</button>
+<p id="load-status">Completed loads: @loaded</p>
+<p id="submit-status">Form submits: @submits</p>
+<p>Input bytes: @(bytes?.Length ?? 0)</p>
+<div id="modal-simulation" style="transform: translate(0px); overflow: hidden; max-width: 900px; margin: auto">
+<form @onsubmit="Submitted" @onsubmit:preventDefault>
+@if (visible && bytes is not null)
+{
+    <PdfViewer @key="scrollMode" @ref="viewer" ScrollMode="@scrollMode" Height="75vh"
+               HideFullscreenButton="@hideFullscreen"
+               HideDropdownMenu="true" HideThumbnails="true"
+               OnDocumentLoaded="Loaded" />
+}
+</form>
+</div>
+
+@code {
+    private PdfViewer? viewer;
+    private byte[]? bytes;
+    private bool pending;
+    private bool visible = true;
+    private int loaded;
+    private int submits;
+    private bool scrollMode = true;
+    private bool hideFullscreen;
+
+    protected override async Task OnInitializedAsync()
+    {
+        bytes = await Http.GetByteArrayAsync("sample.pdf");
+        pending = true;
+    }
+
+    private void Loaded(PdfViewerEventArgs _) => loaded++;
+    private void Submitted() => submits++;
+    private void ToggleFullscreenButton() => hideFullscreen = !hideFullscreen;
+    private void ToggleMode()
+    {
+        scrollMode = !scrollMode;
+        pending = true;
+    }
+    private void SelectAgain() => pending = true;
+    private void Toggle()
+    {
+        visible = !visible;
+        pending = visible;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!pending || viewer is null || bytes is null || !visible) return;
+        pending = false;
+        await viewer.LoadPdfAsync(bytes, "sample.pdf");
+    }
+}

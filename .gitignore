@@ -515,3 +515,4 @@ dist
 *.min.js.map
 *.min.mjs
 *.min.css
+/graphify-out

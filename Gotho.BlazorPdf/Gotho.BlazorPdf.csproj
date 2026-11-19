@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
     <PropertyGroup>
         <PackageId>Gotho.BlazorPdf</PackageId>
@@ -7,7 +7,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-        <Version>2.2.0</Version>
+        <Version>2.3.0</Version>        
         <Title>Gotho.BlazorPdf</Title>
         <Authors>tgothorp</Authors>
         <Company>tgothorp</Company>
@@ -25,14 +25,14 @@
         <InternalsVisibleTo Include="$(AssemblyName).MudBlazor" />
     </ItemGroup>
     
-    <Target Name="NpmCommandsDebug" BeforeTargets="Build" Condition="'$(Configuration)' == 'Debug'">
+    <Target Name="NpmCommandsDebug" BeforeTargets="PrepareForBuild" Condition="'$(Configuration)' == 'Debug' and '$(TargetFramework)' != ''">
         <Exec Command="npm run clean"/>
         <Exec Command="npm run ts" />
         <Exec Command="npm run css" />
         <Exec Command="npm run copy-pdfjs-worker" />
     </Target>
 
-    <Target Name="NpmCommandsRelease" BeforeTargets="Build" Condition="'$(Configuration)' == 'Release'">
+    <Target Name="NpmCommandsRelease" BeforeTargets="PrepareForBuild" Condition="'$(Configuration)' == 'Release' and '$(TargetFramework)' != ''">
         <Exec Command="npm run clean"/>
         <Exec Command="npm run ts-min" />
         <Exec Command="npm run css" />
@@ -41,6 +41,13 @@
 
     <ItemGroup>
         <SupportedPlatform Include="browser"/>
+        <Compile Remove="Tests/**/*.cs" />
+        <Content Remove="Tests/**" />
+        <None Remove="Tests/**" />
+        <!-- Generated before asset discovery; do not retain a Debug-only source map
+             in the evaluated item list when switching to Release. -->
+        <Content Remove="wwwroot/blazorpdf.min.js;wwwroot/blazorpdf.min.js.map;wwwroot/blazorpdf.min.css;wwwroot/pdf.worker-5.1.91.min.mjs" />
+        <Content Include="wwwroot/blazorpdf.min.js;wwwroot/blazorpdf.min.css;wwwroot/pdf.worker-5.1.91.min.mjs" />
     </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'net10.0' ">

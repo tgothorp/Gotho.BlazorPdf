@@ -1,0 +1,7 @@
+@page "/touch-zoom"
+@inject NavigationManager Navigation
+
+<h3>Scroll-mode touch zoom</h3>
+<p>Use two fingers inside the PDF, then check toolbar zoom and page navigation.</p>
+<PdfViewer ScrollMode="true" Height="65vh" HideThumbnails="true"
+           Url="@(Navigation.BaseUri + "pdfs/annotated_pdf.pdf")" />

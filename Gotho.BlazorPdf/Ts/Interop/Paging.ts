@@ -22,7 +22,7 @@ export function scrollToPage(id: string, pageNumber: number) {
     const targetPage = document.getElementById(`${id}-page-${pageNumber}`);
     if (container && targetPage) {
         container.scrollTo({
-            top: targetPage.offsetTop - container.offsetTop,
+            top: targetPage.offsetTop,
             behavior: 'smooth'
         });
     }

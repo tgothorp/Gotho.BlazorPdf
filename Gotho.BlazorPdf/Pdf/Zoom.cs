@@ -2,15 +2,12 @@ namespace Gotho.BlazorPdf.Pdf;
 
 public record Zoom
 {
-    private const int MinZoomLevel = 1;
-    private const int MaxZoomLevel = 17;
-    private const int DefaultZoomLevel = 8;
-    
-    private int _zoomLevel;
+    private static readonly int[] Percentages = [25, 33, 50, 67, 75, 80, 90, 100, 110, 125, 150, 175, 200, 250, 300, 400, 500];
+    private double _percentage = 100;
 
     public Zoom()
     {
-        _zoomLevel = DefaultZoomLevel;
+        _percentage = 100;
     }
 
     public double GetScale()
@@ -20,54 +17,44 @@ public record Zoom
 
     public bool ZoomIn()
     {
-        if (_zoomLevel == MaxZoomLevel)
+        var next = Percentages.FirstOrDefault(value => value > _percentage + 0.01);
+        if (next == 0)
             return false;
 
-        _zoomLevel += 1;
+        _percentage = next;
         return true;
     }
     
     public bool ZoomOut()
     {
-        if (_zoomLevel == MinZoomLevel)
+        var previous = Percentages.LastOrDefault(value => value < _percentage - 0.01);
+        if (previous == 0)
             return false;
 
-        _zoomLevel -= 1;
+        _percentage = previous;
         return true;
     }
 
     public bool ResetZoom()
     {
-        if (_zoomLevel == DefaultZoomLevel)
+        if (_percentage == 100)
             return false;
         
-        _zoomLevel = DefaultZoomLevel;
+        _percentage = 100;
         return true;
     }
 
-    public string GetZoomPercentageString() => $"{GetZoomPercentage()}%";
-    private int GetZoomPercentage()
+    public bool SetScale(double scale)
     {
-        return _zoomLevel switch
-        {
-            1 => 25,
-            2 => 33,
-            3 => 50,
-            4 => 67,
-            5 => 75,
-            6 => 80,
-            7 => 90,
-            8 => 100,
-            9 => 110,
-            10 => 125,
-            11 => 150,
-            12 => 175,
-            13 => 200,
-            14 => 250,
-            15 => 300,
-            16 => 400,
-            17 => 500,
-            _ => 100
-        };
+        if (!double.IsFinite(scale))
+            return false;
+        var percentage = Math.Clamp(scale * 100, 25, 500);
+        if (Math.Abs(percentage - _percentage) < 0.001)
+            return false;
+        _percentage = percentage;
+        return true;
     }
+
+    public string GetZoomPercentageString() => $"{_percentage:0.#}%";
+    private double GetZoomPercentage() => _percentage;
 }

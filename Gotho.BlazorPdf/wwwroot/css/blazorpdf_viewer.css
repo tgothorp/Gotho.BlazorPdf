@@ -1,10 +1,9 @@
 .blazorpdf__scroll {
     width: 100%;
     height: 100vh;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    overflow: auto;
+    touch-action: pan-x pan-y;
+    overflow-anchor: none;
     background-color: #161719;
     position: relative;
     scrollbar-color: white transparent;
@@ -51,4 +50,122 @@ mark {
 
 mark.active {
     background: rgba(0, 217, 255, 0.46);
+}
+
+.blazorpdf__scroll-host {
+    width: 100%;
+    min-width: 0;
+}
+
+.blazorpdf__scroll-content {
+    position: relative;
+    min-width: 100%;
+}
+
+.blazorpdf__page {
+    position: absolute;
+    background: white;
+    box-shadow: 0 2px 8px #0003;
+}
+
+.blazorpdf-pdf .blazorpdf__page > canvas {
+    display: block;
+    margin: 0;
+}
+
+.blazorpdf__fullscreen-control {
+    flex-shrink: 0;
+}
+
+.blazorpdf__fullscreen-exit,
+.blazorpdf--fullscreen .blazorpdf__fullscreen-enter {
+    display: none;
+}
+
+.blazorpdf--fullscreen .blazorpdf__fullscreen-exit {
+    display: inline-flex;
+}
+
+.blazorpdf__fullscreen-toggle:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+}
+
+.blazorpdf--fullscreen {
+    display: flex !important;
+    flex-direction: column !important;
+    box-sizing: border-box !important;
+    width: 100vw !important;
+    max-width: none !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    transform: none !important;
+    background: #161719;
+}
+
+.blazorpdf--fullscreen::backdrop {
+    background: #161719;
+}
+
+.blazorpdf--fullscreen-fallback {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 2147483647 !important;
+}
+
+.blazorpdf__fullscreen-ancestor {
+    position: static !important;
+    z-index: auto !important;
+    isolation: auto !important;
+    opacity: 1 !important;
+    mix-blend-mode: normal !important;
+    transform: none !important;
+    filter: none !important;
+    backdrop-filter: none !important;
+    perspective: none !important;
+    contain: none !important;
+    will-change: auto !important;
+    clip-path: none !important;
+    overflow: visible !important;
+}
+
+.blazorpdf__fullscreen-document,
+.blazorpdf__fullscreen-document body {
+    overflow: hidden !important;
+}
+
+.blazorpdf--fullscreen > .blazorpdf-toolbar {
+    flex: 0 0 auto;
+    flex-wrap: wrap;
+    height: auto;
+    min-height: 48px;
+}
+
+.blazorpdf--fullscreen > .blazorpdf-pdf {
+    flex: 1 1 0;
+    min-height: 0;
+    min-width: 0;
+    width: 100%;
+}
+
+.blazorpdf--fullscreen.blazorpdf--scroll-mode > .blazorpdf-pdf {
+    overflow: hidden;
+}
+
+.blazorpdf--fullscreen .blazorpdf__scroll-host {
+    height: 100%;
+    margin: 0 !important;
+}
+
+.blazorpdf--fullscreen.blazorpdf--scroll-mode .blazorpdf__page-frame {
+    height: 100%;
+    margin: 0 !important;
+}
+
+.blazorpdf--fullscreen.blazorpdf--scroll-mode .blazorpdf__page-frame > div:first-child,
+.blazorpdf--fullscreen .blazorpdf__scroll {
+    height: 100% !important;
 }

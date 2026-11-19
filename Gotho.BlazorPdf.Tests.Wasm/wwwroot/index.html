@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <base href="/" />
+    <link href="_content/Gotho.BlazorPdf/blazorpdf.min.css" rel="stylesheet" />
+    <title>BlazorPdf WebAssembly integration</title>
+    <script>
+        // Test host only: allow background smoke tests when the desktop tab is hidden.
+        if (new URLSearchParams(location.search).has("background-tests")) {
+            window.requestAnimationFrame = callback => setTimeout(() => callback(performance.now()), 16);
+            window.cancelAnimationFrame = clearTimeout;
+        }
+    </script>
+</head>
+<body>
+    <div id="app">Starting WebAssembly...</div>
+    <script src="_framework/blazor.webassembly.js"></script>
+</body>
+</html>

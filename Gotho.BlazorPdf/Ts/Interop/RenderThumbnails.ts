@@ -6,9 +6,11 @@ import {goToPage} from "./Paging";
 
 export async function renderThumbnails(dotnetReference: DotNetObject, pdf: Pdf) {
     const sidebar = document.getElementById(`${pdf.id}_thumbs`) as HTMLElement;
+    if (!sidebar || sidebar.dataset.renderThumbnails === "false" || pdf.disposed) return;
     sidebar.innerHTML = '';
 
     for (let pageNum = 1; pageNum <= pdf.pageCount; pageNum++) {
+        if (pdf.disposed) return;
         const doc = pdf.document as PDFDocumentProxy;
         const page = await doc.getPage(pageNum);
 
